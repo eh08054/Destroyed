@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public abstract class EnemyBase
+{   
+    public abstract string EnemyName { get; }
+    public abstract int MaxHP { get; }
+    public abstract float AttackRange { get; }
+    public abstract int AttackDamage { get; }
+    public abstract float AttackCoolTime { get; }
+    public int CurrentHP { get; set; }
+    public enum State{Idle, Attack, Dead}
+    public State CurrentState { get; set; } = State.Idle;
+    public virtual void Init()
+    {
+        CurrentHP = MaxHP;
+        CurrentState = State.Idle;
+    }
+    public virtual void TakeDamage(int damage)
+    {
+        CurrentHP -= damage;
+    }
+
+}

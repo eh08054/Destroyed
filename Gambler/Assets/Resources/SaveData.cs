@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class SaveData
+public class My3DSaveData
 {
     public int highScore;
 }

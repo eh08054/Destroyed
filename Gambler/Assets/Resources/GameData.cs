@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GameData
+public class My3DGameData
 {
     public int currentScore;
     public float timer;
@@ -9,8 +9,8 @@ public class GameData
         this.currentScore = currentScore;
         this.timer = timer;
     }
-    public SaveData ToSaveData()
+    public My3DSaveData ToSaveData()
     {
-        return new SaveData{highScore = currentScore};
+        return new My3DSaveData { highScore = currentScore};
     }
 }

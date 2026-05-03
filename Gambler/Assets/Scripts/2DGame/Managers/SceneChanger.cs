@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class My3DSceneChanger : MonoBehaviour
+public class SceneChanger : MonoBehaviour
 {
     public void SceneChange(string SceneName)
     {

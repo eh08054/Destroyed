@@ -11,7 +11,6 @@ public class My3DGameManager : MonoBehaviour
     public float timeInit = 10f;
     [SerializeField] private My3DPlayerController player;
     [SerializeField] private My3DUIManager ui;
-    [SerializeField] private My3DSceneChanger sceneChanger;
     public event Action OnGameEnd;
 
     private void Awake()

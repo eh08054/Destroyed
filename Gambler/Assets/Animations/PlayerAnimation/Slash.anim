@@ -80,14 +80,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: HitboxOn
+    functionName: AttackHitboxOn
     data: 
     objectReferenceParameter: {fileID: 2656376013994101240, guid: db0e325aaf8e9604ab93adac6db5e81d, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.33333334
-    functionName: HitboxOff
+    functionName: AttackHitboxOff
     data: 
     objectReferenceParameter: {fileID: 2656376013994101240, guid: db0e325aaf8e9604ab93adac6db5e81d, type: 3}
     floatParameter: 0

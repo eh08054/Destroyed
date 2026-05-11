@@ -6,15 +6,24 @@ public class CameraController : MonoBehaviour
     private Collider2D mapCollider;
     private float minX;
     private float maxX;
+    private float minY;
+    private float maxY;
+    private float cameraHalfHeight;
     private float cameraHalfWidth;
     private void Start()
     {
         mapCollider = GameManager.Instance.BackGround.GetComponent<BoxCollider2D>();
         playerTransform = GameManager.Instance.Player.transform;
-        cameraHalfWidth = Camera.main.orthographicSize * Camera.main.aspect;
-        Debug.Log(Camera.main.orthographicSize + " " + Camera.main.aspect + " " + cameraHalfWidth);
+        cameraHalfHeight = Camera.main.orthographicSize;
+        cameraHalfWidth = cameraHalfHeight * Camera.main.aspect;
         minX = mapCollider.bounds.min.x + cameraHalfWidth;
         maxX = mapCollider.bounds.max.x - cameraHalfWidth;
+        minY = mapCollider.bounds.min.y + cameraHalfHeight;
+        maxY = mapCollider.bounds.max.y - cameraHalfHeight;
+
+        float playerFeetY = playerTransform.position.y;
+        float cameraY = playerFeetY + cameraHalfHeight;
+        transform.position = new Vector3(transform.position.x, playerFeetY + (mapCollider.bounds.max.y - mapCollider.bounds.min.y) / 2, transform.position.z);
     }
     private void LateUpdate()
     {

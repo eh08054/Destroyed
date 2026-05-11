@@ -1,6 +1,8 @@
+using Assets.PixelFantasy.Common.Scripts;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -9,13 +11,17 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     public PlayerBase player;
     [SerializeField] private PlayerType playerType;
-    private SpriteRenderer body;
     private Animator animator;
+    private Ghost ghost;
+    float moveDirection = 0f;
     [SerializeField]private float playerSpeed = 1f;
-    [SerializeField]private float jumpForce = 100f;
+    [SerializeField]private float dashSpeed = 50f;
+    [SerializeField]private float jumpForce = 10f;
     [SerializeField] private GameObject attackCollision;
     private bool isWalking;
-    private bool isGrounded;
+    private bool isJumping;
+    private bool isDashing;
+    private bool canCombo = false; 
 
     public event Action<int> OnBirth;
     public event Action<int> OnHPChanged;
@@ -23,9 +29,9 @@ public class PlayerController : MonoBehaviour
     public int AttackDamage { get; private set; }
     private void Awake()
     {
-        body = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        ghost = GetComponent<Ghost>();
         player = playerType switch
         {
             PlayerType.SwordsMan => new SwordsMan(),
@@ -39,53 +45,76 @@ public class PlayerController : MonoBehaviour
         player.Init();
         AttackDamage = player.AttackDamage;
         OnBirth?.Invoke(player.MaxHP);
+        moveDirection = 1f;
         isWalking = false;
-        isGrounded = true;
+        isJumping = false;
     }
     private void Update()
     {
-        HandleMove();
-        HandleJump();
-        HandleSlash();
-        UpdateAnimator();
-    }
-    void HandleMove()
-    {
-        float move = 0f;
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            move = 1f;
-            body.flipX = false;
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            move = -1f;
-            body.flipX = true;
-        }
-
-        transform.Translate(move * playerSpeed * Time.deltaTime, 0, 0);
-        isWalking = (move != 0);
-        animator.SetBool("Walking", isWalking);
-    }
-
-    void HandleJump()
-    {
-        if (Input.GetKeyDown(KeyCode.C) && isGrounded)
-        {
-            isGrounded = false;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-    }
-    void HandleSlash()
-    {
+        isWalking = false;
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            animator.SetTrigger("Slashing");
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if(canCombo)
+            {
+                animator.SetTrigger("ComboAttacking");
+                canCombo = false;
+            }
+            else
+            {
+                animator.SetTrigger("Attacking");
+            }
         }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            animator.SetTrigger("Dashing");
+            StartCoroutine(Dash());
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Jump();
+        }
+        if (!isDashing)
+        {
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                moveDirection = 1f;
+                Move();
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                moveDirection = -1f;
+                Move();
+            }
+        }
+        animator.SetBool("IsJumping", isJumping);
+        animator.SetBool("IsWalking", isWalking);
     }
-    void UpdateAnimator()
+    void Move()
     {
-        animator.SetBool("Jumping", !isGrounded);
+        isWalking = true;
+        Vector3 scale = transform.localScale;
+        scale.x = moveDirection > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        transform.localScale = scale;
+        rb.linearVelocity = new Vector2(moveDirection * playerSpeed, rb.linearVelocity.y);
+    }
+
+    private IEnumerator Dash()
+    {
+        isDashing = true;
+        rb.linearVelocity = new Vector2(moveDirection * dashSpeed, rb.linearVelocity.y);
+        MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Dash");
+        ghost.makeGhost = true;
+        yield return new WaitForSeconds(0.4f);
+        isDashing = false;
+        ghost.makeGhost = false;
+    }
+
+    void Jump()
+    {
+        isJumping = true;
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Jump");
     }
     public void AttackHitboxOn()
     {
@@ -99,7 +128,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = true;
+            isJumping = false;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -118,13 +147,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    public void ComboOpen() => canCombo = true;
+    public void ComboClose() => canCombo = false;
     private void PlayDeathAnimation()
     {
-        animator.SetTrigger("PlayerDeath");
+        animator.SetTrigger("Death");
     }
     public void PlayerDeath()
     {
         gameObject.SetActive(false);
         OnDeath?.Invoke();
     }
+
 }

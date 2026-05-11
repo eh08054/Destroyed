@@ -1,51 +1,55 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public GameObject Player { get; private set; }
-    public GameData GameData { get; private set; }
     public GameObject BackGround { get; private set; }
+    public GameData GameData { get; private set; }
+    [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject dragonPrefab;
-    [SerializeField] private GameObject orgePrefab;
-    [SerializeField] private GameObject backgroundPrefab;
+
+    public event Action OnClear;
     private void Awake()
     {
         Instance = this;
-        Player = Instantiate(playerPrefab, playerPrefab.transform.position, Quaternion.identity);
-        BackGround = Instantiate(backgroundPrefab, backgroundPrefab.transform.position, Quaternion.identity);
         GameData = new GameData();
+        LoadStage(stages[GameData.SelectedStage]);
     }
     private void Start()
     {
         PlayerController playerController = Player.GetComponent<PlayerController>();
-        SpawnEnemies();
     }
-    public void SpawnEnemies()
+    private void LoadStage(StageData stageData)
     {
-        SpawnElite();
-        //SpawnBoss();
-    }
-    public void SpawnElite()
-    {
-        GameObject BossEnemy = Instantiate(orgePrefab, orgePrefab.transform.position, Quaternion.identity);
-        EnemyController enemyController = BossEnemy.GetComponent<EnemyController>();
-        enemyController.OnDeath += EnemyDeath;
-        if (enemyController.Enemy is Dragon)
+        Player = Instantiate(playerPrefab, stageData.PlayerSpawnPosition, Quaternion.identity);
+        BackGround = Instantiate(stageData.backGroundPrefab, Vector3.zero, Quaternion.identity);
+        BackGround.AddComponent<BoxCollider2D>();
+        BackGround.GetComponent<BoxCollider2D>().size = new Vector2(stageData.backgroundWidthSize / 32, stageData.backgroundHeightSize / 32);
+        BackGround.GetComponent<BoxCollider2D>().offset = Vector2.zero;
+        BackGround.GetComponent<BoxCollider2D>().isTrigger = true;
+
+        foreach (var enemy in stageData.enemies)
         {
-            enemyController.OnDeath += UIManager.Instance.ShowGameClearPanel;
+            for(int i = 0; i < enemy.count; i++)
+            {
+                GameObject newEnemy = Instantiate(enemy.enemyData.enemyPrefab, 
+                    new Vector2(UnityEngine.Random.Range(enemy.enemyData.spawnLeftLimit, enemy.enemyData.spawnRightLimit), 
+                    enemy.enemyData.enemyPrefab.transform.position.y),
+                    Quaternion.identity);
+                EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
+                enemyController.OnDeath += EnemyDeath;
+                if(enemy.enemyType == EnemyData.Type.Boss)
+                {
+                    enemyController.OnDeath += UIManager.Instance.ShowGameClearPanel;
+                }
+                enemyController.InitEnemy(enemy.enemyData);
+            }
         }
-    }
-    public void SpawnBoss()
-    {
-        GameObject BossEnemy = Instantiate(dragonPrefab, dragonPrefab.transform.position, Quaternion.identity);
-        EnemyController enemyController = BossEnemy.GetComponent<EnemyController>();
-        enemyController.OnDeath += EnemyDeath;
-        if (enemyController.Enemy is Dragon)
-        {
-            enemyController.OnDeath += UIManager.Instance.ShowGameClearPanel;
-        }
+        GameData.RemainedEnemyInStage = stageData.totalEnemyCount;
     }
     public void StopTime()
     {
@@ -53,6 +57,10 @@ public class GameManager : MonoBehaviour
     }
     public void EnemyDeath()
     {
-        //Add Score... 
+        GameData.RemainedEnemyInStage--;
+        if(GameData.RemainedEnemyInStage == 0)
+        {
+            OnClear.Invoke();
+        }
     }
 }

@@ -1,21 +1,15 @@
-public abstract class EnemyBase
-{   
-    public abstract string EnemyName { get; }
-    public abstract int MaxHP { get; }
+public class EnemyBase
+{
+    public EnemyData Data { get; private set;}
     public int CurrentHP { get; set; }
-    public abstract float ChaseRange { get; }
-    public abstract float AttackRange { get; }
-    public abstract int AttackDamage { get; }
-    public abstract float AttackCoolTime { get; }
-    public abstract float MoveSpeed { get; }
-    public enum State{Idle, Chase, CoolTime, Attack, Dead}
-    public State CurrentState { get; set; } = State.Idle;
-    public virtual void Init()
+    public EnemyData.State CurrentState { get; set; }
+    public void Init(EnemyData data)
     {
-        CurrentHP = MaxHP;
-        CurrentState = State.Idle;
+        this.Data = data;
+        CurrentHP = data.maxHP;
+        CurrentState = EnemyData.State.Idle;
     }
-    public virtual void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         CurrentHP -= damage;
     }

@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
     [SerializeField] private Slider PlayerHPSlider;
     [SerializeField] private TMP_Text HPText;
+    [SerializeField] private TMP_Text StageText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gameClearPanel;
     private void Awake()
@@ -20,6 +21,8 @@ public class UIManager : MonoBehaviour
         playerController.OnBirth += HPSliderInit;
         playerController.OnHPChanged += SetPlayerHP;
         playerController.OnDeath += ShowGameOverPanel;
+        GameManager.Instance.OnClear += ShowGameClearPanel;
+        SetStageText();
     }
     public void HPSliderInit(int max)
     {
@@ -44,6 +47,17 @@ public class UIManager : MonoBehaviour
     public void ShowGameOverPanel()
     {
         gameOverPanel.SetActive(true);
+    }
+    public void SetStageText()
+    {
+        if (GameData.SelectedStage == 0)
+        {
+            StageText.text = "Elite";
+        }
+        else if(GameData.SelectedStage == 1)
+        {
+            StageText.text = "Boss";
+        }
     }
     private void OnDestory()
     {

@@ -102,7 +102,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.1}
+  m_Offset: {x: 6, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -202,6 +202,7 @@ GameObject:
   - component: {fileID: 2650167607596907150}
   - component: {fileID: 7190685541925665369}
   - component: {fileID: 3541918548960724800}
+  - component: {fileID: 3135972820513200977}
   m_Layer: 0
   m_Name: BossDragon
   m_TagString: Enemy
@@ -236,7 +237,7 @@ Animator:
   m_GameObject: {fileID: 1886921123244102641}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6831d77f2efe03640b5f034f0b7794da, type: 2}
+  m_Controller: {fileID: 9100000, guid: becf555259dab794680fd77fa1b12ce0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -261,6 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   enemyType: 2
+  HPCanvas: {fileID: 5118997437037867711}
   HPSlider: {fileID: 2820662585969945718}
   HPText: {fileID: 4221697980211175493}
   EnemyAttackCollision: {fileID: 582707759801319418}
@@ -298,7 +300,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.53647995, y: 1.4545302}
+  m_Offset: {x: -0.5522177, y: 1.4545302}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -308,7 +310,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.8596659, y: 2.9410849}
+  m_Size: {x: 3.9310555, y: 2.9410849}
   m_EdgeRadius: 0
 --- !u!212 &3541918548960724800
 SpriteRenderer:
@@ -359,7 +361,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_Sprite: {fileID: 1740535230, guid: 0e0c49562085468e8b180291b8414bf8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 8, y: 8}
@@ -368,6 +370,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &3135972820513200977
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886921123244102641}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2741360163895981410
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c56d2cff7ea763e43bf97552373fcac2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 6200000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 349116
+  packageName: 28 City Backgrounds Pixel Art
+  packageVersion: 1.2
+  assetPath: Assets/City Backgrounds Collection/Prefabs/Materials/NoFriction.physicsMaterial2D
+  uploadId: 850016

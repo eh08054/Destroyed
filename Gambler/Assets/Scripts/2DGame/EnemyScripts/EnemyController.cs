@@ -3,14 +3,12 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyController : MonoBehaviour
 {
-    enum EnemyType { Goblin, Orc, Dragon}
     private SpriteRenderer body;
     private Rigidbody2D rb;
-    [SerializeField] private EnemyType enemyType;
+    [SerializeField] private GameObject HPCanvas;
     [SerializeField] private Slider HPSlider;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private GameObject EnemyAttackCollision;
@@ -27,55 +25,65 @@ public class EnemyController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         body = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        Enemy = enemyType switch
-        {
-            EnemyType.Goblin => new Goblin(),
-            EnemyType.Orc => new Orc(),
-            EnemyType.Dragon => new Dragon(),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        Enemy = new EnemyBase();
     }
     private void Start()
     {
-        Enemy.Init();
-        HPSlider.maxValue = Enemy.MaxHP;
+        playerTransform = GameManager.Instance.Player.transform;
+    }
+    public void InitEnemy(EnemyData enemyData)
+    {
+        Enemy.Init(enemyData);
+        HPSlider.maxValue = Enemy.Data.maxHP;
         HPSlider.value = HPSlider.maxValue;
         HPText.text = HPSlider.value + "/" + HPSlider.maxValue;
-        AttackDamage = Enemy.AttackDamage;
-        playerTransform = GameManager.Instance.Player.transform;
-        body.flipX = moveDirection < 0;
+        AttackDamage = Enemy.Data.attackDamage;
     }
     // Update is called once per frame
     private void Update()
     {
-        if (playerTransform.gameObject.activeSelf)
+        if (playerTransform.gameObject.activeSelf && Enemy.CurrentState != EnemyData.State.Dead)
         {
             float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
             UpdateState(distanceToPlayer);
-            if(Enemy.CurrentState == EnemyBase.State.Idle)
+            moveDirection = (playerTransform.position.x - transform.position.x > 0) ? 1f : -1f;
+            CheckDirection();
+            if (Enemy.CurrentState == EnemyData.State.Idle)
             {
                 Move();
             }
-            else if(Enemy.CurrentState == EnemyBase.State.Chase)
+            else if(Enemy.CurrentState == EnemyData.State.Chase)
             {
                 Chase();
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
             }
             ApplyAnimation(Enemy.CurrentState);
         }
     }
+    private void CheckDirection()
+    {
+        Vector3 scale = transform.localScale;
+        scale.x = moveDirection > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        transform.localScale = scale;
+
+        Vector3 hpCanvasScale = HPCanvas.transform.localScale;
+        hpCanvasScale.x = moveDirection > 0 ? Mathf.Abs(hpCanvasScale.x) : -Mathf.Abs(hpCanvasScale.x);
+        HPCanvas.transform.localScale = hpCanvasScale;
+    }
     private void Move()
     {
-        rb.linearVelocity = new Vector2(moveDirection * Enemy.MoveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * Enemy.Data.moveSpeed, rb.linearVelocity.y);
     }
     private void Chase()
     {
-        moveDirection = (playerTransform.position.x - transform.position.x > 0) ? 1f : -1f;
-        body.flipX = moveDirection < 0;
-        rb.linearVelocity = new Vector2(moveDirection * Enemy.MoveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * Enemy.Data.moveSpeed, rb.linearVelocity.y);
     }
-    private void ApplyAnimation(EnemyBase.State currentState)
+    private void ApplyAnimation(EnemyData.State currentState)
     {
-        if(currentState == EnemyBase.State.Chase)
+        if(currentState == EnemyData.State.Chase)
         {
             animator.SetBool("IsChase", true);
         }
@@ -83,7 +91,7 @@ public class EnemyController : MonoBehaviour
         {
             animator.SetBool("IsChase", false);
         }
-        if (currentState == EnemyBase.State.CoolTime)
+        if (currentState == EnemyData.State.CoolTime)
         {
             animator.SetBool("IsCool", true);
         }
@@ -91,39 +99,39 @@ public class EnemyController : MonoBehaviour
         {
             animator.SetBool("IsCool", false);
         }
-        if (currentState == EnemyBase.State.Attack)
+        if (currentState == EnemyData.State.Attack)
         {
             animator.SetTrigger("Attack");
         }
     }
     public void UpdateState(float distance)
     {
-        if (distance <= Enemy.AttackRange)
+        if (distance <= Enemy.Data.attackRange)
         {
-            if (Time.time - lastAttackTime >= Enemy.AttackCoolTime)
+            if (Time.time - lastAttackTime >= Enemy.Data.attackCoolTime)
             {
-                ChangeState(EnemyBase.State.Attack);
+                ChangeState(EnemyData.State.Attack);
                 lastAttackTime = Time.time;
             }
             else
             {
-                ChangeState(EnemyBase.State.CoolTime);
+                ChangeState(EnemyData.State.CoolTime);
             }
         }
-        else if(distance <= Enemy.ChaseRange)
+        else if(distance <= Enemy.Data.chaseRange)
         {
-            ChangeState(EnemyBase.State.Chase);
+            ChangeState(EnemyData.State.Chase);
         }
         else
         {
-            ChangeState(EnemyBase.State.Idle);
+            ChangeState(EnemyData.State.Idle);
         }
     }
     public void AttackEnd()
     {
-        ChangeState(EnemyBase.State.Idle);
+        ChangeState(EnemyData.State.Idle);
     }
-    public void ChangeState(EnemyBase.State state)
+    public void ChangeState(EnemyData.State state)
     {
         Enemy.CurrentState = state;
     }
@@ -137,6 +145,7 @@ public class EnemyController : MonoBehaviour
                 Enemy.TakeDamage(playerController.AttackDamage);
                 if(Enemy.CurrentHP <= 0)
                 {
+                    Enemy.CurrentState = EnemyData.State.Dead;
                     PlayDeathAnimation();
                 }
             }
@@ -147,7 +156,7 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall"))
         {
             moveDirection = -moveDirection;
-            body.flipX = !body.flipX;
+            CheckDirection();
         }
     }
     private IEnumerator ChangeColor()
@@ -172,5 +181,15 @@ public class EnemyController : MonoBehaviour
     {
         Destroy(gameObject);
         OnDeath.Invoke();
+    }
+    private void OnDrawGizmos()
+    {
+        // 시야 범위
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, Enemy.Data.chaseRange);
+
+        // 공격 범위
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, Enemy.Data.attackRange);
     }
 }

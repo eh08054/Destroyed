@@ -9,8 +9,4 @@ public class EnemyBase
         CurrentHP = data.maxHP;
         CurrentState = EnemyData.State.Idle;
     }
-    public void TakeDamage(int damage)
-    {
-        CurrentHP -= damage;
-    }
 }

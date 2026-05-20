@@ -21,13 +21,13 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 4176362632249098406, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
+      value: {fileID: 4176362632249098406, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
     - time: 0.083333336
-      value: {fileID: -3696019449777573715, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
+      value: {fileID: -3696019449777573715, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
     - time: 0.16666667
-      value: {fileID: 6099374761294450104, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
+      value: {fileID: 6099374761294450104, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
     - time: 0.25
-      value: {fileID: -1817706105750108133, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
+      value: {fileID: -1817706105750108133, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -50,10 +50,10 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 4176362632249098406, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
-    - {fileID: -3696019449777573715, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
-    - {fileID: 6099374761294450104, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
-    - {fileID: -1817706105750108133, guid: b3015e62702fe1b40a388cc90ae509ab, type: 3}
+    - {fileID: 4176362632249098406, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
+    - {fileID: -3696019449777573715, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
+    - {fileID: 6099374761294450104, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
+    - {fileID: -1817706105750108133, guid: 908ca20828e95e549adb4b310ff35655, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -79,17 +79,24 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0
-    functionName: AttackHitboxOn
+  - time: 0.083333336
+    functionName: PlayPaticle
     data: 
-    objectReferenceParameter: {fileID: 2656376013994101240, guid: db0e325aaf8e9604ab93adac6db5e81d, type: 3}
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.33333334
-    functionName: AttackHitboxOff
+  - time: 0.083333336
+    functionName: AttackHitbox_2_On
     data: 
-    objectReferenceParameter: {fileID: 2656376013994101240, guid: db0e325aaf8e9604ab93adac6db5e81d, type: 3}
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.25
+    functionName: AttackHitbox_2_Off
+    data: 
+    objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

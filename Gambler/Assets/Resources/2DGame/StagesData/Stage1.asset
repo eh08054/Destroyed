@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Stage1
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageNum: 0
-  stageName: 
-  totalEnemyCount: 10
-  backGroundPrefab: {fileID: 39498890455853477, guid: 77372ebcb71c0bd46875a883d4a2fd3c, type: 3}
-  backgroundWidthSize: 1728
-  backgroundHeightSize: 324
+  stageName: Stage 1
+  totalEnemyCount: 13
+  backGroundPrefab: {fileID: 4246222773208558604, guid: 255986c7ed1d70d4cb3bba86e110df9a, type: 3}
+  backgroundWidthSize: 2500
+  backgroundHeightSize: 1080
   backgroundPPU: 32
-  PlayerSpawnPosition: {x: 0, y: 0, z: 0}
+  PlayerSpawnPosition: {x: 0, y: 1.318604, z: 0}
   enemies:
   - enemyData: {fileID: 11400000, guid: a75527ec2f2a18e4c97dd221b8c8f589, type: 2}
     enemyType: 1
+    count: 3
+  - enemyData: {fileID: 11400000, guid: 68614a95055b2df4aa2ea23c7b269b02, type: 2}
+    enemyType: 0
     count: 10

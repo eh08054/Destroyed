@@ -219,7 +219,7 @@ Transform:
   m_GameObject: {fileID: 1886921123244102641}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: -3, z: 0}
+  m_LocalPosition: {x: 4, y: 1.318604, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -261,7 +261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297ded0c9e3183642979eb3f63ed09aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  enemyType: 2
   HPCanvas: {fileID: 5118997437037867711}
   HPSlider: {fileID: 2820662585969945718}
   HPText: {fileID: 4221697980211175493}
@@ -358,7 +357,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1740535230, guid: 0e0c49562085468e8b180291b8414bf8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

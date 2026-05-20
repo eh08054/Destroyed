@@ -17,15 +17,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField]private float playerSpeed = 1f;
     [SerializeField]private float dashSpeed = 50f;
     [SerializeField]private float jumpForce = 10f;
-    [SerializeField] private GameObject attackCollision;
+    [SerializeField] private GameObject attackHitbox1;
+    [SerializeField] private GameObject attackHitbox2;
     private bool isWalking;
     private bool isJumping;
     private bool isDashing;
+    private bool isAttacking;
+    private bool isDoubleJumping;
     private bool canCombo = false; 
 
     public event Action<int> OnBirth;
     public event Action<int> OnHPChanged;
     public event Action OnDeath;
+
     public int AttackDamage { get; private set; }
     private void Awake()
     {
@@ -48,33 +52,45 @@ public class PlayerController : MonoBehaviour
         moveDirection = 1f;
         isWalking = false;
         isJumping = false;
+        isDoubleJumping = false;
+        isAttacking = false;
     }
     private void Update()
     {
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (!stateInfo.IsName("Jab"))
+        {
+            canCombo = false;
+        }     
         isWalking = false;
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if(canCombo)
             {
                 animator.SetTrigger("ComboAttacking");
                 canCombo = false;
+                AudioManager.instance.PlaySFX(SFX.Slash);
             }
-            else
+            else if(!isAttacking)
             {
                 animator.SetTrigger("Attacking");
+                AudioManager.instance.PlaySFX(SFX.Jab);
             }
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && !isAttacking)
         {
             animator.SetTrigger("Dashing");
             StartCoroutine(Dash());
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Jump();
+            if (!isDoubleJumping)
+            {
+                Jump();
+            }
         }
-        if (!isDashing)
+        if (!isDashing && !isAttacking)
         {
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
@@ -112,23 +128,44 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+        if(isJumping == true)
+        {
+            isDoubleJumping = true;
+        }
         isJumping = true;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Jump");
     }
-    public void AttackHitboxOn()
+    public void AttackHitbox_1_On()
     {
-        attackCollision.SetActive(true);
+        attackHitbox1.SetActive(true);
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        isAttacking = true;
     }
-    public void AttackHitboxOff()
+    public void AttackHitbox_1_Off()
     {
-        attackCollision.SetActive(false);
+        attackHitbox1.SetActive(false);
+        isAttacking = false;
+    }
+    public void AttackHitbox_2_On()
+    {
+        attackHitbox1.SetActive(false);
+        attackHitbox2.SetActive(true);
+        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        isAttacking = true;
+    }
+    public void AttackHitbox_2_Off()
+    {
+        attackHitbox2.SetActive(false);
+        isAttacking = false;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        Debug.Log(rb.linearVelocity.y);
+        if (collision.gameObject.CompareTag("Ground") && Mathf.Abs(rb.linearVelocity.y) < 0.1f)
         {
             isJumping = false;
+            isDoubleJumping = false;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)

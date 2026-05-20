@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class CameraController : MonoBehaviour
 {
     private Transform playerTransform;
@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     private float maxY;
     private float cameraHalfHeight;
     private float cameraHalfWidth;
+    private float cameraThreshold = 5f;
     private void Start()
     {
         mapCollider = GameManager.Instance.BackGround.GetComponent<BoxCollider2D>();
@@ -20,15 +21,24 @@ public class CameraController : MonoBehaviour
         maxX = mapCollider.bounds.max.x - cameraHalfWidth;
         minY = mapCollider.bounds.min.y + cameraHalfHeight;
         maxY = mapCollider.bounds.max.y - cameraHalfHeight;
-
+        Debug.Log(minY + " " + maxY + " " + cameraHalfHeight);
         float playerFeetY = playerTransform.position.y;
         float cameraY = playerFeetY + cameraHalfHeight;
-        transform.position = new Vector3(transform.position.x, playerFeetY + (mapCollider.bounds.max.y - mapCollider.bounds.min.y) / 2, transform.position.z);
+        transform.position = new Vector3(transform.position.x, cameraY, transform.position.z);
     }
     private void LateUpdate()
     {
         float clampedX = Mathf.Clamp(playerTransform.position.x, minX, maxX);
-        transform.position = new Vector3(clampedX, transform.position.y,
-            transform.position.z);
+        float clampedY;
+        if (playerTransform.position.y > cameraThreshold && SceneManager.GetActiveScene().name != "MapScene")
+        {
+            clampedY = Mathf.Clamp(minY + playerTransform.position.y - cameraThreshold, minY, maxY);
+        }
+        else
+        {
+            clampedY = Mathf.Clamp(playerTransform.position.y, minY, maxY);
+        }
+            transform.position = new Vector3(clampedX, clampedY,
+                transform.position.z);
     }
 }

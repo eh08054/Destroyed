@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -9,8 +10,11 @@ public class GameManager : MonoBehaviour
     public GameObject Player { get; private set; }
     public GameObject BackGround { get; private set; }
     public GameData GameData { get; private set; }
+    [field: SerializeField] public SceneChanger SceneChanger { get; private set; }
+    [SerializeField] private GameObject Ground;
     [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
+    private int PPU = 32;
 
     public event Action OnClear;
     private void Awake()
@@ -28,9 +32,10 @@ public class GameManager : MonoBehaviour
         Player = Instantiate(playerPrefab, stageData.PlayerSpawnPosition, Quaternion.identity);
         BackGround = Instantiate(stageData.backGroundPrefab, Vector3.zero, Quaternion.identity);
         BackGround.AddComponent<BoxCollider2D>();
-        BackGround.GetComponent<BoxCollider2D>().size = new Vector2(stageData.backgroundWidthSize / 32, stageData.backgroundHeightSize / 32);
-        BackGround.GetComponent<BoxCollider2D>().offset = Vector2.zero;
+        BackGround.GetComponent<BoxCollider2D>().size = new Vector2(stageData.backgroundWidthSize / PPU, stageData.backgroundHeightSize / PPU);
+        BackGround.GetComponent<BoxCollider2D>().offset = new Vector2(0, stageData.backgroundHeightSize / PPU / 2);
         BackGround.GetComponent<BoxCollider2D>().isTrigger = true;
+        Ground.transform.localScale = new Vector3(stageData.backgroundWidthSize / PPU / Ground.GetComponent<SpriteRenderer>().size.x, 1f, 1f);
 
         foreach (var enemy in stageData.enemies)
         {

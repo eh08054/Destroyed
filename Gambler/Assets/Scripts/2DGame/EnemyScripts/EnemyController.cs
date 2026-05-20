@@ -31,6 +31,7 @@ public class EnemyController : MonoBehaviour
     {
         playerTransform = GameManager.Instance.Player.transform;
     }
+
     public void InitEnemy(EnemyData enemyData)
     {
         Enemy.Init(enemyData);
@@ -46,7 +47,7 @@ public class EnemyController : MonoBehaviour
         {
             float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
             UpdateState(distanceToPlayer);
-            moveDirection = (playerTransform.position.x - transform.position.x > 0) ? 1f : -1f;
+            moveDirection = (playerTransform.position.x - transform.position.x > 0f) ? 1f : -1f;
             CheckDirection();
             if (Enemy.CurrentState == EnemyData.State.Idle)
             {
@@ -137,27 +138,24 @@ public class EnemyController : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("PlayerAttack"))
-        {
-            PlayerController playerController = collision.GetComponentInParent<PlayerController>();
-            if (playerController != null)
-            {
-                Enemy.TakeDamage(playerController.AttackDamage);
-                if(Enemy.CurrentHP <= 0)
-                {
-                    Enemy.CurrentState = EnemyData.State.Dead;
-                    PlayDeathAnimation();
-                }
-            }
-            HPSlider.value = Enemy.CurrentHP;
-            HPText.text = HPSlider.value + "/" + HPSlider.maxValue;
-            StartCoroutine("ChangeColor");
-        }
         if (collision.gameObject.CompareTag("Wall"))
         {
             moveDirection = -moveDirection;
             CheckDirection();
         }
+    }
+    public void TakeDamage(int damage)
+    {
+        Enemy.CurrentHP -= damage;
+        if (Enemy.CurrentHP <= 0 && Enemy.CurrentState != EnemyData.State.Dead)
+        {
+            Enemy.CurrentState = EnemyData.State.Dead;
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            PlayDeathAnimation();
+        }
+        HPSlider.value = Enemy.CurrentHP;
+        HPText.text = HPSlider.value + "/" + HPSlider.maxValue;
+        StartCoroutine(ChangeColor());
     }
     private IEnumerator ChangeColor()
     {
@@ -179,6 +177,7 @@ public class EnemyController : MonoBehaviour
     }
     public void EnemyDeath()
     {
+        Enemy.Data.dropTable.ItemDrop(transform.position);
         Destroy(gameObject);
         OnDeath.Invoke();
     }

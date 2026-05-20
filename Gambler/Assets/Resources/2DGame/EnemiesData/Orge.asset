@@ -22,3 +22,4 @@ MonoBehaviour:
   spawnLeftLimit: -27
   spawnRightLimit: 27
   enemyPrefab: {fileID: 8717428289968952444, guid: b32d20a4361546044ad78e029151c9b2, type: 3}
+  dropTable: {fileID: 11400000, guid: f6b3fb51f0dce9949b818b09d02827bf, type: 2}

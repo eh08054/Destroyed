@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
     }
     public void ShowGameClearPanel()
     {
-        StartCoroutine("ShowGamePanelDelay");
+        StartCoroutine(ShowGamePanelDelay());
     }
     private IEnumerator ShowGamePanelDelay()
     {

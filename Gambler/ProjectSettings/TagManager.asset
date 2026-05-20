@@ -12,6 +12,7 @@ TagManager:
   - PlayerAttack
   - Sword
   - Wall
+  - PlayerAttack2
   layers:
   - Default
   - TransparentFX
@@ -19,8 +20,8 @@ TagManager:
   - Attack
   - Water
   - UI
-  - 
-  - 
+  - Interactable
+  - Player
   - 
   - 
   - 

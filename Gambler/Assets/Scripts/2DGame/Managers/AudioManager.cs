@@ -15,6 +15,7 @@ public enum SFX
     Slash_Hit,
     Jab,
     Jab_Hit,
+    Shot,
 }
 
 [System.Serializable]
@@ -157,7 +158,4 @@ public class AudioManager : MonoBehaviour
         clip.PlayedNum--;
         audioSourcePool.Enqueue(source);
     }
-    
-
-
 }

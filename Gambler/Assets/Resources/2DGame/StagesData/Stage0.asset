@@ -15,9 +15,9 @@ MonoBehaviour:
   stageNum: 0
   stageName: MapStage
   totalEnemyCount: 0
-  backGroundPrefab: {fileID: 2560018400618209007, guid: d1b0a7b182bffdb44b3f2d7e599e9066, type: 3}
+  backgroundPrefab: {fileID: 2560018400618209007, guid: d1b0a7b182bffdb44b3f2d7e599e9066, type: 3}
   backgroundWidthSize: 1672
   backgroundHeightSize: 284
   backgroundPPU: 32
-  PlayerSpawnPosition: {x: 0, y: 1, z: 0}
+  PlayerSpawnPosition: {x: 0, y: 1.2, z: 0}
   enemies: []

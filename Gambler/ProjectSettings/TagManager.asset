@@ -13,21 +13,22 @@ TagManager:
   - Sword
   - Wall
   - PlayerAttack2
+  - Platform
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Attack
+  - EnemyAttack
   - Water
   - UI
   - Interactable
   - Player
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Background
+  - Enemy
+  - PlayerAttack
+  - Platform
+  - Ground
+  - Minimap
   - 
   - 
   - 

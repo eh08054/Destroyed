@@ -12,15 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f80ce20d11cc98f4d906e649948f9463, type: 3}
   m_Name: Stage2
   m_EditorClassIdentifier: Assembly-CSharp::StageData
-  stageNum: 1
+  stageNum: 2
   stageName: Stage 2
-  totalEnemyCount: 1
-  backGroundPrefab: {fileID: 4246222773208558604, guid: 255986c7ed1d70d4cb3bba86e110df9a, type: 3}
-  backgroundWidthSize: 2500
+  totalEnemyCount: 12
+  backgroundPrefab: {fileID: 2019304612854202477, guid: 49b204633e1439d479feaf9a5be5cac6, type: 3}
+  backgroundWidthSize: 5000
   backgroundHeightSize: 1080
   backgroundPPU: 32
-  PlayerSpawnPosition: {x: 0, y: 1.318604, z: 0}
+  PlayerSpawnPosition: {x: -15, y: 4.5, z: 0}
   enemies:
-  - enemyData: {fileID: 11400000, guid: 870c8ea957d01ef4d9d2429885486500, type: 2}
-    enemyType: 2
-    count: 1
+  - enemyData: {fileID: 11400000, guid: 68614a95055b2df4aa2ea23c7b269b02, type: 2}
+    enemyType: 0
+    count: 7
+  - enemyData: {fileID: 11400000, guid: b754b5bb59bbd6a47bdfbf2cbae8e0c4, type: 2}
+    enemyType: 0
+    count: 5

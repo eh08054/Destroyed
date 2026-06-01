@@ -4,8 +4,14 @@ public class Door : MonoBehaviour, IInteractable
 {
     [SerializeField] private Sprite openSprite;
     [SerializeField] private Sprite closedSprite;
-    public string PromptContent { get; private set; } = "[E] 문 열기";
+    [SerializeField] private int nextStage;
+    [SerializeField] private string promptContent;
+    public string PromptContent => promptContent;
     private bool isOpened = false;
+    public void OnEnable()
+    {
+        GameManager.Instance.OnClear += ClearDoor;
+    }
     public void OnInteractionEntered()
     {
 
@@ -18,28 +24,49 @@ public class Door : MonoBehaviour, IInteractable
     {
         if (keyCode == KeyCode.E)
         {
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
             if (!isOpened)
             {
-                spriteRenderer.sprite = openSprite;
-                isOpened = true;
-                PromptContent = "[E] 문 닫기" + "\n" + "[F] 나가기";
+                OpenDoor();
+                promptContent = "[E] 문 닫기" + "\n" + "[F] 나가기";
+
             }
             else
             {
-                spriteRenderer.sprite = closedSprite;
-                isOpened = false;
-                PromptContent = "[E] 문 열기";
+                CloseDoor();
+                promptContent = "[E] 문 열기";
             }
         }
         else if(keyCode == KeyCode.F)
         {
             if (isOpened)
             {
+                GameData.SelectedStage = nextStage;
                 GameManager.Instance.SceneChanger.SceneChange("GameScene");
             }
         }
     }
+    public void OnDisable()
+    {
+        GameManager.Instance.OnClear -= ClearDoor;
+    }
+    public void OpenDoor()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = openSprite;
+        isOpened = true;
+    }
+    public void CloseDoor()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = closedSprite;
+        isOpened = false;
+    }
+    public void ClearDoor()
+    {
+        OpenDoor();
+        promptContent = "[F] 다음 스테이지로 이동";
+        KeyCodes = new KeyCode[] { KeyCode.F };
+    }
     public bool CanInteract { get; } = true;
-    public KeyCode[] KeyCodes { get; } = { KeyCode.E, KeyCode.F };
+    public KeyCode[] KeyCodes { get; private set; } = { KeyCode.E, KeyCode.F };
 }

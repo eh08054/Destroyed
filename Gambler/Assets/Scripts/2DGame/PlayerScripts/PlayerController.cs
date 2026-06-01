@@ -2,40 +2,47 @@ using Assets.PixelFantasy.Common.Scripts;
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    enum PlayerType { SwordsMan, Sorcerer, AxeMan}
+    enum PlayerType { SwordsMan, Sorcerer, AxeMan }
     private Rigidbody2D rb;
     public PlayerBase player;
+    public GameObject currentOneWayPlatform;
     [SerializeField] private PlayerType playerType;
     private Animator animator;
     private Ghost ghost;
     float moveDirection = 0f;
-    [SerializeField]private float playerSpeed = 1f;
-    [SerializeField]private float dashSpeed = 50f;
-    [SerializeField]private float jumpForce = 10f;
+    [SerializeField] private float playerSpeed = 1f;
+    [SerializeField] private float dashSpeed = 50f;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private float gravityScale;
+    [SerializeField] private float fallingGravityScale;
+    [SerializeField] private int maxDashCount = 2;
+    [SerializeField] private float dashCoolTime = 0.4f;
     [SerializeField] private GameObject attackHitbox1;
     [SerializeField] private GameObject attackHitbox2;
+    [SerializeField] private GameObject firePosition;
+    [SerializeField] private LayerMask enemyLayer;
     private bool isWalking;
     private bool isJumping;
-    private bool isDashing;
     private bool isAttacking;
     private bool isDoubleJumping;
-    private bool canCombo = false; 
+    private bool isDashing;
+    private bool canCombo = false;
+    private int currentDashCount;
 
-    public event Action<int> OnBirth;
     public event Action<int> OnHPChanged;
     public event Action OnDeath;
-
+    private Coroutine dashCoroutine;
     public int AttackDamage { get; private set; }
     private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         ghost = GetComponent<Ghost>();
+        //GameManager.Input.keyAction -= OnKeyboard;
+        //GameManager.Input.keyAction += OnKeyboard;
         player = playerType switch
         {
             PlayerType.SwordsMan => new SwordsMan(),
@@ -47,45 +54,65 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         player.Init();
+        player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Sword"));
+        player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Gun"));
+        player.ChangeWeapon(player.ownedWeapons[0]);
         AttackDamage = player.AttackDamage;
-        OnBirth?.Invoke(player.MaxHP);
         moveDirection = 1f;
         isWalking = false;
         isJumping = false;
         isDoubleJumping = false;
         isAttacking = false;
+        isDashing = false;
+        currentDashCount = 0;
+        rb.gravityScale = gravityScale;
     }
     private void Update()
     {
+        isWalking = false;
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if (!stateInfo.IsName("Jab"))
         {
             canCombo = false;
-        }     
-        isWalking = false;
-
+        }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            if(canCombo)
+            if (player.currentWeapon.weaponType == WeaponData.WeaponType.Sword)
             {
-                animator.SetTrigger("ComboAttacking");
-                canCombo = false;
-                AudioManager.instance.PlaySFX(SFX.Slash);
+                if (canCombo)
+                {
+                    animator.SetTrigger("ComboAttacking");
+                    canCombo = false;
+                    AudioManager.instance.PlaySFX(SFX.Slash);
+                }
+                else if (!isAttacking)
+                {
+                    animator.SetTrigger("Attacking");
+                    AudioManager.instance.PlaySFX(SFX.Jab);
+                }
             }
-            else if(!isAttacking)
+            else if(player.currentWeapon.weaponType == WeaponData.WeaponType.Gun)
             {
-                animator.SetTrigger("Attacking");
-                AudioManager.instance.PlaySFX(SFX.Jab);
+                animator.SetTrigger("Shooting");
+                AudioManager.instance.PlaySFX(SFX.Shot);
+                MyEffectManager.Instance.CreateSpriteEffect(gameObject, "FireMuzzleM", 0, firePosition.transform);
+                Projectile();
             }
         }
-        if (Input.GetKeyDown(KeyCode.X) && !isAttacking)
+        if (Input.GetKeyDown(KeyCode.X) && !isAttacking && currentDashCount < maxDashCount)
         {
             animator.SetTrigger("Dashing");
-            StartCoroutine(Dash());
+            if (dashCoroutine != null)
+                StopCoroutine(dashCoroutine);
+            dashCoroutine = StartCoroutine(Dash());
         }
         if (Input.GetKeyDown(KeyCode.C))
         {
-            if (!isDoubleJumping)
+            if (Input.GetKey(KeyCode.DownArrow) && !isJumping && !isDoubleJumping)
+            {
+                DownJump();
+            }
+            else if (!isDoubleJumping)
             {
                 Jump();
             }
@@ -103,10 +130,25 @@ public class PlayerController : MonoBehaviour
                 Move();
             }
         }
+        if (isJumping || isDoubleJumping)
+        {
+            if(rb.linearVelocity.y >= 0)
+            {
+                rb.gravityScale = gravityScale;
+            }
+            else
+            {
+                rb.gravityScale = fallingGravityScale;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            ChangeWeapon(player.ownedWeapons[++player.currentWeaponIndex % 2]);
+        }
         animator.SetBool("IsJumping", isJumping);
         animator.SetBool("IsWalking", isWalking);
     }
-    void Move()
+    private void Move()
     {
         isWalking = true;
         Vector3 scale = transform.localScale;
@@ -118,28 +160,69 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Dash()
     {
         isDashing = true;
+        currentDashCount++;
         rb.linearVelocity = new Vector2(moveDirection * dashSpeed, rb.linearVelocity.y);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Dash");
         ghost.makeGhost = true;
         yield return new WaitForSeconds(0.4f);
         isDashing = false;
         ghost.makeGhost = false;
+
+        yield return new WaitForSeconds(dashCoolTime);
+        currentDashCount = 0;
     }
 
-    void Jump()
+    private void Jump()
     {
-        if(isJumping == true)
+        if (isJumping)
         {
             isDoubleJumping = true;
         }
-        isJumping = true;
+        else
+        {
+            isJumping = true;
+        }
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Jump");
+    }
+    private void DownJump()
+    {
+        if (currentOneWayPlatform == null) { return; }
+        isJumping = true;
+        StartCoroutine(DisableCollision());
+    }
+    private void ChangeWeapon(WeaponData weaponData)
+    {
+        animator.runtimeAnimatorController = weaponData.animatorOverride;
+        player.ChangeWeapon(weaponData);
+    }
+    private void Projectile()
+    {
+        RaycastHit2D bullet = Physics2D.Raycast(firePosition.transform.position, Vector2.right * moveDirection, 3f, enemyLayer);
+        if(bullet.collider != null)
+        {
+            EnemyController enemy = bullet.collider.gameObject.GetComponent<EnemyController>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(10);
+            }
+        }
+    }
+    private IEnumerator DisableCollision()
+    {
+        BoxCollider2D platformCollider = currentOneWayPlatform.GetComponent<BoxCollider2D>();
+        BoxCollider2D playerCollider = gameObject.GetComponent<BoxCollider2D>();
+        Physics2D.IgnoreCollision(platformCollider, playerCollider);
+        yield return new WaitForSeconds(0.5f);
+        Physics2D.IgnoreCollision(platformCollider, playerCollider, false);
     }
     public void AttackHitbox_1_On()
     {
         attackHitbox1.SetActive(true);
-        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        if (!isJumping && !isDoubleJumping)
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
         isAttacking = true;
     }
     public void AttackHitbox_1_Off()
@@ -151,7 +234,10 @@ public class PlayerController : MonoBehaviour
     {
         attackHitbox1.SetActive(false);
         attackHitbox2.SetActive(true);
-        rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        if (!isJumping && !isDoubleJumping)
+        {
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
         isAttacking = true;
     }
     public void AttackHitbox_2_Off()
@@ -161,11 +247,37 @@ public class PlayerController : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(rb.linearVelocity.y);
-        if (collision.gameObject.CompareTag("Ground") && Mathf.Abs(rb.linearVelocity.y) < 0.1f)
+        if (collision.gameObject.CompareTag("Platform"))
         {
-            isJumping = false;
-            isDoubleJumping = false;
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                if (contact.normal.y > 0.5f)
+                {
+                    isJumping = false;
+                    isDoubleJumping = false;
+                    currentOneWayPlatform = collision.gameObject;
+                    break;
+                }
+            }
+        }
+        else if (collision.gameObject.CompareTag("Ground"))
+        {
+            foreach (ContactPoint2D contact in collision.contacts)
+            {
+                if (contact.normal.y > 0.5f)
+                {
+                    isJumping = false;
+                    isDoubleJumping = false;
+                    break;
+                }
+            }
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            currentOneWayPlatform = null;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -196,4 +308,9 @@ public class PlayerController : MonoBehaviour
         OnDeath?.Invoke();
     }
 
+    public void HealPlayer(int amount)
+    {
+        player.HealPlayer(amount);
+        OnHPChanged.Invoke(player.CurrentHP);
+    }
 }

@@ -11,18 +11,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text StageText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gameClearPanel;
+    private PlayerController playerController;
     private void Awake()
     {
         Instance = this;
     }
     private void Start()
     {
-        PlayerController playerController = GameManager.Instance.Player.GetComponent<PlayerController>();
-        playerController.OnBirth += HPSliderInit;
+        SetStageText();
+        playerController = GameManager.Instance.Player.GetComponent<PlayerController>();
         playerController.OnHPChanged += SetPlayerHP;
         playerController.OnDeath += ShowGameOverPanel;
         GameManager.Instance.OnClear += ShowGameClearPanel;
-        SetStageText();
     }
     public void HPSliderInit(int max)
     {
@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour
     }
     public void ShowGameClearPanel()
     {
-        StartCoroutine(ShowGamePanelDelay());
+        //StartCoroutine(ShowGamePanelDelay());
     }
     private IEnumerator ShowGamePanelDelay()
     {
@@ -52,17 +52,17 @@ public class UIManager : MonoBehaviour
     {
         if (GameData.SelectedStage == 0)
         {
-            StageText.text = "Elite";
+            StageText.text = "SHELTER";
         }
         else if(GameData.SelectedStage == 1)
         {
-            StageText.text = "Boss";
+            StageText.text = "STAGE 1";
         }
     }
-    private void OnDestory()
+    private void OnDisable()
     {
-        PlayerController playerController = GameManager.Instance.Player.GetComponent<PlayerController>();
-        playerController.OnBirth -= HPSliderInit;
         playerController.OnHPChanged -= SetPlayerHP;
+        playerController.OnDeath -= ShowGameOverPanel;
+        GameManager.Instance.OnClear -= ShowGameClearPanel;
     }
 }

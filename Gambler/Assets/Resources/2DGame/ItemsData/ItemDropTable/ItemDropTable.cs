@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class ItemDropTable : ScriptableObject
 {
     [System.Serializable]
-    public class Item
+    public class DropItem
     {
-        public ItemData item;
+        public Item _item;
         public int weight;
     }
 
@@ -18,27 +18,27 @@ public class ItemDropTable : ScriptableObject
     [SerializeField] private int expAmount;
 
     [Header("»Æ∑¸ æ∆¿Ã≈€")]
-    [SerializeField] private List<Item> items = new List<Item>();
+    [SerializeField] private List<DropItem> dropItems = new List<DropItem>();
 
-    protected ItemData PickItem()
+    protected Item PickItem()
     {
         int sum = 0;
-        foreach (var item in items)
+        foreach (var dropItem in dropItems)
         {
-            sum += item.weight;
+            sum += dropItem.weight;
         }
         int rnd = Random.Range(0, sum);
 
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < dropItems.Count; i++)
         {
-            Item item = items[i];
-            if (item.weight >= rnd)
+            DropItem dropItem = dropItems[i];
+            if (dropItem.weight >= rnd)
             {
-                return items[i].item;
+                return dropItems[i]._item;
             }
             else
             {
-                rnd -= item.weight;
+                rnd -= dropItem.weight;
             }
         }
         return null;
@@ -46,13 +46,16 @@ public class ItemDropTable : ScriptableObject
     public void ItemDrop(Vector3 pos)
     {
         DropGold(pos);
-        ItemData item = PickItem();
-        Instantiate(item, pos, Quaternion.identity);
+        Item pickItem = PickItem();
+        if (pickItem != null)
+        {
+            Instantiate(pickItem._itemPrefab, pos, Quaternion.identity);
+        }
     }
     public void DropGold(Vector3 pos)
     {
         int amount = Random.Range(goldMin, goldMax);
-        GameObject goldObj = Instantiate(goldPrefab, pos, Quaternion.identity);
+        GameObject goldObj = Instantiate(goldPrefab, pos + Vector3.right * 0.2f, Quaternion.identity);
         goldObj.GetComponent<GoldDrop>().amount = amount;
     }
 }

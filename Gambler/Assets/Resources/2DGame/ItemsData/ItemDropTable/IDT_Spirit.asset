@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e012790057529a34e941737b314f35e3, type: 3}
+  m_Name: IDT_Spirit
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDropTable
+  goldMin: 5
+  goldMax: 10
+  goldPrefab: {fileID: 6625369214283042491, guid: 13f3f07050025b1419825b8fba5631c7, type: 3}
+  expAmount: 0
+  dropItems:
+  - _item: {fileID: 0}
+    weight: 50
+  - _item: {fileID: 11400000, guid: ba79d7f2aef401d40993ba28bf37e5b0, type: 2}
+    weight: 50

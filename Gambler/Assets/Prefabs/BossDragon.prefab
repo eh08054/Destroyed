@@ -203,7 +203,7 @@ GameObject:
   - component: {fileID: 7190685541925665369}
   - component: {fileID: 3541918548960724800}
   - component: {fileID: 3135972820513200977}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BossDragon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -265,6 +265,16 @@ MonoBehaviour:
   HPSlider: {fileID: 2820662585969945718}
   HPText: {fileID: 4221697980211175493}
   EnemyAttackCollision: {fileID: 582707759801319418}
+  AttackThresholdY: 1
+  ChaseThresholdY: 0.1
+  rayDistance: 20
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  platformDistance: 1
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!61 &7190685541925665369
 BoxCollider2D:
   m_ObjectHideFlags: 0

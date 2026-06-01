@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e012790057529a34e941737b314f35e3, type: 3}
   m_Name: IDT_Orge
   m_EditorClassIdentifier: Assembly-CSharp::ItemDropTable
-  goldMin: 0
-  goldMax: 0
-  goldPrefab: {fileID: 0}
+  goldMin: 25
+  goldMax: 30
+  goldPrefab: {fileID: 6625369214283042491, guid: 13f3f07050025b1419825b8fba5631c7, type: 3}
   expAmount: 0
-  items:
-  - item: {fileID: 0}
+  dropItems:
+  - _item: {fileID: 0}
     weight: 50
-  - item: {fileID: 0}
+  - _item: {fileID: 11400000, guid: ba79d7f2aef401d40993ba28bf37e5b0, type: 2}
     weight: 50

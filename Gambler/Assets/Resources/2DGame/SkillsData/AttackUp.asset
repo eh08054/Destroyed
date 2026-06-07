@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86256f420a01c34baa055facaf107dd, type: 3}
+  m_Name: AttackUp
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  id: 1
+  skillName: AttackUp
+  skillIcon: {fileID: 21300000, guid: 1c331db2ee752b145ae3a3a654afd7f7, type: 2}
+  skillLevel: 0
+  skillMaxLevel: 10
+  valuePerSkill:
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  - 5
+  goldPerLevel: 0a000000140000001e00000028000000320000003c00000046000000500000005a00000064000000
+  skillType: 0

@@ -4,8 +4,10 @@ using System.Collections.Generic;
 public class SaveData 
 {
     public List<string> item_names;
+    public int gold;
     public SaveData()
     {
         item_names = new List<string>();
+        gold = 0;
     }
 }

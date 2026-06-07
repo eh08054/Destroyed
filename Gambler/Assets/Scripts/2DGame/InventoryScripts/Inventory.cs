@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ItemSlot
 {
-    public Item item;
+    public ItemData item;
     public int count;
     public int maxStack;
     public bool CanStack => count < maxStack;
@@ -14,7 +14,7 @@ public class Inventory
 {
     public List<ItemSlot> itemSlots;
     public Slot[] Slots { get; set; }
-    public bool AddItem(Item _item)
+    public bool AddItem(ItemData _item)
     {
         foreach (var itemSlot in itemSlots)
         {

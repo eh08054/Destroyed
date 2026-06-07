@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 [CreateAssetMenu(fileName = "WeaponData", menuName = "Scriptable Objects/WeaponData")]
 public class WeaponData : ScriptableObject
 {
@@ -10,5 +10,7 @@ public class WeaponData : ScriptableObject
         Gun,
         Bow,
     }
+    public int weaponDamage;
     public WeaponType weaponType;
+    public Sprite weaponIcon;
 }

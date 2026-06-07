@@ -7,20 +7,20 @@ public class ItemDropTable : ScriptableObject
     [System.Serializable]
     public class DropItem
     {
-        public Item _item;
+        public ItemData _item;
         public int weight;
     }
 
     [Header("필연 재화")]
     [SerializeField] private int goldMin;
     [SerializeField] private int goldMax;
-    [SerializeField] private GameObject goldPrefab;
+    [SerializeField] private ItemData goldData;
     [SerializeField] private int expAmount;
 
     [Header("확률 아이템")]
     [SerializeField] private List<DropItem> dropItems = new List<DropItem>();
 
-    protected Item PickItem()
+    protected ItemData PickItem()
     {
         int sum = 0;
         foreach (var dropItem in dropItems)
@@ -46,7 +46,7 @@ public class ItemDropTable : ScriptableObject
     public void ItemDrop(Vector3 pos)
     {
         DropGold(pos);
-        Item pickItem = PickItem();
+        ItemData pickItem = PickItem();
         if (pickItem != null)
         {
             Instantiate(pickItem._itemPrefab, pos, Quaternion.identity);
@@ -55,7 +55,7 @@ public class ItemDropTable : ScriptableObject
     public void DropGold(Vector3 pos)
     {
         int amount = Random.Range(goldMin, goldMax);
-        GameObject goldObj = Instantiate(goldPrefab, pos + Vector3.right * 0.2f, Quaternion.identity);
+        GameObject goldObj = Instantiate(goldData._itemPrefab, pos + Vector3.right * 0.2f, Quaternion.identity);
         goldObj.GetComponent<GoldDrop>().amount = amount;
     }
 }

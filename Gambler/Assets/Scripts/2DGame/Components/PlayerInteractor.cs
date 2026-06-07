@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class PlayerInteractor : MonoBehaviour
 {
-    public event Action<IInteractable> OnHoverEntered;
-    public event Action<IInteractable> OnHoverExited;
-    public event Action<IInteractable> OnInteracted;
+    public event Action<IInteractable, GameObject> OnHoverEntered;
+    public event Action<IInteractable, GameObject> OnHoverExited;
+    public event Action<IInteractable, GameObject> OnInteracted;
 
     private IInteractable CurrentInteractable;
+    private GameObject CurrentInteractableObject;
     public LayerMask interactionLayerMask;
     public float interactionRange = 1;
 
@@ -26,6 +27,7 @@ public class PlayerInteractor : MonoBehaviour
         foreach(var c in orderedColliders)
         {
             var interactable = c.GetComponentInParent<IInteractable>(true);
+            var interactableObject = c.gameObject;
             if(interactable != null && interactable.CanInteract)
             {
                 if (CurrentInteractable != null)
@@ -35,7 +37,7 @@ public class PlayerInteractor : MonoBehaviour
                         if (Input.GetKeyDown(x))
                         {
                             CurrentInteractable.OnInteract(x);
-                            OnInteracted.Invoke(CurrentInteractable);
+                            OnInteracted.Invoke(CurrentInteractable, c.gameObject);
                         }
                     }
                 }
@@ -48,11 +50,12 @@ public class PlayerInteractor : MonoBehaviour
                 if(CurrentInteractable != null)
                 {
                     CurrentInteractable.OnInteractionExited();
-                    OnHoverExited?.Invoke(CurrentInteractable);
+                    OnHoverExited?.Invoke(CurrentInteractable, c.gameObject);
                 }
                 CurrentInteractable = interactable;
+                CurrentInteractableObject = interactableObject;
                 CurrentInteractable.OnInteractionEntered();
-                OnHoverEntered?.Invoke(CurrentInteractable);
+                OnHoverEntered?.Invoke(CurrentInteractable, c.gameObject);
                 break;
             }
         }
@@ -60,7 +63,7 @@ public class PlayerInteractor : MonoBehaviour
         if(!foundInteractable && !stayingOnCurrent && CurrentInteractable != null)
         {
             CurrentInteractable.OnInteractionExited();
-            OnHoverExited?.Invoke(CurrentInteractable);
+            OnHoverExited?.Invoke(CurrentInteractable, CurrentInteractableObject);
             CurrentInteractable = null;
         }
     }

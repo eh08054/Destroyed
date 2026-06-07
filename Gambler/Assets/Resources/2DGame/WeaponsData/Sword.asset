@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   animatorOverride: {fileID: 22100000, guid: 1a28700493745704b8da0b387767e6aa, type: 2}
+  weaponDamage: 5
+  weaponType: 0
+  weaponIcon: {fileID: 21300000, guid: 1c331db2ee752b145ae3a3a654afd7f7, type: 2}

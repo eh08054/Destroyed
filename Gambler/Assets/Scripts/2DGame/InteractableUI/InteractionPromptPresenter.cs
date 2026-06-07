@@ -11,15 +11,18 @@ public class InteractionPromptPresenter : MonoBehaviour
         interactionModel.OnInteractableChanged += HandleInteractionView;
     }
 
-    private void HandleInteractionView(bool isInteractable)
+    private void HandleInteractionView(bool isInteractable, GameObject interactableObject)
     {
-        if (isInteractable)
+        if (gameObject == interactableObject)
         {
-            view.ShowPrompt(interactionModel.PromptContent);
-        }
-        else
-        {
-            view.HidePrompt();
+            if (isInteractable)
+            {
+                view.ShowPrompt(interactionModel.PromptContent);
+            }
+            else
+            {
+                view.HidePrompt();
+            }
         }
     }
     private void OnDestroy()

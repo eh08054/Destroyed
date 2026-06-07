@@ -14,6 +14,7 @@ public class InventoryController : MonoBehaviour
             Slots = SlotParent.GetComponentsInChildren<Slot>(),
             itemSlots = new List<ItemSlot>()
         };
+        GameManager.Instance.RegisterInventory(Inventory);
     }
     private void Start()
     {
@@ -52,7 +53,7 @@ public class InventoryController : MonoBehaviour
             Inventory.Slots[j].slotIndex = j;
         }
     }
-    public bool AddItem(Item _item)
+    public bool AddItem(ItemData _item)
     {
         bool check = Inventory.AddItem(_item);
         if (check == true)
@@ -65,17 +66,17 @@ public class InventoryController : MonoBehaviour
             return false;
         }
     }
-    public void UseItem(Item _item)
+    public void UseItem(ItemData _item)
     {
         PlayerController player = GameManager.Instance.Player.GetComponent<PlayerController>();
         switch (_item.itemType)
         {
-            case Item.ItemType.Potion:
+            case ItemData.ItemType.Potion:
                 player.HealPlayer(_item.value);
                 break;
-            case Item.ItemType.Sword:
+            case ItemData.ItemType.Sword:
                 break;
-            case Item.ItemType.Shield:
+            case ItemData.ItemType.Shield:
                 break;
         }
     }

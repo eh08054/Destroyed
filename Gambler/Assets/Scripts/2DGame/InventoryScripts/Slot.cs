@@ -48,11 +48,11 @@ public class Slot : MonoBehaviour
 
     private void UseItem()
     {
-        GameManager.Instance.Inventory.GetComponentInChildren<InventoryController>().UseItem(_itemSlot.item);
+        GameManager.Instance.InventoryObject.GetComponentInChildren<InventoryController>().UseItem(_itemSlot.item);
     }
     private void RemoveItem()
     {
-        GameManager.Instance.Inventory.GetComponentInChildren<InventoryController>().RemoveItem(slotIndex);
+        GameManager.Instance.InventoryObject.GetComponentInChildren<InventoryController>().RemoveItem(slotIndex);
     }
 
 }

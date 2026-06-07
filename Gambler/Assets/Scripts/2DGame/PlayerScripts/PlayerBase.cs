@@ -6,18 +6,20 @@ public abstract class PlayerBase
     public abstract int MaxHP { get; }
     public int CurrentHP { get; set; }
     public abstract float AttackRange { get;}
-    public abstract int AttackDamage { get; }
+    public abstract int AttackDamage { get; set; }
     public abstract float AttackCoolTime { get; }
     public enum AttackType { Jab, Slash };
     public enum State { Idle, Attack, Dead}
     public State CurrentState { get; set; } = State.Idle;
     public WeaponData currentWeapon { get; private set; }
     public List<WeaponData> ownedWeapons { get; private set; } = new List<WeaponData>();
-    public int currentWeaponIndex = 0;
+    public List<SkillData> skillDatas;
+    public int currentWeaponIndex;
     public virtual void Init()
     {
         CurrentHP = MaxHP;
         CurrentState = State.Idle;
+        currentWeaponIndex = 0;
     }
     public virtual void TakeDamage(int damage)
     {
@@ -39,6 +41,16 @@ public abstract class PlayerBase
         if(ownedWeapons.Contains(weapon))
         {
             currentWeapon = weapon;
+        }
+    }
+    public void ApplySkillEffect(SkillData skillData)
+    {
+        switch (skillData.skillType)
+        {
+            case SkillData.SkillType.AttackUp:
+                AttackDamage += (int)skillData.valuePerSkill[skillData.skillLevel];
+                skillData.skillLevel++;
+                break;
         }
     }
 }

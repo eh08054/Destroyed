@@ -13,12 +13,20 @@ PrefabInstance:
       value: Modern-ruins_10
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 16.34348
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 10.206
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -30,15 +38,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -50,6 +58,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2275366018317679488, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 133.31305
+      objectReference: {fileID: 0}
+    - target: {fileID: -2275366018317679488, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.41200256
+      objectReference: {fileID: 0}
+    - target: {fileID: 683650805199822136, guid: 9fcdadb798862d84d904dcb4128fe5da, type: 3}
+      propertyPath: m_SortingOrder
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

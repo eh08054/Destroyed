@@ -19,7 +19,5 @@ MonoBehaviour:
   attackDamage: 30
   attackCoolTime: 2
   moveSpeed: 1
-  spawnLeftLimit: 10
-  spawnRightLimit: 15
-  enemyType: 2
   enemyPrefab: {fileID: 1886921123244102641, guid: cabc51dceda4635459a068e5ee757386, type: 3}
+  dropTable: {fileID: 11400000, guid: b9c9ba19fa5275c4899877916ad17b3d, type: 2}

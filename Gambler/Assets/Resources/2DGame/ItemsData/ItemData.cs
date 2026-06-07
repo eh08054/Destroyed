@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Item", menuName = "Scriptable Objects/Item")]
-public class Item : ScriptableObject
+[CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
+public class ItemData : ScriptableObject
 {
     public int id;
     public string itemName;
@@ -14,6 +14,7 @@ public class Item : ScriptableObject
         Potion,
         Sword,
         Shield,
+        Gold,
     }
     public ItemType itemType;
 }

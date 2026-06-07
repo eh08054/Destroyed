@@ -11,7 +11,9 @@ public class AttackHitbox : MonoBehaviour
             EnemyController enemyController = collision.GetComponentInParent<EnemyController>();
             if(enemyController != null)
             {
-                enemyController.TakeDamage(attackData.AttackDamage);
+                var attackDamage = attackData.AttackDamage + GameManager.Instance.PlayerBase.AttackDamage
+                    + GameManager.Instance.PlayerBase.currentWeapon.weaponDamage;
+                enemyController.TakeDamage(attackDamage);
                 AudioManager.instance.PlaySFX(attackData.Attack_Hit);
             }
         }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemDropTable
   goldMin: 25
   goldMax: 30
-  goldPrefab: {fileID: 6625369214283042491, guid: 13f3f07050025b1419825b8fba5631c7, type: 3}
+  goldData: {fileID: 11400000, guid: 188210b2de6b5eb4e95a0de63a97d14f, type: 2}
   expAmount: 0
   dropItems:
   - _item: {fileID: 0}

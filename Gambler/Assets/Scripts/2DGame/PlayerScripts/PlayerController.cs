@@ -34,8 +34,8 @@ public class PlayerController : MonoBehaviour
 
     public event Action<int> OnHPChanged;
     public event Action OnDeath;
+    public event Action<WeaponData> OnWeaponChanged;
     private Coroutine dashCoroutine;
-    public int AttackDamage { get; private set; }
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -50,14 +50,12 @@ public class PlayerController : MonoBehaviour
             PlayerType.AxeMan => new AxeMan(),
             _ => throw new ArgumentOutOfRangeException()
         };
-    }
-    private void Start()
-    {
-        player.Init();
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Sword"));
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Gun"));
         player.ChangeWeapon(player.ownedWeapons[0]);
-        AttackDamage = player.AttackDamage;
+    }
+    private void Start()
+    {
         moveDirection = 1f;
         isWalking = false;
         isJumping = false;
@@ -144,6 +142,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.V))
         {
             ChangeWeapon(player.ownedWeapons[++player.currentWeaponIndex % 2]);
+            OnWeaponChanged?.Invoke(player.ownedWeapons[player.currentWeaponIndex % 2]);
         }
         animator.SetBool("IsJumping", isJumping);
         animator.SetBool("IsWalking", isWalking);
@@ -204,7 +203,8 @@ public class PlayerController : MonoBehaviour
             EnemyController enemy = bullet.collider.gameObject.GetComponent<EnemyController>();
             if (enemy != null)
             {
-                enemy.TakeDamage(10);
+                var attackDamage = player.AttackDamage + player.currentWeapon.weaponDamage;
+                enemy.TakeDamage(attackDamage);
             }
         }
     }
@@ -311,6 +311,6 @@ public class PlayerController : MonoBehaviour
     public void HealPlayer(int amount)
     {
         player.HealPlayer(amount);
-        OnHPChanged.Invoke(player.CurrentHP);
+        OnHPChanged?.Invoke(player.CurrentHP);
     }
 }

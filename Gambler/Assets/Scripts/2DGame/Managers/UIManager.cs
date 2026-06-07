@@ -9,8 +9,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider PlayerHPSlider;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text StageText;
+    [SerializeField] private TMP_Text goldText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gameClearPanel;
+    [SerializeField] private GameObject dialogPanel;
+    [SerializeField] private GameObject skillEnhancePanel;
+    [SerializeField] private Image WeaponImage;
     private PlayerController playerController;
     private void Awake()
     {
@@ -22,12 +26,15 @@ public class UIManager : MonoBehaviour
         playerController = GameManager.Instance.Player.GetComponent<PlayerController>();
         playerController.OnHPChanged += SetPlayerHP;
         playerController.OnDeath += ShowGameOverPanel;
-        GameManager.Instance.OnClear += ShowGameClearPanel;
+        playerController.OnWeaponChanged += ChangeWeaponImage;
+        GameManager.Instance.OpenDialog += ShowDialogPanel;
+        GameManager.Instance.CloseDialog += HideDialogPanel;
+        GameManager.Instance.GoldChanged += SetGold;
     }
-    public void HPSliderInit(int max)
+    public void HPSliderInit(int current)
     {
-        PlayerHPSlider.maxValue = max;
-        PlayerHPSlider.value = PlayerHPSlider.maxValue;
+        PlayerHPSlider.maxValue = GameManager.Instance.PlayerBase.MaxHP;
+        PlayerHPSlider.value = current;
         HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
     }
     public void SetPlayerHP(int current)
@@ -35,9 +42,13 @@ public class UIManager : MonoBehaviour
         PlayerHPSlider.value = current;
         HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
     }
+    public void SetGold(int goldValue)
+    {
+        goldText.text = "Gold: " + goldValue;
+    }
     public void ShowGameClearPanel()
     {
-        //StartCoroutine(ShowGamePanelDelay());
+        StartCoroutine(ShowGamePanelDelay());
     }
     private IEnumerator ShowGamePanelDelay()
     {
@@ -47,6 +58,26 @@ public class UIManager : MonoBehaviour
     public void ShowGameOverPanel()
     {
         gameOverPanel.SetActive(true);
+    }
+    public void ShowDialogPanel()
+    {
+        dialogPanel.SetActive(true);
+    }
+    public void ShowSkillEnhancePanel()
+    {
+        skillEnhancePanel.SetActive(true);
+    }
+    public void HideSkillEnhancePanel()
+    {
+        skillEnhancePanel.SetActive(false);
+    }
+    public void HideDialogPanel()
+    {
+        dialogPanel.SetActive(false);
+    }
+    public void ChangeWeaponImage(WeaponData weaponData)
+    {
+        WeaponImage.sprite = weaponData.weaponIcon;
     }
     public void SetStageText()
     {
@@ -63,6 +94,7 @@ public class UIManager : MonoBehaviour
     {
         playerController.OnHPChanged -= SetPlayerHP;
         playerController.OnDeath -= ShowGameOverPanel;
-        GameManager.Instance.OnClear -= ShowGameClearPanel;
+        playerController.OnWeaponChanged -= ChangeWeaponImage;
+        GameManager.Instance.OpenDialog -= ShowDialogPanel;
     }
 }

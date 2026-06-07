@@ -1,6 +1,7 @@
 using Assets.PixelFantasy.PixelTileEngine.Scripts;
 using CityBackgroundsCollection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,7 +14,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public GameObject Player { get; private set; }
-    public GameObject Inventory { get; private set; }
+    public PlayerBase PlayerBase { get; private set; }
+    public GameObject InventoryObject { get; private set; }
+    public Inventory PlayerInventory { get; private set; }
     public GameObject Background { get; private set; }
     public Transform BackgroundOnly { get; private set; }
     public GameData GameData { get; private set; }
@@ -28,32 +31,37 @@ public class GameManager : MonoBehaviour
     public event Action OnClear;
     public event Action<int> OnBirth;
     public event Action OnStageLoaded;
+    public event Action OpenDialog;
+    public event Action CloseDialog;
+    public event Action<int> GoldChanged;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            GameData = new GameData();
+            SceneManager.sceneLoaded += OnSceneLoaded;
             DontDestroyOnLoad(gameObject);
             SpawnPlayer();
             CreateInventory();
-            Debug.Log("hello");
-            GameData = new GameData();
+            LoadSaveData();
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    public void Start()
+    public void LoadSaveData()
     {
         SaveData saveData = SaveSystem.Load();
         if (saveData != null)
         {
             foreach (var itemName in saveData.item_names)
             {
-                Item item = Resources.Load<Item>("2DGame/ItemsData/" + itemName);
-                Inventory.transform.GetChild(0).GetComponent<InventoryController>().AddItem(item);
+                ItemData item = Resources.Load<ItemData>("2DGame/ItemsData/" + itemName);
+                InventoryObject.transform.GetChild(0).GetComponent<InventoryController>().AddItem(item);
             }
+            GameData.gold = saveData.gold;
         }
     }
     private void Update()
@@ -66,15 +74,31 @@ public class GameManager : MonoBehaviour
         {
             Player = Instantiate(playerPrefab);
             DontDestroyOnLoad(Player);
+            PlayerBase = Player.GetComponent<PlayerController>().player;
+            PlayerBase.Init();
         }
     }
     private void CreateInventory()
     {
-        if(Inventory == null)
+        if(InventoryObject == null)
         {
-            Inventory = Instantiate(inventoryPrefab);
-            DontDestroyOnLoad(Inventory);
+            InventoryObject = Instantiate(inventoryPrefab);
+            DontDestroyOnLoad(InventoryObject);
         }
+    }
+    public void RegisterInventory(Inventory inventory)
+    {
+        PlayerInventory = inventory;
+    }
+    public void AddGold(int value)
+    {
+        GameData.gold += value;
+        GoldChanged?.Invoke(GameData.gold);
+    }
+    public void UseGold(int value)
+    {
+        GameData.gold -= value;
+        GoldChanged?.Invoke(GameData.gold);
     }
     private void LoadStage(StageData stageData)
     {
@@ -137,6 +161,20 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void StartDialogue()
+    {
+        OpenDialog?.Invoke();
+        DialogSystem dialog = GameObject.FindGameObjectWithTag("DialogSystem").GetComponent<DialogSystem>();
+        StartCoroutine(StartDialogueCoroutine(dialog));
+    }
+    public void StopDialogue()
+    {
+        CloseDialog?.Invoke();
+    }
+    private IEnumerator StartDialogueCoroutine(DialogSystem dialog)
+    {
+        yield return new WaitUntil(() => dialog.UpdateDialog());
+    }
     public void StopTime()
     {
         Time.timeScale = 0f;
@@ -149,28 +187,24 @@ public class GameManager : MonoBehaviour
             OnClear.Invoke();
         }
     }
-    private void OnEnable()
-    {
-        if (Instance != this) { return; }
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (Instance != this) { return; }
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
         SaveData saveData = new SaveData();
-        List<ItemSlot> MyItemSlots = Inventory.transform.GetChild(0).GetComponent<InventoryController>().Inventory.itemSlots;
-        foreach(var itemSlot in MyItemSlots)
+        if (PlayerInventory != null)
         {
-            for (int i = 0; i < itemSlot.count; i++)
+            foreach (var itemSlot in PlayerInventory.itemSlots)
             {
-                saveData.item_names.Add(itemSlot.item.itemName);
+                for (int i = 0; i < itemSlot.count; i++)
+                {
+                    saveData.item_names.Add(itemSlot.item.itemName);
+                }
             }
         }
+        saveData.gold = GameData.gold;
         SaveSystem.Save(saveData);
-        Destroy(gameObject);
-        Destroy(Player);
-        Destroy(Inventory);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -183,8 +217,10 @@ public class GameManager : MonoBehaviour
         if (scene.name != "MenuScene")
         {
             LoadStage(stages[GameData.SelectedStage]);
-            OnStageLoaded.Invoke();
-            UIManager.Instance.HPSliderInit(Player.GetComponent<PlayerController>().player.MaxHP);
+            OnStageLoaded?.Invoke();
+            UIManager.Instance.HPSliderInit(PlayerBase.CurrentHP);
+            UIManager.Instance.ChangeWeaponImage(PlayerBase.ownedWeapons[PlayerBase.currentWeaponIndex % 2]);
+            UIManager.Instance.SetGold(GameData.gold);
         }
         SceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
     }

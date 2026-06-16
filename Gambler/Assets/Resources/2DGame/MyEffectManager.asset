@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: MyEffectManager
   m_EditorClassIdentifier: Assembly-CSharp::MyEffectManager
   SpriteEffectPrefab: {fileID: 2627439853550921081, guid: 136cfe2593db2f441aed2e601b3dae7e, type: 3}
+  FloatingTextPrefab: {fileID: 263085205596004406, guid: 0b4994d6ae1af5140be2380477a304fa, type: 3}

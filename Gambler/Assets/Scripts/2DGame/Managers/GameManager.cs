@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject inventoryPrefab;
+    [SerializeField] private GameObject treasureBoxPrefab;
     private Platform[] platforms;
 
     public event Action OnClear;
@@ -100,11 +101,19 @@ public class GameManager : MonoBehaviour
         GameData.gold -= value;
         GoldChanged?.Invoke(GameData.gold);
     }
+    public void ChangeHP()
+    {
+        Player.GetComponent<PlayerController>().InvokeHPChanged();
+    }
     private void LoadStage(StageData stageData)
     {
         Player.transform.SetPositionAndRotation(stageData.PlayerSpawnPosition, Quaternion.identity);
         SetBackground(stageData);
         SpawnEnemy(stageData);
+        if (stageData.totalEnemyCount > 0)
+        {
+            UIManager.Instance.SetMinimapPanel(stageData.enemies);
+        }
     }
     public void SetBackground(StageData stageData)
     {
@@ -142,6 +151,7 @@ public class GameManager : MonoBehaviour
                    Quaternion.identity);
                 EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
                 enemyController.OnDeath += EnemyDeath;
+                enemyController.OnDeath += UIManager.Instance.RefreshMinimapPanel;
                 if (enemy.enemyType == EnemyData.Type.Boss)
                 {
                     enemyController.OnDeath += UIManager.Instance.ShowGameClearPanel;
@@ -155,7 +165,6 @@ public class GameManager : MonoBehaviour
                 }
                 if (enemyIndex >= stageData.enemies.Count)
                 {
-                    Debug.Log(enemyIndex);
                     return;
                 }
             }
@@ -179,12 +188,13 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
     }
-    public void EnemyDeath()
+    public void EnemyDeath(string enemyName)
     {
         GameData.RemainedEnemyInStage--;
         if(GameData.RemainedEnemyInStage == 0)
         {
             OnClear.Invoke();
+            Instantiate(treasureBoxPrefab, Player.transform.position, Quaternion.identity);
         }
     }
     private void OnDestroy()
@@ -209,18 +219,27 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log(scene.name);
-        if(scene.name == "MapScene")
+        if (scene.name == "MapScene")
         {
             GameData.SelectedStage = 0;
+            Player.SetActive(true);
+            AudioManager.instance.PlayBGM(BGM.MAP);
         }
-        if (scene.name != "MenuScene")
+        if (scene.name == "MenuScene")
+        {
+            AudioManager.instance.PlayBGM(BGM.TITLE);
+        }
+        else
         {
             LoadStage(stages[GameData.SelectedStage]);
             OnStageLoaded?.Invoke();
-            UIManager.Instance.HPSliderInit(PlayerBase.CurrentHP);
+            UIManager.Instance.HPSliderInit(PlayerBase.CurrentHP, PlayerBase.MaxHP);
             UIManager.Instance.ChangeWeaponImage(PlayerBase.ownedWeapons[PlayerBase.currentWeaponIndex % 2]);
             UIManager.Instance.SetGold(GameData.gold);
+            if (Player.GetComponent<SkillController>().EquipedSkills != null)
+            {
+                UIManager.Instance.SetSkillImages(Player.GetComponent<SkillController>().EquipedSkills);
+            }
         }
         SceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
     }

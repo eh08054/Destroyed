@@ -1048,6 +1048,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: RedDragonIcon
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 767
+        width: 60
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a53301fddb2f4524784cbc45ff0d0125
+      internalID: -723363861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -1096,6 +1118,7 @@ TextureImporter:
       Ready_1: 1249533364
       Ready_2: -1540566767
       Ready_3: -612471574
+      RedDragonIcon: -723363861
       Run_0: -558461130
       Run_1: 998643852
       Run_2: -1768039378

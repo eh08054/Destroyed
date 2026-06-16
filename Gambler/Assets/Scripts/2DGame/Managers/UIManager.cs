@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,7 +15,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameClearPanel;
     [SerializeField] private GameObject dialogPanel;
     [SerializeField] private GameObject skillEnhancePanel;
+    [SerializeField] private GameObject MinimapPanel;
+    [SerializeField] private GameObject SettingPanel;
     [SerializeField] private Image WeaponImage;
+    [SerializeField] private Image[] SkillImages;
     private PlayerController playerController;
     private void Awake()
     {
@@ -31,14 +35,15 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.CloseDialog += HideDialogPanel;
         GameManager.Instance.GoldChanged += SetGold;
     }
-    public void HPSliderInit(int current)
+    public void HPSliderInit(int current, int max)
     {
-        PlayerHPSlider.maxValue = GameManager.Instance.PlayerBase.MaxHP;
+        PlayerHPSlider.maxValue = max;
         PlayerHPSlider.value = current;
         HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
     }
-    public void SetPlayerHP(int current)
+    public void SetPlayerHP(int current, int max)
     {
+        PlayerHPSlider.maxValue = max;
         PlayerHPSlider.value = current;
         HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
     }
@@ -46,7 +51,7 @@ public class UIManager : MonoBehaviour
     {
         goldText.text = "Gold: " + goldValue;
     }
-    public void ShowGameClearPanel()
+    public void ShowGameClearPanel(string enemyName)
     {
         StartCoroutine(ShowGamePanelDelay());
     }
@@ -63,6 +68,14 @@ public class UIManager : MonoBehaviour
     {
         dialogPanel.SetActive(true);
     }
+    public void ShowSettingPanel()
+    {
+        SettingPanel.SetActive(true);
+    }
+    public void HideSettingPanel()
+    {
+        SettingPanel.SetActive(false);
+    }
     public void ShowSkillEnhancePanel()
     {
         skillEnhancePanel.SetActive(true);
@@ -75,9 +88,44 @@ public class UIManager : MonoBehaviour
     {
         dialogPanel.SetActive(false);
     }
+    public void SetMinimapPanel(List<EnemySpawnInfo> enemySpawnInfos)
+    {
+        MinimapPanel.GetComponent<MinimapHUD>().InitHUD(enemySpawnInfos);
+    }
+    public void RefreshMinimapPanel(string enemyName)
+    {
+        MinimapPanel.GetComponent<MinimapHUD>().RefreshHUD(enemyName);
+    }
     public void ChangeWeaponImage(WeaponData weaponData)
     {
         WeaponImage.sprite = weaponData.weaponIcon;
+    }
+
+    public void RegisterSkill(int slotIndex, ActiveSkill activeSkill)
+    {
+        SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
+        SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[slotIndex]);
+    }
+    public void SetSkillImages(ActiveSkill[] activeSkills)
+    {
+        Debug.Log(activeSkills);
+        for(int i = 0; i < SkillImages.Length; i++)
+        {
+            if (activeSkills[i] != null)
+            {
+                SkillImages[i].sprite = activeSkills[i].skillData.skillIcon;
+                SkillImages[i].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[i]);
+            }
+        }
+    }
+
+    public void ActiveCoolDownImage(int index)
+    {
+        SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().ActiveCoolDownImage();
+    }
+    public void CoolDownImage(int index, float ratio)
+    {
+        SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().UpdateSkillSlotUI(ratio);
     }
     public void SetStageText()
     {
@@ -85,9 +133,9 @@ public class UIManager : MonoBehaviour
         {
             StageText.text = "SHELTER";
         }
-        else if(GameData.SelectedStage == 1)
+        else
         {
-            StageText.text = "STAGE 1";
+            StageText.text = $"STAGE {GameData.SelectedStage}";
         }
     }
     private void OnDisable()

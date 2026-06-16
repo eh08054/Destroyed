@@ -285,6 +285,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: SkeletonIcon
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 49
+        width: 50
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5bf7a725c7013ef459152fe45e733ecb
+      internalID: -235725143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -309,7 +331,7 @@ TextureImporter:
       Attack_5: -722894793
       Attack_6: 288441742
       Attack_7: 582935797
-      Attack_8: 1012057613
+      SkeletonIcon: 1012057613
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

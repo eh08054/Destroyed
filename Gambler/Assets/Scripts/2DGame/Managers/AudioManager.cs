@@ -83,12 +83,16 @@ public class AudioManager : MonoBehaviour
             audioSourcePool.Enqueue(source);
         }
     }
+    private void Start()
+    {
+        PlayBGM(BGM.TITLE);
+    }
 
     public void PlayBGM(BGM bgmType)
     {
         if(bgmDict.TryGetValue(bgmType, out var clip))
         {
-            if(bgmPlayer.clip != clip.audioClip)
+            if (bgmPlayer.clip != clip.audioClip)
             {
                 bgmPlayer.clip = clip.audioClip;
                 bgmPlayer.Play();

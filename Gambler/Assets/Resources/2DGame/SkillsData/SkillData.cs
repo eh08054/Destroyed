@@ -1,21 +1,15 @@
 using UnityEngine;
-
-[CreateAssetMenu(fileName = "SkillData", menuName = "Scriptable Objects/SkillData")]
-public class SkillData : ScriptableObject
+public abstract class SkillData : ScriptableObject
 {
     public int id;
     public string skillName;
     public Sprite skillIcon;
     public int skillLevel;
     public int skillMaxLevel;
-    public float[] valuePerSkill;
+    public float sumValues;
+    public float[] valuePerLevel;
     public int[] goldPerLevel;
-    public enum SkillType
-    {
-        AttackUp,
-        SpeedUp,
-        DefendUp,
-        HPUp,
-    }
-    public SkillType skillType;
+
+    [TextArea(2, 5)] public string descriptionFormat;
+    [TextArea(1, 5)] public string skillDescriptionFormat;
 }

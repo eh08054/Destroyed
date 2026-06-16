@@ -5,6 +5,7 @@ using UnityEngine;
 public class MyEffectManager : ScriptableObject
 {
     public MySpriteEffect SpriteEffectPrefab;
+    public GameObject FloatingTextPrefab;
     public static MyEffectManager Instance;
 
     [RuntimeInitializeOnLoadMethod]
@@ -19,9 +20,14 @@ public class MyEffectManager : ScriptableObject
 
         instance.name = clipName;
         instance.transform.position = parent == null ? player.transform.position : parent.transform.position;
-        instance.GetComponent<SpriteRenderer>().sortingOrder = player.GetComponent<SpriteRenderer>().sortingOrder + 1;
+        instance.GetComponent<SpriteRenderer>().sortingOrder = player.GetComponentInChildren<SpriteRenderer>().sortingOrder + 1;
         instance.Play(clipName, direction == 0 ? Math.Sign(player.transform.localScale.x) : direction);
 
         return instance;
+    }
+    public void CreateFloatingText(int damage, Vector2 textPosition)
+    {
+        GameObject floatingTextObject = Instantiate(FloatingTextPrefab, textPosition, Quaternion.identity, null);
+        floatingTextObject.GetComponent<FloatingText>().InitText(damage, textPosition);
     }
 }

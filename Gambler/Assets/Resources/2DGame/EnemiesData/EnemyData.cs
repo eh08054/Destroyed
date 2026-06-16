@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]
 public class EnemyData : ScriptableObject
 {
@@ -13,5 +13,6 @@ public class EnemyData : ScriptableObject
     public enum Type { Normal, Elite, Boss}
     public enum State { Idle, Chase, CoolTime, Attack, Dead }
     public GameObject enemyPrefab;
+    public Sprite enemyIcon;
     public ItemDropTable dropTable;
 }

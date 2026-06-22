@@ -12,25 +12,33 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class GameManager : MonoBehaviour
 {
+    InputManager _input = new InputManager();
+    public static InputManager InputM { get { return Instance._input; } }
+
     public static GameManager Instance { get; private set; }
     public GameObject Player { get; private set; }
     public PlayerBase PlayerBase { get; private set; }
-    public GameObject InventoryObject { get; private set; }
-    public Inventory PlayerInventory { get; private set; }
+    public GameObject InventoryPanel { get; private set; }
+    public GameObject SkillPanel{ get; private set; }
+    public GameObject PausePanel { get; private set; }
+    public GameObject SettingsPanel { get; private set; }
     public GameObject Background { get; private set; }
     public Transform BackgroundOnly { get; private set; }
+    public Inventory PlayerInventory { get; private set; }
     public GameData GameData { get; private set; }
-    InputManager _input = new InputManager();
-    public static InputManager Input { get { return Instance._input; } }
     public SceneChanger SceneChanger { get; private set; }
+    public StageData.StageDifficulty CurrentDifficulty { get; private set; }
+
     [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject inventoryPrefab;
-    [SerializeField] private GameObject treasureBoxPrefab;
+    [SerializeField] private GameObject skillContainerPrefab;
+    [SerializeField] private GameObject pauseCanvasPrefab;
+    [SerializeField] private GameObject settingsCanvasPrefab;
+    [SerializeField] private GameObject[] treasureBoxPrefab;
     private Platform[] platforms;
 
     public event Action OnClear;
-    public event Action<int> OnBirth;
     public event Action OnStageLoaded;
     public event Action OpenDialog;
     public event Action CloseDialog;
@@ -45,6 +53,9 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             SpawnPlayer();
             CreateInventory();
+            CreateSkillContainer();
+            CreatePausePanel();
+            CreateSettingsPanel();
             LoadSaveData();
         }
         else
@@ -60,10 +71,15 @@ public class GameManager : MonoBehaviour
             foreach (var itemName in saveData.item_names)
             {
                 ItemData item = Resources.Load<ItemData>("2DGame/ItemsData/" + itemName);
-                InventoryObject.transform.GetChild(0).GetComponent<InventoryController>().AddItem(item);
+                InventoryPanel.GetComponentInChildren<InventoryController>().AddItem(item);
             }
             GameData.gold = saveData.gold;
         }
+    }
+    private void Start()
+    {
+        InputM.keyAction -= RegisterKeyActions;
+        InputM.keyAction += RegisterKeyActions;
     }
     private void Update()
     {
@@ -81,15 +97,75 @@ public class GameManager : MonoBehaviour
     }
     private void CreateInventory()
     {
-        if(InventoryObject == null)
+        if(InventoryPanel == null)
         {
-            InventoryObject = Instantiate(inventoryPrefab);
-            DontDestroyOnLoad(InventoryObject);
+            InventoryPanel = Instantiate(inventoryPrefab);
+            DontDestroyOnLoad(InventoryPanel);
+        }
+    }
+    public void CreateSkillContainer()
+    {
+        if(SkillPanel == null)
+        {
+            SkillPanel = Instantiate(skillContainerPrefab);
+            DontDestroyOnLoad(SkillPanel);
+        }
+    }
+    public void CreatePausePanel()
+    {
+        if(PausePanel == null)
+        {
+            PausePanel = Instantiate(pauseCanvasPrefab);
+            DontDestroyOnLoad(PausePanel);
+        }
+    }
+    public void CreateSettingsPanel()
+    {
+        if(SettingsPanel == null)
+        {
+            SettingsPanel = Instantiate(settingsCanvasPrefab);
+            DontDestroyOnLoad(SettingsPanel);
         }
     }
     public void RegisterInventory(Inventory inventory)
     {
         PlayerInventory = inventory;
+    }
+    public void RegisterKeyActions()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (InventoryPanel.activeSelf)
+            {
+                UIManager.Instance.ClosePanel(InventoryPanel);
+            }
+            else
+            {
+                UIManager.Instance.OpenPanel(InventoryPanel);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (SkillPanel.activeSelf)
+            {
+                UIManager.Instance.ClosePanel(SkillPanel);
+            }
+            else
+            {
+                UIManager.Instance.OpenPanel(SkillPanel);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (UIManager.Instance.openedPanels.Count != 0)
+            {
+                UIManager.Instance.CloseLastPanel();
+            }
+            else if (!PausePanel.activeSelf)
+            {
+                UIManager.Instance.OpenPanel(PausePanel);
+            }
+        }
     }
     public void AddGold(int value)
     {
@@ -114,6 +190,7 @@ public class GameManager : MonoBehaviour
         {
             UIManager.Instance.SetMinimapPanel(stageData.enemies);
         }
+        CurrentDifficulty = stageData.stageDifficulty;
     }
     public void SetBackground(StageData stageData)
     {
@@ -194,8 +271,36 @@ public class GameManager : MonoBehaviour
         if(GameData.RemainedEnemyInStage == 0)
         {
             OnClear.Invoke();
-            Instantiate(treasureBoxPrefab, Player.transform.position, Quaternion.identity);
+            MakeTreasureBox();
         }
+    }
+    public void MakeTreasureBox()
+    {
+        switch (CurrentDifficulty)
+        {
+            case StageData.StageDifficulty.peace:
+                break;
+            case StageData.StageDifficulty.easy:
+                Instantiate(treasureBoxPrefab[0], Player.transform.position, Quaternion.identity);
+                break;
+            case StageData.StageDifficulty.normal:
+                Instantiate(treasureBoxPrefab[1], Player.transform.position, Quaternion.identity);
+                break;
+            case StageData.StageDifficulty.hard:
+                Instantiate(treasureBoxPrefab[2], Player.transform.position, Quaternion.identity);
+                break;
+        }
+    }
+    public void ResetGameData()
+    {
+        PlayerBase.CurrentHP = PlayerBase.MaxHP;
+    }
+    public void ResetPanel()
+    {
+        InventoryPanel.SetActive(false);
+        SkillPanel.SetActive(false);
+        PausePanel.SetActive(false);
+        SettingsPanel.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -228,6 +333,7 @@ public class GameManager : MonoBehaviour
         if (scene.name == "MenuScene")
         {
             AudioManager.instance.PlayBGM(BGM.TITLE);
+            ResetGameData();
         }
         else
         {
@@ -241,6 +347,7 @@ public class GameManager : MonoBehaviour
                 UIManager.Instance.SetSkillImages(Player.GetComponent<SkillController>().EquipedSkills);
             }
         }
+        ResetPanel();
         SceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
     }
 }

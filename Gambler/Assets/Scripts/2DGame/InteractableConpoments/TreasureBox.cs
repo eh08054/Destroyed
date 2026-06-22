@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class TreasureBox : MonoBehaviour, IInteractable
 {
     [SerializeField] private string promptContent;
+    [SerializeField] private TreasureData treasureData;
     public string PromptContent => promptContent;
     private Animator _animator;
     private bool isOpened = false;
@@ -38,6 +39,19 @@ public class TreasureBox : MonoBehaviour, IInteractable
         KeyCodes = new KeyCode[] {};
         SetState(open: true);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Fall");
+        GetRewards();
+    }
+    private void GetRewards()
+    {
+        switch (treasureData.treasureType)
+        {
+            case TreasureData.TreasureType.Wooden:
+                break;
+            case TreasureData.TreasureType.Silver:
+                break;
+            case TreasureData.TreasureType.Golden:
+                break;
+        }
     }
     private void SetState(bool idle = false, bool destroy = false, bool open = false)
     {

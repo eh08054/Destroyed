@@ -14,8 +14,8 @@ public class ItemController : MonoBehaviour
             }
             else
             {
-                Transform inventory = GameManager.Instance.InventoryObject.transform.GetChild(0);
-                bool check = inventory.GetComponent<InventoryController>().AddItem(_item);
+                Transform inventory = GameManager.Instance.InventoryPanel.transform;
+                bool check = inventory.GetComponentInChildren<InventoryController>().AddItem(_item);
                 if (check == true)
                 {
                     Destroy(gameObject);

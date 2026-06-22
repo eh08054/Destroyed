@@ -11,5 +11,5 @@ public abstract class SkillData : ScriptableObject
     public int[] goldPerLevel;
 
     [TextArea(2, 5)] public string descriptionFormat;
-    [TextArea(1, 5)] public string skillDescriptionFormat;
+    [TextArea(2, 5)] public string skillDescriptionFormat;
 }

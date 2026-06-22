@@ -18,6 +18,10 @@ public class Slot : MonoBehaviour
     {
         button.onClick.AddListener(ClickedItem);
     }
+    public void OnDestroy()
+    {
+        button.onClick.RemoveListener(ClickedItem);
+    }
     public ItemSlot ItemSlot
     {
         get { return _itemSlot; }
@@ -48,11 +52,11 @@ public class Slot : MonoBehaviour
 
     private void UseItem()
     {
-        GameManager.Instance.InventoryObject.GetComponentInChildren<InventoryController>().UseItem(_itemSlot.item);
+        GameManager.Instance.InventoryPanel.GetComponentInChildren<InventoryController>().UseItem(_itemSlot.item);
     }
     private void RemoveItem()
     {
-        GameManager.Instance.InventoryObject.GetComponentInChildren<InventoryController>().RemoveItem(slotIndex);
+        GameManager.Instance.InventoryPanel.GetComponentInChildren<InventoryController>().RemoveItem(slotIndex);
     }
 
 }

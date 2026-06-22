@@ -7,19 +7,33 @@ using System.Collections.Generic;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
+
+    [Header("Menu Bar")]
     [SerializeField] private Slider PlayerHPSlider;
     [SerializeField] private TMP_Text HPText;
     [SerializeField] private TMP_Text StageText;
     [SerializeField] private TMP_Text goldText;
-    [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject gameClearPanel;
-    [SerializeField] private GameObject dialogPanel;
-    [SerializeField] private GameObject skillEnhancePanel;
-    [SerializeField] private GameObject MinimapPanel;
-    [SerializeField] private GameObject SettingPanel;
+
+    [Header("Common")]
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject weaponPanel;
+    [SerializeField] private GameObject skillPanel;
     [SerializeField] private Image WeaponImage;
     [SerializeField] private Image[] SkillImages;
+
+    [Header("Map Scene")]
+    [SerializeField] private GameObject dialogPanel;
+    [SerializeField] private GameObject skillEnhancePanel;
+    [SerializeField] private GameObject activeSkillPanel;
+    [SerializeField] private GameObject passiveSkillPanel;
+
+    [Header("Game Scene")]
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject gameClearPanel;
+    [SerializeField] private GameObject MinimapPanel;
+
     private PlayerController playerController;
+    public List<GameObject> openedPanels = new List<GameObject>();
     private void Awake()
     {
         Instance = this;
@@ -34,6 +48,45 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OpenDialog += ShowDialogPanel;
         GameManager.Instance.CloseDialog += HideDialogPanel;
         GameManager.Instance.GoldChanged += SetGold;
+    }
+    public void OpenPanel(GameObject panel)
+    {
+        if(panel == dialogPanel || panel == GameManager.Instance.PausePanel)
+        {
+            skillPanel.SetActive(false);
+            weaponPanel.SetActive(false);
+            menuPanel.SetActive(false);
+        }
+        panel.SetActive(true);
+        openedPanels.Add(panel);
+    }
+    public void ClosePanel(GameObject panel, bool last = false)
+    {
+        GameObject entry;
+        if(last == true)
+        {
+            entry = panel;
+            openedPanels.RemoveAt(openedPanels.Count - 1);
+        }
+        else
+        {
+            entry = openedPanels.FindLast(e => e.gameObject == panel);
+            if (entry == null) { return; }
+            openedPanels.Remove(entry);
+        }
+
+        if (entry == dialogPanel || entry == GameManager.Instance.PausePanel)
+        {
+            skillPanel.SetActive(true);
+            weaponPanel.SetActive(true);
+            menuPanel.SetActive(true);
+        }
+        panel.SetActive(false);
+    }
+    public void CloseLastPanel()
+    {
+        GameObject last = openedPanels[openedPanels.Count - 1];
+        ClosePanel(last, true);
     }
     public void HPSliderInit(int current, int max)
     {
@@ -66,27 +119,30 @@ public class UIManager : MonoBehaviour
     }
     public void ShowDialogPanel()
     {
-        dialogPanel.SetActive(true);
+        OpenPanel(dialogPanel);
     }
-    public void ShowSettingPanel()
+    public void HideDialogPanel()
     {
-        SettingPanel.SetActive(true);
+        ClosePanel(dialogPanel);
     }
-    public void HideSettingPanel()
-    {
-        SettingPanel.SetActive(false);
-    }
+
     public void ShowSkillEnhancePanel()
     {
-        skillEnhancePanel.SetActive(true);
+        OpenPanel(skillEnhancePanel);
     }
     public void HideSkillEnhancePanel()
     {
         skillEnhancePanel.SetActive(false);
     }
-    public void HideDialogPanel()
+    public void ShowActiveSkillPanel()
     {
-        dialogPanel.SetActive(false);
+        passiveSkillPanel.SetActive(false);
+        activeSkillPanel.SetActive(true);
+    }
+    public void ShowPassiveSkillPanel()
+    {
+        activeSkillPanel.SetActive(false);
+        passiveSkillPanel.SetActive(true);
     }
     public void SetMinimapPanel(List<EnemySpawnInfo> enemySpawnInfos)
     {
@@ -108,7 +164,6 @@ public class UIManager : MonoBehaviour
     }
     public void SetSkillImages(ActiveSkill[] activeSkills)
     {
-        Debug.Log(activeSkills);
         for(int i = 0; i < SkillImages.Length; i++)
         {
             if (activeSkills[i] != null)

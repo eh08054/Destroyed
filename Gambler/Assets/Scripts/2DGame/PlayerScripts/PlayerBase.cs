@@ -46,8 +46,6 @@ public abstract class PlayerBase
     }
     public void ApplySkillEffect(SkillData skillData)
     {
-        Skill targetSkill;
-
         if(ownedSkills.TryGetValue(skillData, out Skill existingSkill))
         {
             if(existingSkill.level == existingSkill.skillData.skillMaxLevel) { return; }
@@ -56,10 +54,7 @@ public abstract class PlayerBase
                 Debug.Log("골드가 부족합니다.");
                 return;
             }
-            GameManager.Instance.UseGold(skillData.goldPerLevel[skillData.skillLevel]);
-
             LevelUp(existingSkill);
-            targetSkill = existingSkill;
         }
         else
         {
@@ -71,41 +66,55 @@ public abstract class PlayerBase
                 Debug.Log("골드가 부족합니다.");
                 return;
             }
-            GameManager.Instance.UseGold(skillData.goldPerLevel[newSkill.level]);
-
             LevelUp(newSkill);
             ownedSkills.Add(skillData, newSkill);
 
-            if (newSkill is ActiveSkill activeSkill)
+            if (newSkill is ActiveSkill activeSkill 
+                && activeSkill.ActiveData.attackSkillType == ActiveSkillData.AttackSkillType.Original)
             {
                 GameManager.Instance.Player.GetComponent<SkillController>().EquipSkill(0, activeSkill);
             }
-            targetSkill = newSkill;
         }
-
-        if(skillData is PassiveSkillData passiveData)
-        {
-            ApplyPassiveStat(passiveData, targetSkill);
-        }
-    }
-
-    public void ApplyPassiveStat(PassiveSkillData passiveData, Skill skill)
-    {
-            switch (passiveData.skillType)
-            {
-                case PassiveSkillData.SkillType.AttackUp:
-                    AttackDamage += (int)passiveData.valuePerLevel[skill.level];
-                    break;
-                case PassiveSkillData.SkillType.HPUp:
-                    MaxHP += (int)passiveData.valuePerLevel[skill.level];
-                    CurrentHP += (int)passiveData.valuePerLevel[skill.level];
-                    GameManager.Instance.ChangeHP();
-                    break;
-            }
     }
     public void LevelUp(Skill skill)
     {
-        skill.level++;
+        if (skill is PassiveSkill passiveSkill)
+        {
+            ApplyPassiveStat(passiveSkill);
+        }
+        else if(skill is ActiveSkill activeSkill 
+            && activeSkill.ActiveData.attackSkillType == ActiveSkillData.AttackSkillType.Enhance)
+        {
+            ApplyActiveStat(activeSkill);
+        }
+
+        GameManager.Instance.UseGold(skill.skillData.goldPerLevel[skill.level]);
         skill.sumValue += skill.skillData.valuePerLevel[skill.level];
+        skill.level++;
+    }
+    public void ApplyPassiveStat(PassiveSkill skill)
+    {
+        switch (skill.skillType)
+        {
+            case PassiveSkillData.SkillType.AttackUp:
+                AttackDamage += (int)skill.skillData.valuePerLevel[skill.level];
+                break;
+            case PassiveSkillData.SkillType.HPUp:
+                MaxHP += (int)skill.skillData.valuePerLevel[skill.level];
+                CurrentHP += (int)skill.skillData.valuePerLevel[skill.level];
+                GameManager.Instance.ChangeHP();
+                break;
+        }
+    }
+    public void ApplyActiveStat(ActiveSkill skill)
+    {
+        if(!ownedSkills.TryGetValue(skill.ActiveData.targetSkill, out Skill targetSkill)) { return; }
+        if(targetSkill is not ActiveSkill activeSkill) { return; }
+        switch (skill.ActiveData.enhanceType)
+        {
+            case ActiveSkillData.EnhanceType.CoolDownReduce:
+                activeSkill.MaxCoolDown -= (skill.skillData.valuePerLevel[skill.level] / 100);
+                break;
+        }
     }
 }

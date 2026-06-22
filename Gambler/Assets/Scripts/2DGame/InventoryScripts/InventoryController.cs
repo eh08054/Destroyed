@@ -19,23 +19,6 @@ public class InventoryController : MonoBehaviour
     private void Start()
     {
         FreshSlot();
-        GameManager.Input.keyAction -= InventoryControl;
-        GameManager.Input.keyAction += InventoryControl;
-        gameObject.SetActive(false);
-    }
-    public void InventoryControl()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            if (gameObject.activeSelf)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                gameObject.SetActive(true);
-            }
-        }
     }
     public void FreshSlot()
     {

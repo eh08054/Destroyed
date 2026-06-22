@@ -13,6 +13,15 @@ public class StageData : ScriptableObject
     public float backgroundPPU;
     public Vector3 PlayerSpawnPosition;
     public List<EnemySpawnInfo> enemies;
+
+    public enum StageDifficulty
+    {
+        peace,
+        easy,
+        normal,
+        hard,
+    }
+    public StageDifficulty stageDifficulty;
 }
 
 [System.Serializable]

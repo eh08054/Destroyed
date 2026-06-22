@@ -31,7 +31,11 @@ public class SkillController : MonoBehaviour
         currentSkillEffect = activeSkill.ActiveData.skillEffectPrefab;
         if (activeSkill.ActiveData.attackType == ActiveSkillData.AttackType.projectile)
         {
-            animator.SetTrigger("Projectile");
+            if (playerBase.currentWeapon.weaponType == WeaponData.WeaponType.Sword)
+            {
+                animator.SetTrigger("Projectile");
+            }
+            else { return; }
         }
         StartCoroutine(SkillCoolTime(activeSkill, index));
     }

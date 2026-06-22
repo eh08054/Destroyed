@@ -27,3 +27,4 @@ MonoBehaviour:
   - enemyData: {fileID: 11400000, guid: b754b5bb59bbd6a47bdfbf2cbae8e0c4, type: 2}
     enemyType: 0
     count: 5
+  stageDifficulty: 2

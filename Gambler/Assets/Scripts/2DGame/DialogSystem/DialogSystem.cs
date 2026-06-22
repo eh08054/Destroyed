@@ -9,6 +9,7 @@ public class DialogSystem : MonoBehaviour
     [SerializeField] private DialogData[] dialogs;
     [SerializeField] private bool isAutoStart = true;
     private bool isFirst = true;
+    private bool isTalking = false;
     private int currentDialogIndex = -1;
     private int currentSpeakerIndex = 0;
     private float typingSpeed = 0.1f;
@@ -22,6 +23,7 @@ public class DialogSystem : MonoBehaviour
             SetActiveObjects(speakers[i], false);
             speakers[i].spriteRenderer.gameObject.SetActive(true);
         }
+        isTalking = true;
     }
     public bool UpdateDialog()
     {
@@ -55,6 +57,12 @@ public class DialogSystem : MonoBehaviour
                 return true;
             }
         }
+        if (Input.GetKeyDown(KeyCode.Escape) && isTalking == true)
+        {
+            GameManager.Instance.StopDialogue();
+            InitDialogue();
+            return true;
+        }
         return false;
     }
     private void SetNextDialog()
@@ -85,7 +93,9 @@ public class DialogSystem : MonoBehaviour
             SetActiveObjects(speakers[i], false);
             speakers[i].spriteRenderer.gameObject.SetActive(false);
         }
+        StopCoroutine(typingTextCoroutine);
         isFirst = true;
+        isTalking = false;
         currentDialogIndex = -1;
         currentSpeakerIndex = 0;
         typingTextCoroutine = null;

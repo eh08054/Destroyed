@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PassiveSkillData
   id: 1
   skillName: "\uACF5\uACA9\uD6C8\uB828"
-  skillIcon: {fileID: 21300000, guid: 1c331db2ee752b145ae3a3a654afd7f7, type: 2}
+  skillIcon: {fileID: 21300000, guid: 4f0b1b34806904f47afb23de85826910, type: 3}
   skillLevel: 0
   skillMaxLevel: 10
   sumValues: 0
@@ -34,5 +34,5 @@ MonoBehaviour:
     {1}\n\uAC15\uD654\uD6A8\uACFC: \uACF5\uACA9\uB825\uC774 \uC601\uAD6C\uC801\uC73C\uB85C
     {2}% \uC99D\uAC00\uD569\uB2C8\uB2E4."
   skillDescriptionFormat: "\uACF5\uACA9\uB825\uC774 \uC601\uAD6C\uC801\uC73C\uB85C
-    {0}% \uC99D\uAC00\uD569\uB2C8\uB2E4."
+    <color=red>{0}%</color> \uC99D\uAC00\uD569\uB2C8\uB2E4."
   skillType: 0

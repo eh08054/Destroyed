@@ -185,6 +185,7 @@ public class EnemyController : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
+        if(Enemy.CurrentState == EnemyData.State.Dead) { return; }
         Enemy.CurrentHP -= damage;
         if(Enemy.CurrentHP > 0)
         {
@@ -209,9 +210,9 @@ public class EnemyController : MonoBehaviour
             }
             HPSlider.value = 0;
             HPText.text = 0 + "/" + HPSlider.maxValue;
+            PlayDeathAnimation();
             Enemy.CurrentState = EnemyData.State.Dead;
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
-            PlayDeathAnimation();
         }
     }
     private IEnumerator KnockBack(float attackDirection)

@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler
+public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public SkillData skillData;
     public TMP_Text valueSumText;
@@ -11,9 +11,14 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler
     public Image skillImage;
 
     public event Action<SkillUpgradeSlot> OnHoverEnter;
+    public event Action OnHoverExit;
     public void OnPointerEnter(PointerEventData eventData)
     {
         OnHoverEnter?.Invoke(this);
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        OnHoverExit?.Invoke();
     }
     public void Enhance()
     {

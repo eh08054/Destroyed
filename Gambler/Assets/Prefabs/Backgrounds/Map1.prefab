@@ -849,6 +849,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map1_Backgrounds
       objectReference: {fileID: 0}
+    - target: {fileID: 2697079365947851416, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2697079365947851416, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2697079365947851416, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 2778231187627920422, guid: f76abce671127144994ed2bc367bb123, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -856,6 +868,18 @@ PrefabInstance:
     - target: {fileID: 4327325332258204945, guid: f76abce671127144994ed2bc367bb123, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606635519289222063, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606635519289222063, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606635519289222063, guid: f76abce671127144994ed2bc367bb123, type: 3}
+      propertyPath: m_Color.r
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4606635519289222063, guid: f76abce671127144994ed2bc367bb123, type: 3}
       propertyPath: m_SortingOrder

@@ -194,6 +194,7 @@ public class PlayerController : MonoBehaviour
         }
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Jump");
+        AudioManager.instance.PlaySFX(SFX.Jump);
     }
     private void DownJump()
     {

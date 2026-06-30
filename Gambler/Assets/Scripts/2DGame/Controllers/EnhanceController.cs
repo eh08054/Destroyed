@@ -17,15 +17,12 @@ public class EnhanceController : MonoBehaviour
         {
             SkillUpgradeSlot SUS = x.GetComponentInChildren<SkillUpgradeSlot>();
             x.GetComponentInChildren<Button>().onClick.AddListener(() => ShowInhanceComment(SUS));
-            SUS.OnHoverEnter += SetDescriptionPanel;
+            SUS.OnHoverEnter += ActivateSDPanel;
+            SUS.OnHoverExit += DeActivateSDPanel;
             SUS.Refresh();
         }
         currentSlot = skillSlots[0].GetComponent<SkillUpgradeSlot>();
         playerBase = GameManager.Instance.PlayerBase;
-    }
-    private void OnEnable()
-    {
-        skillDescriptionPanel.SetActive(true);
     }
     private void OnDisable()
     {
@@ -80,7 +77,7 @@ public class EnhanceController : MonoBehaviour
         {
            skillSlot.GetComponent<SkillUpgradeSlot>().Refresh();
         }
-        SetDescriptionPanel(currentSlot);
+        ActivateSDPanel(currentSlot);
         HideInhanceComment();
     }
     public void SetDescriptionText(SkillUpgradeSlot skillSlot)
@@ -90,18 +87,52 @@ public class EnhanceController : MonoBehaviour
                skillSlot.skillData.goldPerLevel[0],
                skillSlot.skillData.valuePerLevel[0]);
     }
-    private void SetDescriptionPanel(SkillUpgradeSlot skillSlot)
+    private void ActivateSDPanel(SkillUpgradeSlot skillSlot)
     {
+        if (!skillDescriptionPanel.activeSelf)
+        {
+            skillDescriptionPanel.SetActive(true);
+        }
         SkillDescriptionPanel SDPanel = skillDescriptionPanel.GetComponent<SkillDescriptionPanel>();
+
+        string levelText;
+        float sumValue;
+        string enhanceText;
         if (playerBase.ownedSkills.TryGetValue(skillSlot.skillData, out Skill skill))
         {
-            SDPanel.SetPanel(skillSlot.skillData.skillName,
-        string.Format(skillSlot.skillData.skillDescriptionFormat, skill.sumValue), skill.skillData.skillMaxLevel, skill.level);
+            if(skill.level == skill.skillData.skillMaxLevel)
+            {
+                levelText = "LV.MAX";
+                enhanceText = "";
+            }
+            else
+            {
+                levelText = $"LV.{skill.level} / {skill.skillData.skillMaxLevel}";
+                enhanceText = $"\n강화 시:   <color=grey>{skill.sumValue}%</color> > <color=#62FF00>{skill.sumValue + skill.skillData.valuePerLevel[skill.level]}%</color>";
+            }
+            sumValue = skill.sumValue;
         }
         else
         {
-            SDPanel.SetPanel(skillSlot.skillData.skillName,
-        string.Format(skillSlot.skillData.skillDescriptionFormat, 0), skillSlot.skillData.skillMaxLevel);
+            if(skillSlot.skillData is ActiveSkillData activeSkillData && activeSkillData.attackSkillType == ActiveSkillData.AttackSkillType.Original)
+            {
+                levelText = "미해금";
+                enhanceText = "";               
+            }
+            else
+            {
+                levelText = $"LV.0 / {skillSlot.skillData.skillMaxLevel}";
+                enhanceText = $"\n강화 시:   <color=grey>0%</color> > <color=#62FF00>{skillSlot.skillData.valuePerLevel[0]}%</color>";
+            }
+            sumValue = 0;
+        }
+        SDPanel.SetPanel(skillSlot.skillData.skillName, levelText, string.Format(skillSlot.skillData.skillDescriptionFormat, sumValue) + enhanceText);
+    }
+    private void DeActivateSDPanel()
+    {
+        if (skillDescriptionPanel.activeSelf)
+        {
+            skillDescriptionPanel.SetActive(false);
         }
     }
     public void HideInhanceComment()

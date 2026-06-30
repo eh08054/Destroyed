@@ -3,20 +3,13 @@ using TMPro;
 public class SkillDescriptionPanel : MonoBehaviour
 {
     [SerializeField] private TMP_Text skillName;
-    [SerializeField] private TMP_Text skillDescription;
     [SerializeField] private TMP_Text skillLevel;
+    [SerializeField] private TMP_Text skillDescription;
 
-    public void SetPanel(string name, string description, int maxLevel, int level = 0)
+    public void SetPanel(string name, string levelText, string description)
     {
         skillName.text = name;
+        skillLevel.text = levelText;
         skillDescription.text = description;
-        if (maxLevel == level)
-        {
-            skillLevel.text = "LV.MAX";
-        }
-        else
-        {
-            skillLevel.text = $"LV.{level} / {maxLevel}";
-        }
     }
 }

@@ -73,7 +73,13 @@ public class GameManager : MonoBehaviour
                 ItemData item = Resources.Load<ItemData>("2DGame/ItemsData/" + itemName);
                 InventoryPanel.GetComponentInChildren<InventoryController>().AddItem(item);
             }
-            GameData.gold = saveData.gold;
+            GameData.Gold = saveData.gold;
+            SettingsPanel.GetComponent<SettingsManager>().BGMSlider.value = saveData.BGMVolume;
+            SettingsPanel.GetComponent<SettingsManager>().SFXSlider.value = saveData.SFXVolume;
+            SettingsPanel.GetComponent<SettingsManager>().AllSlider.value = saveData.AllVolume;
+            GameData.BGMVolume = saveData.BGMVolume;
+            GameData.SFXVolume = saveData.SFXVolume;
+            GameData.AllVolume = saveData.AllVolume;
         }
     }
     private void Start()
@@ -169,13 +175,13 @@ public class GameManager : MonoBehaviour
     }
     public void AddGold(int value)
     {
-        GameData.gold += value;
-        GoldChanged?.Invoke(GameData.gold);
+        GameData.Gold += value;
+        GoldChanged?.Invoke(GameData.Gold);
     }
     public void UseGold(int value)
     {
-        GameData.gold -= value;
-        GoldChanged?.Invoke(GameData.gold);
+        GameData.Gold -= value;
+        GoldChanged?.Invoke(GameData.Gold);
     }
     public void ChangeHP()
     {
@@ -318,7 +324,10 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        saveData.gold = GameData.gold;
+        saveData.gold = GameData.Gold;
+        saveData.BGMVolume = GameData.BGMVolume;
+        saveData.SFXVolume = GameData.SFXVolume;
+        saveData.AllVolume = GameData.AllVolume;
         SaveSystem.Save(saveData);
     }
 
@@ -330,18 +339,24 @@ public class GameManager : MonoBehaviour
             Player.SetActive(true);
             AudioManager.instance.PlayBGM(BGM.MAP);
         }
-        if (scene.name == "MenuScene")
+        else if (scene.name == "GameScene")
+        {
+            AudioManager.instance.PlayBGM(BGM.BATTLE);
+        }
+        else if (scene.name == "MenuScene")
         {
             AudioManager.instance.PlayBGM(BGM.TITLE);
             ResetGameData();
         }
-        else
+        else { return; }
+
+        if (scene.name != "MenuScene")
         {
             LoadStage(stages[GameData.SelectedStage]);
             OnStageLoaded?.Invoke();
             UIManager.Instance.HPSliderInit(PlayerBase.CurrentHP, PlayerBase.MaxHP);
             UIManager.Instance.ChangeWeaponImage(PlayerBase.ownedWeapons[PlayerBase.currentWeaponIndex % 2]);
-            UIManager.Instance.SetGold(GameData.gold);
+            UIManager.Instance.SetGold(GameData.Gold);
             if (Player.GetComponent<SkillController>().EquipedSkills != null)
             {
                 UIManager.Instance.SetSkillImages(Player.GetComponent<SkillController>().EquipedSkills);

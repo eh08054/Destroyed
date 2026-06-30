@@ -11,11 +11,9 @@ public class UIManager : MonoBehaviour
     [Header("Menu Bar")]
     [SerializeField] private Slider PlayerHPSlider;
     [SerializeField] private TMP_Text HPText;
-    [SerializeField] private TMP_Text StageText;
     [SerializeField] private TMP_Text goldText;
 
     [Header("Common")]
-    [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject weaponPanel;
     [SerializeField] private GameObject skillPanel;
     [SerializeField] private Image WeaponImage;
@@ -55,7 +53,6 @@ public class UIManager : MonoBehaviour
         {
             skillPanel.SetActive(false);
             weaponPanel.SetActive(false);
-            menuPanel.SetActive(false);
         }
         panel.SetActive(true);
         openedPanels.Add(panel);
@@ -79,7 +76,6 @@ public class UIManager : MonoBehaviour
         {
             skillPanel.SetActive(true);
             weaponPanel.SetActive(true);
-            menuPanel.SetActive(true);
         }
         panel.SetActive(false);
     }
@@ -102,7 +98,7 @@ public class UIManager : MonoBehaviour
     }
     public void SetGold(int goldValue)
     {
-        goldText.text = "Gold: " + goldValue;
+        goldText.text = goldValue.ToString();
     }
     public void ShowGameClearPanel(string enemyName)
     {
@@ -160,6 +156,7 @@ public class UIManager : MonoBehaviour
     public void RegisterSkill(int slotIndex, ActiveSkill activeSkill)
     {
         SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
+        SkillImages[slotIndex].color = new Color(1, 1, 1);
         SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[slotIndex]);
     }
     public void SetSkillImages(ActiveSkill[] activeSkills)
@@ -168,8 +165,7 @@ public class UIManager : MonoBehaviour
         {
             if (activeSkills[i] != null)
             {
-                SkillImages[i].sprite = activeSkills[i].skillData.skillIcon;
-                SkillImages[i].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[i]);
+                RegisterSkill(i, activeSkills[i]);
             }
         }
     }
@@ -186,11 +182,11 @@ public class UIManager : MonoBehaviour
     {
         if (GameData.SelectedStage == 0)
         {
-            StageText.text = "SHELTER";
+            //StageText.text = "SHELTER";
         }
         else
         {
-            StageText.text = $"STAGE {GameData.SelectedStage}";
+            //StageText.text = $"STAGE {GameData.SelectedStage}";
         }
     }
     private void OnDisable()

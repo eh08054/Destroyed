@@ -3,17 +3,19 @@ public class BackgroundScroll : MonoBehaviour
 {
     [SerializeField][Range(1f, 200f)] float speed;
     [SerializeField] float posValue;
+    RectTransform rect;
     Vector2 startPos;
     float newPos;
 
     void Start()
     {
-        startPos = transform.position; 
+        rect = GetComponent<RectTransform>();
+        startPos = rect.anchoredPosition;
     }
 
     void Update()
     {
         newPos = Mathf.Repeat(Time.time * speed, posValue);
-        transform.position = startPos + Vector2.left * newPos;
+        rect.anchoredPosition = startPos + Vector2.left * newPos;
     }
 }

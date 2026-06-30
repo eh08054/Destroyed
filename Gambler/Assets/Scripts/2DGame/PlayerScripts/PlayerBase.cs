@@ -49,7 +49,7 @@ public abstract class PlayerBase
         if(ownedSkills.TryGetValue(skillData, out Skill existingSkill))
         {
             if(existingSkill.level == existingSkill.skillData.skillMaxLevel) { return; }
-            if (GameManager.Instance.GameData.gold < skillData.goldPerLevel[existingSkill.level])
+            if (GameManager.Instance.GameData.Gold < skillData.goldPerLevel[existingSkill.level])
             {
                 Debug.Log("골드가 부족합니다.");
                 return;
@@ -61,7 +61,7 @@ public abstract class PlayerBase
             Skill newSkill = skillData is ActiveSkillData activeData ? new ActiveSkill(activeData) :
                 new PassiveSkill((PassiveSkillData)skillData);
 
-            if (GameManager.Instance.GameData.gold < skillData.goldPerLevel[newSkill.level])
+            if (GameManager.Instance.GameData.Gold < skillData.goldPerLevel[newSkill.level])
             {
                 Debug.Log("골드가 부족합니다.");
                 return;

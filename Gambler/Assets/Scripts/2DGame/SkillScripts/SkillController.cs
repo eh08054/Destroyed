@@ -33,6 +33,7 @@ public class SkillController : MonoBehaviour
         {
             if (playerBase.currentWeapon.weaponType == WeaponData.WeaponType.Sword)
             {
+                AudioManager.instance.PlaySFX(SFX.Skill_Slash);
                 animator.SetTrigger("Projectile");
             }
             else { return; }

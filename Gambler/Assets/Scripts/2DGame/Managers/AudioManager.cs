@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public enum BGM
 {
@@ -16,6 +17,8 @@ public enum SFX
     Jab,
     Jab_Hit,
     Shot,
+    Skill_Slash,
+    Jump,
 }
 
 [System.Serializable]
@@ -38,6 +41,10 @@ public class AudioManager : MonoBehaviour
     private Dictionary<BGM, Sound> bgmDict;
     private Dictionary<SFX, Sound> sfxDict;
     private Queue<AudioSource> audioSourcePool;
+
+    [SerializeField] AudioMixerGroup bgmGroup;
+    [SerializeField] AudioMixerGroup sfxGroup;
+    [SerializeField] AudioMixer audioMixer;
 
     private void Awake()
     {
@@ -67,6 +74,7 @@ public class AudioManager : MonoBehaviour
 
         bgmPlayer = gameObject.AddComponent<AudioSource>();
         bgmPlayer.loop = true;
+        bgmPlayer.outputAudioMixerGroup = bgmGroup;
 
         InitPool();
     }
@@ -82,10 +90,6 @@ public class AudioManager : MonoBehaviour
             source.enabled = false;
             audioSourcePool.Enqueue(source);
         }
-    }
-    private void Start()
-    {
-        PlayBGM(BGM.TITLE);
     }
 
     public void PlayBGM(BGM bgmType)
@@ -113,6 +117,7 @@ public class AudioManager : MonoBehaviour
                 if (sfxDict[sfxType].PlayedNum < sfxDict[sfxType].SoundLimit)
                 {
                     AudioSource source = audioSourcePool.Dequeue();
+                    source.outputAudioMixerGroup = sfxGroup;
                     source.clip = clip.audioClip;
                     source.enabled = true;
                     source.Play();
@@ -126,6 +131,7 @@ public class AudioManager : MonoBehaviour
                 if (sfxDict[sfxType].PlayedNum < sfxDict[sfxType].SoundLimit)
                 {
                     AudioSource newSource = new AudioSource();
+                    newSource.outputAudioMixerGroup = sfxGroup;
                     newSource.clip = clip.audioClip;
                     newSource.playOnAwake = false;
                     newSource.enabled = true;
@@ -140,6 +146,28 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning("SFX NOT FOUND");
         }
+    }
+
+    public void SetAllVolume(float value)
+    {
+        float db = value > 0.001f ? Mathf.Log10(value) * 20f : -80f;
+        audioMixer.SetFloat("MasterVolume", db);
+        if (GameManager.Instance == null) { return; }
+        GameManager.Instance.GameData.AllVolume = value;
+    }
+    public void SetBGMVolume(float value)
+    {
+        float db = value > 0.001f ? Mathf.Log10(value) * 20f : -80f;
+        audioMixer.SetFloat("BGMVolume", db);
+        if(GameManager.Instance == null) { return; }
+        GameManager.Instance.GameData.BGMVolume = value;
+    }
+    public void SetSFXVolume(float value)
+    {
+        float db = value > 0.001f ? Mathf.Log10(value) * 20f : -80f;
+        audioMixer.SetFloat("SFXVolume", db);
+        if (GameManager.Instance == null) { return; }
+        GameManager.Instance.GameData.SFXVolume = value;
     }
 
     public void PlaySoundOnObject(SFX sfxType, GameObject gameObject)

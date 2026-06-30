@@ -33,8 +33,8 @@ MonoBehaviour:
   descriptionFormat: "{0} \uC2A4\uD0AC\uC744 \uAC15\uD654\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
     {1}\n\uAC15\uD654\uD6A8\uACFC: \uAC80\uACA9 \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
     {2}% \uAC10\uC18C\uD569\uB2C8\uB2E4."
-  skillDescriptionFormat: "\uAC80\uACA9 \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
-    \uAC10\uC18C\uD569\uB2C8\uB2E4.\n\uD604\uC7AC: {0}\t\t"
+  skillDescriptionFormat: "[\uAC80\uACA9] \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
+    <color=red>{0}%</color> \uAC10\uC18C\uD569\uB2C8\uB2E4.\t"
   attackSkillType: 1
   skillEffectPrefab: {fileID: 0}
   cooldown: 0

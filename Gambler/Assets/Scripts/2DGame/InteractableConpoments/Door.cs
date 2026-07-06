@@ -42,7 +42,7 @@ public class Door : MonoBehaviour, IInteractable
             if (isOpened)
             {
                 GameData.SelectedStage = nextStage;
-                GameManager.Instance.SceneChanger.SceneChange("GameScene");
+                StartCoroutine(UIManager.Instance.FadeScene(0, 1, "GameScene"));
             }
         }
     }

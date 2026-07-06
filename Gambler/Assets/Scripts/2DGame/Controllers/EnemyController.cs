@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    private SpriteRenderer body;
-    private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer body;
+    [SerializeField] private Rigidbody2D rb;
     [SerializeField] private GameObject HPCanvas;
     [SerializeField] private Slider HPSlider;
     [SerializeField] private TMP_Text HPText;
@@ -17,10 +17,12 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float rayDistance = 1f;
     [SerializeField] private Vector2 headOffset;
     [SerializeField]private LayerMask wallLayer;
+    
     private float lastAttackTime = -999f;
     private float moveDirection;
     private bool isKnockBack = false;
     private bool isFalling = false;
+
     private Transform playerTransform;
     public EnemyBase Enemy { get; private set; }
     public Animator Animator { get; private set; }
@@ -33,10 +35,8 @@ public class EnemyController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        body = GetComponent<SpriteRenderer>();
-        Animator = GetComponent<Animator>();
         Enemy = new EnemyBase();
+        Animator = GetComponent<Animator>();
     }
     private void Start()
     {
@@ -59,11 +59,11 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         if(Enemy.CurrentState == EnemyData.State.Dead) { return; }
-        CheckWall();
         if (isFalling == false)
         {
             CheckPlatform();
         }
+        CheckWall();
         CheckDirection();
         if (!playerTransform.gameObject.activeSelf)
         {
@@ -131,21 +131,29 @@ public class EnemyController : MonoBehaviour
     }
     private void ApplyAnimation(EnemyData.State currentState)
     {
-        if(currentState == EnemyData.State.Chase)
+        if(currentState == EnemyData.State.Idle)
         {
-            Animator.SetBool("IsChase", true);
+            Animator.SetBool("Walk", true);
         }
         else
         {
-            Animator.SetBool("IsChase", false);
+            Animator.SetBool("Walk", false);
+        }
+        if (currentState == EnemyData.State.Chase)
+        {
+            Animator.SetBool("Run", true);
+        }
+        else
+        {
+            Animator.SetBool("Run", false);
         }
         if (currentState == EnemyData.State.CoolTime)
         {
-            Animator.SetBool("IsCool", true);
+            Animator.SetBool("Ready", true);
         }
         else
         {
-            Animator.SetBool("IsCool", false);
+            Animator.SetBool("Ready", false);
         }
         if (currentState == EnemyData.State.Attack)
         {
@@ -239,7 +247,11 @@ public class EnemyController : MonoBehaviour
     }
     private void PlayDeathAnimation()
     {
-        Animator.SetTrigger("Death");
+        Animator.SetBool("Walk", false);
+        Animator.SetBool("Ready", false);
+        Animator.SetBool("Run", false);
+        Animator.SetBool("Move", false);
+        Animator.SetTrigger("Die");
     }
     public void EnemyDeath()
     {
@@ -249,6 +261,7 @@ public class EnemyController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
+        if (!Application.isPlaying) { return; }
         //시야 범위
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, Enemy.Data.chaseRange);

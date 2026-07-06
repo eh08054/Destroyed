@@ -22,5 +22,11 @@ public class SceneChangeEditor : Editor
     {
         EditorSceneManager.OpenScene("Assets/Scenes/2DGame/GameScene.unity");
     }
+
+    [MenuItem("SceneMove/TutorialScene &4")]
+    private static void TutorialScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/2DGame/TutorialScene.unity");
+    }
 }
 #endif

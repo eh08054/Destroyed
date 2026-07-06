@@ -19,6 +19,6 @@ MonoBehaviour:
   attackDamage: 10
   attackCoolTime: 1
   moveSpeed: 4
-  enemyPrefab: {fileID: 5747813925860929051, guid: 29cb39c9e985c794e81ac76f3f7f5729, type: 3}
+  enemyPrefab: {fileID: 4054891035455531101, guid: 35c2ee5fec76a6442950178a9cb19468, type: 3}
   enemyIcon: {fileID: 21300000, guid: f7a12b8a6baf68347b31dbf2af641fa5, type: 2}
   dropTable: {fileID: 11400000, guid: 09d2e2965bc507c4c83b836fce9473ef, type: 2}

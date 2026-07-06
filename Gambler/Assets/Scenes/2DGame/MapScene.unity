@@ -634,11 +634,14 @@ MonoBehaviour:
   goldText: {fileID: 1818253491}
   weaponPanel: {fileID: 1499091277}
   skillPanel: {fileID: 1202740984}
+  fadePanel: {fileID: 746535345}
+  canvas: {fileID: 874894590}
   WeaponImage: {fileID: 1675267764}
   SkillImages:
   - {fileID: 2087730475}
   - {fileID: 1660944419}
   - {fileID: 976475318}
+  sceneFadeTime: 1.5
   dialogPanel: {fileID: 1736806117}
   skillEnhancePanel: {fileID: 1731565223}
   activeSkillPanel: {fileID: 891408299}
@@ -646,6 +649,7 @@ MonoBehaviour:
   gameOverPanel: {fileID: 0}
   gameClearPanel: {fileID: 0}
   MinimapPanel: {fileID: 0}
+  StageText: {fileID: 0}
   openedPanels: []
 --- !u!4 &157611077
 Transform:
@@ -2823,6 +2827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e9a2f143be5cd4395065cc6f7630ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  gameState: 0
   stages:
   - {fileID: 11400000, guid: a8aeebab1c177664c9b1b6005013140e, type: 2}
   - {fileID: 11400000, guid: ae9e3e707e8dd384e9ac3413f017b181, type: 2}
@@ -2833,6 +2838,7 @@ MonoBehaviour:
   skillContainerPrefab: {fileID: 2621264685268835732, guid: 5be51294c533b534880fd2df31a4a36b, type: 3}
   pauseCanvasPrefab: {fileID: 1080885188674114443, guid: 6b809d79927a2b04d9106904dea1bf18, type: 3}
   settingsCanvasPrefab: {fileID: 9212122048122291044, guid: 3a37078b7dfaf0e41aa65e2b16666a53, type: 3}
+  GameEndCanvasPrefab: {fileID: 61964957982076644, guid: ec3673d2a4fd2dd41b4c6193cf9877a6, type: 3}
   treasureBoxPrefab:
   - {fileID: 9103507562460050893, guid: b37ad03db8872064894bbe132b011d26, type: 3}
   - {fileID: 7987321686610935240, guid: 6573df4583b11ba4fa0598f4483ead2a, type: 3}
@@ -3893,6 +3899,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 723789773}
+  m_CullTransparentMesh: 1
+--- !u!1 &746535345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 746535346}
+  - component: {fileID: 746535348}
+  - component: {fileID: 746535347}
+  m_Layer: 5
+  m_Name: FadePanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &746535346
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746535345}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.0879422, y: 1.0879422, z: 0.989029}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 874894591}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 21.058838, y: 12.109619}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &746535347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746535345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &746535348
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746535345}
   m_CullTransparentMesh: 1
 --- !u!1 &750070265
 GameObject:
@@ -5114,6 +5195,8 @@ RectTransform:
   - {fileID: 1731565224}
   - {fileID: 1978105710}
   - {fileID: 1070923733}
+  - {fileID: 1588743757}
+  - {fileID: 746535346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8166,6 +8249,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587333515}
   m_CullTransparentMesh: 1
+--- !u!1 &1588743756
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588743757}
+  m_Layer: 5
+  m_Name: DimPanels
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1588743757
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588743756}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 874894591}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1592432473
 GameObject:
   m_ObjectHideFlags: 0

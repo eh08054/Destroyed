@@ -13,16 +13,23 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button SettingsButton;
 
     [SerializeField] private float fadeTime;
+    [SerializeField] private float SceneFadeTime;
+    [SerializeField] private GameObject GameEndCanvas;
     [SerializeField] private GameObject SettingsCanvas;
+    [SerializeField] private GameObject FadePanel;
 
     private SaveData saveData;
-    private SettingsManager settings;
+    private SettingsController settings;
+    private GraphicBlink graphicBlink;
+
+    private TMP_Text anyKeyText;
+    private Image fadeImage;
 
     private void Start()
     {
         saveData = SaveSystem.Load();
 
-        settings = SettingsCanvas.GetComponent<SettingsManager>();
+        settings = SettingsCanvas.GetComponent<SettingsController>();
         settings.AllSlider.value = saveData.AllVolume;
         settings.BGMSlider.value = saveData.BGMVolume;
         settings.SFXSlider.value = saveData.SFXVolume;
@@ -32,9 +39,13 @@ public class MainMenu : MonoBehaviour
         AudioManager.instance.SetSFXVolume(saveData.SFXVolume);
         AudioManager.instance.PlayBGM(BGM.TITLE);
 
-        StartCoroutine(TextBlink());
-        EndButton.onClick.AddListener(EndGame);
+        EndButton.onClick.AddListener(OpenGameEndPanel);
         SettingsButton.onClick.AddListener(OpenSettingPanel);
+
+        anyKeyText = AnyKeyText.GetComponent<TMP_Text>();
+        fadeImage = FadePanel.GetComponent<Image>();
+        graphicBlink = new GraphicBlink();
+        StartCoroutine(TextBlink());
     }
 
     private void Update()
@@ -47,6 +58,15 @@ public class MainMenu : MonoBehaviour
                 {
                     SettingsCanvas.SetActive(false);
                 }
+                else if (GameEndCanvas.activeSelf)
+                {
+                    GameEndCanvas.SetActive(false);
+                }
+                else
+                {
+                    GameEndCanvas.SetActive(true);
+                }
+                
             }
             else if (EventSystem.current.IsPointerOverGameObject())
             {
@@ -54,7 +74,8 @@ public class MainMenu : MonoBehaviour
             }
             else
             {
-                SceneManager.LoadScene("MapScene");
+                FadePanel.SetActive(true);
+                StartCoroutine(FadeScene());
             }
         }
     }
@@ -71,45 +92,26 @@ public class MainMenu : MonoBehaviour
 
         SaveSystem.Save(saveData);
     }
-
+    private IEnumerator FadeScene()
+    {
+        yield return StartCoroutine(graphicBlink.FadeGraphic(fadeImage, 0, 1, SceneFadeTime));
+        SceneManager.LoadScene("MapScene");
+    }
     private IEnumerator TextBlink()
     {
         while (true)
         {
-            yield return StartCoroutine(Fade(1, 0));
-            yield return StartCoroutine(Fade(0, 1));
+            yield return StartCoroutine(graphicBlink.FadeGraphic(anyKeyText, 1, 0, fadeTime));
+            yield return StartCoroutine(graphicBlink.FadeGraphic(anyKeyText, 0, 1, fadeTime));
         }
     }
-
-    private IEnumerator Fade(float start, float end)
-    {
-        float current = 0;
-        float percent = 0;
-
-        while (percent < 1)
-        {
-            current += Time.deltaTime;
-            percent = current / fadeTime;
-
-            Color color = AnyKeyText.GetComponent<TMP_Text>().color;
-            color.a = Mathf.Lerp(start, end, percent);
-            AnyKeyText.GetComponent<TMP_Text>().color = color;
-
-            yield return null;
-        }
-    }
-
-    private void EndGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
-    }
-
+    
     private void OpenSettingPanel()
     {
         SettingsCanvas.SetActive(true);
+    }
+    private void OpenGameEndPanel()
+    {
+        GameEndCanvas.SetActive(true);
     }
 }

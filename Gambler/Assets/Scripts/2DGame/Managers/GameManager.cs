@@ -9,7 +9,12 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static UnityEngine.EventSystems.EventTrigger;
 
-
+public enum GameState
+{
+    Playing,
+    Pausing,
+    Loading,
+}
 public class GameManager : MonoBehaviour
 {
     InputManager _input = new InputManager();
@@ -22,12 +27,14 @@ public class GameManager : MonoBehaviour
     public GameObject SkillPanel{ get; private set; }
     public GameObject PausePanel { get; private set; }
     public GameObject SettingsPanel { get; private set; }
+    public GameObject GameEndPanel { get; private set; }
     public GameObject Background { get; private set; }
     public Transform BackgroundOnly { get; private set; }
     public Inventory PlayerInventory { get; private set; }
     public GameData GameData { get; private set; }
     public SceneChanger SceneChanger { get; private set; }
     public StageData.StageDifficulty CurrentDifficulty { get; private set; }
+    public GameState gameState = GameState.Playing;
 
     [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
@@ -35,6 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject skillContainerPrefab;
     [SerializeField] private GameObject pauseCanvasPrefab;
     [SerializeField] private GameObject settingsCanvasPrefab;
+    [SerializeField] private GameObject GameEndCanvasPrefab;
     [SerializeField] private GameObject[] treasureBoxPrefab;
     private Platform[] platforms;
 
@@ -56,6 +64,7 @@ public class GameManager : MonoBehaviour
             CreateSkillContainer();
             CreatePausePanel();
             CreateSettingsPanel();
+            CreateGameEndPanel();
             LoadSaveData();
         }
         else
@@ -74,9 +83,9 @@ public class GameManager : MonoBehaviour
                 InventoryPanel.GetComponentInChildren<InventoryController>().AddItem(item);
             }
             GameData.Gold = saveData.gold;
-            SettingsPanel.GetComponent<SettingsManager>().BGMSlider.value = saveData.BGMVolume;
-            SettingsPanel.GetComponent<SettingsManager>().SFXSlider.value = saveData.SFXVolume;
-            SettingsPanel.GetComponent<SettingsManager>().AllSlider.value = saveData.AllVolume;
+            SettingsPanel.GetComponent<SettingsController>().BGMSlider.value = saveData.BGMVolume;
+            SettingsPanel.GetComponent<SettingsController>().SFXSlider.value = saveData.SFXVolume;
+            SettingsPanel.GetComponent<SettingsController>().AllSlider.value = saveData.AllVolume;
             GameData.BGMVolume = saveData.BGMVolume;
             GameData.SFXVolume = saveData.SFXVolume;
             GameData.AllVolume = saveData.AllVolume;
@@ -131,6 +140,14 @@ public class GameManager : MonoBehaviour
         {
             SettingsPanel = Instantiate(settingsCanvasPrefab);
             DontDestroyOnLoad(SettingsPanel);
+        }
+    }
+    public void CreateGameEndPanel()
+    {
+        if(GameEndPanel == null)
+        {
+            GameEndPanel = Instantiate(GameEndCanvasPrefab);
+            DontDestroyOnLoad(GameEndPanel);
         }
     }
     public void RegisterInventory(Inventory inventory)
@@ -307,6 +324,7 @@ public class GameManager : MonoBehaviour
         SkillPanel.SetActive(false);
         PausePanel.SetActive(false);
         SettingsPanel.SetActive(false);
+        GameEndPanel.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -337,6 +355,7 @@ public class GameManager : MonoBehaviour
         {
             GameData.SelectedStage = 0;
             Player.SetActive(true);
+            PlayerBase.CurrentHP = PlayerBase.MaxHP;
             AudioManager.instance.PlayBGM(BGM.MAP);
         }
         else if (scene.name == "GameScene")

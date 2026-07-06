@@ -958,6 +958,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297ded0c9e3183642979eb3f63ed09aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  body: {fileID: 499920433791929212}
+  rb: {fileID: -3394367941339123939}
   HPCanvas: {fileID: 5545248681360214046}
   HPSlider: {fileID: 1635242094932745631}
   HPText: {fileID: 3516017744814972257}

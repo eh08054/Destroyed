@@ -1299,7 +1299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8836977447383169370, guid: b2dfa872dbb843f44953dc2cd5e3aefc, type: 3}
       propertyPath: nextStage
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8836977447383169370, guid: b2dfa872dbb843f44953dc2cd5e3aefc, type: 3}
       propertyPath: openSprite

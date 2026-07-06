@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class PauseManager : MonoBehaviour
+public class PauseController : MonoBehaviour
 {
     [SerializeField] private Button backButton;
     [SerializeField] private Button newGameButton;
@@ -37,10 +38,6 @@ public class PauseManager : MonoBehaviour
     }
     private void EndGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        UIManager.Instance.OpenPanel(GameManager.Instance.GameEndPanel);
     }
 }

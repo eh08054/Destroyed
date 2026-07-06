@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-public class SettingsManager : MonoBehaviour
+public class SettingsController : MonoBehaviour
 {
     [Header("버튼")]
     [SerializeField] private Button GraphicButton;
@@ -18,6 +19,10 @@ public class SettingsManager : MonoBehaviour
     public Slider SFXSlider;
     public Slider AllSlider;
 
+    [Header("그래픽")]
+    public TMP_Dropdown ScreenDropDown;
+    public TMP_Dropdown ResDropDown;
+
     private void Start()
     {
         GraphicButton.onClick.AddListener(ShowGraphicPanel);
@@ -27,6 +32,10 @@ public class SettingsManager : MonoBehaviour
         BGMSlider.onValueChanged.AddListener(AudioManager.instance.SetBGMVolume);
         SFXSlider.onValueChanged.AddListener(AudioManager.instance.SetSFXVolume);
         AllSlider.onValueChanged.AddListener(AudioManager.instance.SetAllVolume);
+
+        ScreenManager.instance.Init(ScreenDropDown, ResDropDown);
+        ScreenDropDown.onValueChanged.AddListener(ScreenManager.instance.SetScreenMode);
+        ResDropDown.onValueChanged.AddListener(ScreenManager.instance.SetResolution);
     }
     private void OnDestroy()
     {

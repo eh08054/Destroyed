@@ -67,7 +67,7 @@ public class EnhanceController : MonoBehaviour
                 SetDescriptionText(skillSlot);
             }
         }
-        EnhanceConfirmPanel.SetActive(true);
+        UIManager.Instance.OpenPanel(EnhanceConfirmPanel);
     }
     public void OnConfirm()
     {
@@ -137,6 +137,6 @@ public class EnhanceController : MonoBehaviour
     }
     public void HideInhanceComment()
     {
-        EnhanceConfirmPanel.SetActive(false);
+        UIManager.Instance.ClosePanel(EnhanceConfirmPanel);
     }
 }

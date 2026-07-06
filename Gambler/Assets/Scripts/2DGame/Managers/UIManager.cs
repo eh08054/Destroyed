@@ -1,8 +1,11 @@
-using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.Rendering.LookDev;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -16,8 +19,11 @@ public class UIManager : MonoBehaviour
     [Header("Common")]
     [SerializeField] private GameObject weaponPanel;
     [SerializeField] private GameObject skillPanel;
+    [SerializeField] private GameObject fadePanel;
+    [SerializeField] private Canvas canvas;
     [SerializeField] private Image WeaponImage;
     [SerializeField] private Image[] SkillImages;
+    [SerializeField] private float sceneFadeTime;
 
     [Header("Map Scene")]
     [SerializeField] private GameObject dialogPanel;
@@ -29,16 +35,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject gameClearPanel;
     [SerializeField] private GameObject MinimapPanel;
+    [SerializeField] private GameObject StageText;
 
     private PlayerController playerController;
+    private Image fadeImage;
+    private TMP_Text stageText;
     public List<GameObject> openedPanels = new List<GameObject>();
+    public GraphicBlink GraphicBlink { get; private set; }
     private void Awake()
     {
         Instance = this;
     }
     private void Start()
     {
-        SetStageText();
         playerController = GameManager.Instance.Player.GetComponent<PlayerController>();
         playerController.OnHPChanged += SetPlayerHP;
         playerController.OnDeath += ShowGameOverPanel;
@@ -46,10 +55,16 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OpenDialog += ShowDialogPanel;
         GameManager.Instance.CloseDialog += HideDialogPanel;
         GameManager.Instance.GoldChanged += SetGold;
+
+        GraphicBlink = new GraphicBlink();
+        fadeImage = fadePanel.GetComponent<Image>();
+        StartCoroutine(FadeScene(1, 0));
+        SetStageText();
     }
     public void OpenPanel(GameObject panel)
     {
-        if(panel == dialogPanel || panel == GameManager.Instance.PausePanel)
+        EventSystem.current.SetSelectedGameObject(null);
+        if (panel == dialogPanel || panel == GameManager.Instance.PausePanel)
         {
             skillPanel.SetActive(false);
             weaponPanel.SetActive(false);
@@ -182,12 +197,55 @@ public class UIManager : MonoBehaviour
     {
         if (GameData.SelectedStage == 0)
         {
-            //StageText.text = "SHELTER";
+            //StageText.GetComponent<TMP_Text>().text = "SHELTER";
         }
         else
         {
-            //StageText.text = $"STAGE {GameData.SelectedStage}";
+            stageText = StageText.GetComponent<TMP_Text>();
+            stageText.text = $"STAGE {GameData.SelectedStage}";
+            StartCoroutine(StageBlink());
         }
+    }
+
+    public IEnumerator StageBlink()
+    {
+        RectTransform rect = StageText.GetComponent<RectTransform>();
+        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+
+        Vector2 StartPos = new Vector2(0, 100f);
+        Vector2 endPos = new Vector2(0, 100f);
+
+        Vector3 StartScale = Vector3.zero;
+        Vector3 EndScale = Vector3.one;
+
+        float durationTime = 2f;
+        yield return StartCoroutine(GraphicBlink.MSGraphic(rect, StartPos, endPos, StartScale, EndScale, durationTime));
+
+        StartPos = new Vector2(0, 100f);
+        endPos = new Vector2(canvasRect.rect.width / 2 - rect.rect.width / 2,
+            canvasRect.rect.height / 2 - rect.rect.height / 2);
+
+        StartScale = Vector3.one;
+        EndScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+        durationTime = 1f;
+        yield return StartCoroutine(GraphicBlink.MSGraphic(rect, StartPos, endPos, StartScale, EndScale, durationTime));
+    }
+    public IEnumerator FadeScene(float start, float end, string sceneName = null)
+    {
+        GameManager.Instance.gameState = GameState.Loading;
+        fadePanel.SetActive(true);
+        yield return StartCoroutine(GraphicBlink.FadeGraphic(fadeImage, start, end, sceneFadeTime));
+
+        if(sceneName != null)
+        {
+            GameManager.Instance.SceneChanger.SceneChange(sceneName);
+        }
+        else
+        {
+            fadePanel.SetActive(false);
+        }
+        GameManager.Instance.gameState = GameState.Playing;
     }
     private void OnDisable()
     {

@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public GameObject PausePanel { get; private set; }
     public GameObject SettingsPanel { get; private set; }
     public GameObject GameEndPanel { get; private set; }
+    public GameObject BuffPanel { get; private set; }
     public GameObject Background { get; private set; }
     public Transform BackgroundOnly { get; private set; }
     public Inventory PlayerInventory { get; private set; }
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseCanvasPrefab;
     [SerializeField] private GameObject settingsCanvasPrefab;
     [SerializeField] private GameObject GameEndCanvasPrefab;
+    [SerializeField] private GameObject BuffPanelPrefab;
     [SerializeField] private GameObject[] treasureBoxPrefab;
     private Platform[] platforms;
 
@@ -60,11 +62,7 @@ public class GameManager : MonoBehaviour
             SceneManager.sceneLoaded += OnSceneLoaded;
             DontDestroyOnLoad(gameObject);
             SpawnPlayer();
-            CreateInventory();
-            CreateSkillContainer();
-            CreatePausePanel();
-            CreateSettingsPanel();
-            CreateGameEndPanel();
+            CreatePanels();
             LoadSaveData();
         }
         else
@@ -83,9 +81,10 @@ public class GameManager : MonoBehaviour
                 InventoryPanel.GetComponentInChildren<InventoryController>().AddItem(item);
             }
             GameData.Gold = saveData.gold;
-            SettingsPanel.GetComponent<SettingsController>().BGMSlider.value = saveData.BGMVolume;
-            SettingsPanel.GetComponent<SettingsController>().SFXSlider.value = saveData.SFXVolume;
-            SettingsPanel.GetComponent<SettingsController>().AllSlider.value = saveData.AllVolume;
+            SettingsController settings = SettingsPanel.GetComponent<SettingsController>();
+            settings.BGMSlider.value = saveData.BGMVolume;
+            settings.SFXSlider.value = saveData.SFXVolume;
+            settings.AllSlider.value = saveData.AllVolume;
             GameData.BGMVolume = saveData.BGMVolume;
             GameData.SFXVolume = saveData.SFXVolume;
             GameData.AllVolume = saveData.AllVolume;
@@ -110,46 +109,30 @@ public class GameManager : MonoBehaviour
             PlayerBase.Init();
         }
     }
-    private void CreateInventory()
+    private void CreatePanels()
     {
-        if(InventoryPanel == null)
-        {
-            InventoryPanel = Instantiate(inventoryPrefab);
-            DontDestroyOnLoad(InventoryPanel);
-        }
+        GameObject dynamicCanvas = new GameObject("DynamicCanvas");
+        DontDestroyOnLoad(dynamicCanvas);
+
+        GameObject hudGroup = new GameObject("HUDGroup");
+        hudGroup.transform.SetParent(dynamicCanvas.transform);
+        hudGroup.AddComponent<CanvasGroup>();
+
+        GameObject popupGroup = new GameObject("PopUpGroup");
+        popupGroup.transform.SetParent(dynamicCanvas.transform);
+        popupGroup.AddComponent<CanvasGroup>();
+
+        // HUD
+        BuffPanel = Instantiate(BuffPanelPrefab, hudGroup.transform);
+
+        // Popup
+        InventoryPanel = Instantiate(inventoryPrefab, popupGroup.transform);
+        SkillPanel = Instantiate(skillContainerPrefab, popupGroup.transform);
+        PausePanel = Instantiate(pauseCanvasPrefab, popupGroup.transform);
+        SettingsPanel = Instantiate(settingsCanvasPrefab, popupGroup.transform);
+        GameEndPanel = Instantiate(GameEndCanvasPrefab, popupGroup.transform);
     }
-    public void CreateSkillContainer()
-    {
-        if(SkillPanel == null)
-        {
-            SkillPanel = Instantiate(skillContainerPrefab);
-            DontDestroyOnLoad(SkillPanel);
-        }
-    }
-    public void CreatePausePanel()
-    {
-        if(PausePanel == null)
-        {
-            PausePanel = Instantiate(pauseCanvasPrefab);
-            DontDestroyOnLoad(PausePanel);
-        }
-    }
-    public void CreateSettingsPanel()
-    {
-        if(SettingsPanel == null)
-        {
-            SettingsPanel = Instantiate(settingsCanvasPrefab);
-            DontDestroyOnLoad(SettingsPanel);
-        }
-    }
-    public void CreateGameEndPanel()
-    {
-        if(GameEndPanel == null)
-        {
-            GameEndPanel = Instantiate(GameEndCanvasPrefab);
-            DontDestroyOnLoad(GameEndPanel);
-        }
-    }
+
     public void RegisterInventory(Inventory inventory)
     {
         PlayerInventory = inventory;
@@ -326,7 +309,7 @@ public class GameManager : MonoBehaviour
         SettingsPanel.SetActive(false);
         GameEndPanel.SetActive(false);
     }
-    private void OnDestroy()
+    private void OnApplicationQuit()
     {
         if (Instance != this) { return; }
         SceneManager.sceneLoaded -= OnSceneLoaded;

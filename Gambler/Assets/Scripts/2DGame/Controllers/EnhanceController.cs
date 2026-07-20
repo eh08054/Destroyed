@@ -53,7 +53,7 @@ public class EnhanceController : MonoBehaviour
             {
                 if (activeSkillData.requiredSkill != null 
                     && !GameManager.Instance.PlayerBase.ownedSkills.TryGetValue(activeSkillData.requiredSkill, out _)){ return; }
-                if (activeSkillData.attackSkillType == ActiveSkillData.AttackSkillType.Original)
+                if (activeSkillData.activeSkillType == ActiveSkillData.ActiveSkillType.Original)
                 {
                     text.text = currentSlot.skillData.descriptionFormat;
                 }
@@ -114,7 +114,7 @@ public class EnhanceController : MonoBehaviour
         }
         else
         {
-            if(skillSlot.skillData is ActiveSkillData activeSkillData && activeSkillData.attackSkillType == ActiveSkillData.AttackSkillType.Original)
+            if(skillSlot.skillData is ActiveSkillData activeSkillData && activeSkillData.activeSkillType == ActiveSkillData.ActiveSkillType.Original)
             {
                 levelText = "¹ÌÇØ±Ý";
                 enhanceText = "";               

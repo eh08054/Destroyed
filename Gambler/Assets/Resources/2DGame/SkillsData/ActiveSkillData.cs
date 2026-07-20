@@ -3,10 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ActiveSkillData", menuName = "Scriptable Objects/ActiveSkillData")]
 public class ActiveSkillData : SkillData
 {
-    public enum AttackSkillType { Original, Enhance}
-    public enum AttackType
+    public enum ActiveSkillType { Original, Enhance}
+    public enum ActiveType
     {
         projectile,
+        Roll,
+        Buff,
     }
     public enum EnhanceType
     {
@@ -15,18 +17,27 @@ public class ActiveSkillData : SkillData
         DamageIncrease,
     }
 
+    public enum BuffType
+    {
+        AttackUp,
+    }
+
     [Header("Skill Type")]
-    public AttackSkillType attackSkillType;
+    public ActiveSkillType activeSkillType;
 
     [Header("Original")]
     public GameObject skillEffectPrefab;
     public float cooldown;
-    public AttackType attackType;
+    public ActiveType activeType;
 
     [Header("Enhance")]
     public ActiveSkillData targetSkill;
     public ActiveSkillData requiredSkill;
     public EnhanceType enhanceType;
+
+    [Header("Buff")]
+    public float duration;
+    public BuffType buffType;
     
     
 }

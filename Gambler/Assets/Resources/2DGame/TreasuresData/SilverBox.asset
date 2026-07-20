@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: SilverBox
   m_EditorClassIdentifier: Assembly-CSharp::TreasureData
   treasureType: 1
-  gold: 0
-  items: []
+  gold: 200
+  items:
+  - {fileID: 11400000, guid: 188210b2de6b5eb4e95a0de63a97d14f, type: 2}

@@ -17,12 +17,14 @@ public class MyEffectManager : ScriptableObject
     public MySpriteEffect CreateSpriteEffect(GameObject player, string clipName, int direction = 0, Transform parent = null)
     {
         var instance = Instantiate(SpriteEffectPrefab, player.transform.position, Quaternion.identity, parent);
-
-        instance.name = clipName;
         instance.transform.position = parent == null ? player.transform.position : parent.transform.position;
-        instance.GetComponent<SpriteRenderer>().sortingOrder = player.GetComponentInChildren<SpriteRenderer>().sortingOrder + 1;
-        instance.Play(clipName, direction == 0 ? Math.Sign(player.transform.localScale.x) : direction);
 
+        if (clipName != null)
+        {
+            instance.name = clipName;
+            instance.GetComponent<SpriteRenderer>().sortingOrder = player.GetComponentInChildren<SpriteRenderer>().sortingOrder + 1;
+            instance.Play(clipName, direction == 0 ? Math.Sign(player.transform.localScale.x) : direction);
+        }
         return instance;
     }
     public void CreateFloatingText(int damage, Vector2 textPosition)

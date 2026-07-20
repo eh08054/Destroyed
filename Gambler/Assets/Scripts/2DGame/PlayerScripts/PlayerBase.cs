@@ -70,9 +70,9 @@ public abstract class PlayerBase
             ownedSkills.Add(skillData, newSkill);
 
             if (newSkill is ActiveSkill activeSkill 
-                && activeSkill.ActiveData.attackSkillType == ActiveSkillData.AttackSkillType.Original)
+                && activeSkill.ActiveData.activeSkillType == ActiveSkillData.ActiveSkillType.Original)
             {
-                GameManager.Instance.Player.GetComponent<SkillController>().EquipSkill(0, activeSkill);
+                GameManager.Instance.Player.GetComponent<SkillController>().EquipSkill(activeSkill);
             }
         }
     }
@@ -83,7 +83,7 @@ public abstract class PlayerBase
             ApplyPassiveStat(passiveSkill);
         }
         else if(skill is ActiveSkill activeSkill 
-            && activeSkill.ActiveData.attackSkillType == ActiveSkillData.AttackSkillType.Enhance)
+            && activeSkill.ActiveData.activeSkillType == ActiveSkillData.ActiveSkillType.Enhance)
         {
             ApplyActiveStat(activeSkill);
         }
@@ -116,5 +116,14 @@ public abstract class PlayerBase
                 activeSkill.MaxCoolDown -= (skill.skillData.valuePerLevel[skill.level] / 100);
                 break;
         }
+    }
+
+    public void AttackBuffOn(float attackPlus)
+    {
+        AttackDamage += (int)attackPlus;
+    }
+    public void AttackBuffOff(float attackMinus)
+    {
+        AttackDamage -= (int)attackMinus;
     }
 }

@@ -23,6 +23,9 @@ public class SettingsController : MonoBehaviour
     public TMP_Dropdown ScreenDropDown;
     public TMP_Dropdown ResDropDown;
 
+    [Header("공통")]
+    public TMP_Text SettingType;
+
     private void Start()
     {
         GraphicButton.onClick.AddListener(ShowGraphicPanel);
@@ -53,17 +56,20 @@ public class SettingsController : MonoBehaviour
         GraphicPanel.SetActive(true);
         SoundPanel.SetActive(false);
         ControlPanel.SetActive(false);
+        SettingType.text = "그래픽 설정";
     }
     private void ShowSoundPanel()
     {
         GraphicPanel.SetActive(false);
         SoundPanel.SetActive(true);
         ControlPanel.SetActive(false);
+        SettingType.text = "사운드 설정";
     }
     private void ShowControlPanel()
     {
         GraphicPanel.SetActive(false);
         SoundPanel.SetActive(false);
         ControlPanel.SetActive(true);
+        SettingType.text = "게임 플레이 설정";
     }
 }

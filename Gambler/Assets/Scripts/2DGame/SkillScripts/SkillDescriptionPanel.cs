@@ -8,7 +8,7 @@ public class SkillDescriptionPanel : MonoBehaviour
 
     public void SetPanel(string name, string levelText, string description)
     {
-        skillName.text = name;
+        skillName.text = $"[{name}]";
         skillLevel.text = levelText;
         skillDescription.text = description;
     }

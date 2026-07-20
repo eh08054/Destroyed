@@ -19,6 +19,7 @@ public enum SFX
     Shot,
     Skill_Slash,
     Jump,
+    Buff,
 }
 
 [System.Serializable]

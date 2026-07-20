@@ -1,7 +1,8 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections.Generic;
-using System.Collections;
 
 public class SkillController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SkillController : MonoBehaviour
     public ActiveSkill[] EquipedSkills { get; private set; }
     private PlayerBase playerBase;
     private Animator animator;
+    private KeyCode[] skillKeys = { KeyCode.A, KeyCode.S, KeyCode.D };
     public int skillIndex = 0;
 
     private void Start()
@@ -19,31 +21,69 @@ public class SkillController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        for(int i = 0; i < skillKeys.Length; i++)
         {
-            if (EquipedSkills[0] == null || !EquipedSkills[0].IsReady) { return; }
-            TryUseSkill(EquipedSkills[0], 0);
+            if (Input.GetKeyDown(skillKeys[i]))
+            {
+                if (EquipedSkills[i] == null || !EquipedSkills[i].IsReady) { return; }
+                TryUseSkill(EquipedSkills[i], i);
+            }
         }
     }
 
     private void TryUseSkill(ActiveSkill activeSkill, int index)
     {
         currentSkillEffect = activeSkill.ActiveData.skillEffectPrefab;
-        if (activeSkill.ActiveData.attackType == ActiveSkillData.AttackType.projectile)
+        switch (activeSkill.ActiveData.activeType)
         {
-            if (playerBase.currentWeapon.weaponType == WeaponData.WeaponType.Sword)
-            {
-                AudioManager.instance.PlaySFX(SFX.Skill_Slash);
-                animator.SetTrigger("Projectile");
-            }
-            else { return; }
+            case ActiveSkillData.ActiveType.projectile:
+                if (playerBase.currentWeapon.weaponType == WeaponData.WeaponType.Sword)
+                {
+                    AudioManager.instance.PlaySFX(SFX.Skill_Slash);
+                    animator.SetTrigger("Projectile");
+                }
+                break;
+            case ActiveSkillData.ActiveType.Roll:
+                animator.SetTrigger("Rolling");
+                break;
+            case ActiveSkillData.ActiveType.Buff:
+                PlayBuffParticle();
+                activeSkill.ApplyBuff(playerBase);
+                UIManager.Instance.ResisterBuff(activeSkill, () => activeSkill.ReleaseBuff(playerBase));
+                AudioManager.instance.PlaySFX(SFX.Buff);
+                break;
+            default:
+                break;
         }
         StartCoroutine(SkillCoolTime(activeSkill, index));
     }
-    public void EquipSkill(int index, ActiveSkill activeSkill)
+    public void EquipSkill(ActiveSkill activeSkill)
     {
-        EquipedSkills[index] = activeSkill;
-        UIManager.Instance.RegisterSkill(index, activeSkill);
+        for (int i = 0; i < EquipedSkills.Length; i++)
+        {
+            if (EquipedSkills[i] == null)
+            {
+                EquipedSkills[i] = activeSkill;
+                UIManager.Instance.RegisterSkill(i, activeSkill);
+                return;
+            }
+        }
+    }
+    public void EquipSkillFromDrag(int index, Skill skill)
+    {
+        if (skill is ActiveSkill activeSkill)
+        {
+            for(int i = 0; i < EquipedSkills.Length; i++)
+            {
+                if (EquipedSkills[i] == activeSkill)
+                {
+                    EquipedSkills[i] = null;
+                    UIManager.Instance.RegisterSkill(i, null);
+                }
+            }
+            EquipedSkills[index] = activeSkill;
+            UIManager.Instance.RegisterSkill(index, activeSkill);
+        }
     }
     public void PlaySkillParticle()
     {
@@ -56,7 +96,10 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-
+    public void PlayBuffParticle()
+    {
+        Instantiate(currentSkillEffect, transform);
+    }
     private IEnumerator SkillCoolTime(ActiveSkill skill, int index)
     {
         skill.CurrentCooldown = skill.ActiveData.cooldown;

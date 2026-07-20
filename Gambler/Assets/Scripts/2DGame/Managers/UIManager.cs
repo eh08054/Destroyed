@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,6 +21,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject weaponPanel;
     [SerializeField] private GameObject skillPanel;
     [SerializeField] private GameObject fadePanel;
+    [SerializeField] private GameObject buffSlotPrefab;
     [SerializeField] private Canvas canvas;
     [SerializeField] private Image WeaponImage;
     [SerializeField] private Image[] SkillImages;
@@ -170,9 +172,25 @@ public class UIManager : MonoBehaviour
 
     public void RegisterSkill(int slotIndex, ActiveSkill activeSkill)
     {
-        SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
-        SkillImages[slotIndex].color = new Color(1, 1, 1);
-        SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[slotIndex]);
+        if (activeSkill == null)
+        {
+            SkillImages[slotIndex].sprite = null;
+            SkillImages[slotIndex].color = new Color(0.4f, 0.4f, 0.4f);
+        }
+        else
+        {
+            SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
+            SkillImages[slotIndex].color = new Color(1, 1, 1);
+            SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[slotIndex]);
+        }
+    }
+    public void ResisterBuff(ActiveSkill activeSkill, Action OnEnd)
+    {
+        GameObject gameObject = Instantiate(buffSlotPrefab, GameManager.Instance.BuffPanel.transform.GetChild(0));
+        BuffSlot buffSlot = gameObject.GetComponent<BuffSlot>();
+
+        buffSlot.icon.sprite = activeSkill.ActiveData.skillIcon;
+        buffSlot.StartBuff(activeSkill, OnEnd);
     }
     public void SetSkillImages(ActiveSkill[] activeSkills)
     {
@@ -222,8 +240,7 @@ public class UIManager : MonoBehaviour
         yield return StartCoroutine(GraphicBlink.MSGraphic(rect, StartPos, endPos, StartScale, EndScale, durationTime));
 
         StartPos = new Vector2(0, 100f);
-        endPos = new Vector2(canvasRect.rect.width / 2 - rect.rect.width / 2,
-            canvasRect.rect.height / 2 - rect.rect.height / 2);
+        endPos = new Vector2(0, canvasRect.rect.height / 2 - rect.rect.height / 2);
 
         StartScale = Vector3.one;
         EndScale = new Vector3(0.5f, 0.5f, 0.5f);

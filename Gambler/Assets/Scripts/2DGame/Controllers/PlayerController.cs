@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private bool isAttacking;
     private bool isDoubleJumping;
     private bool isDashing;
+    private bool isRolling;
     private bool canCombo = false;
     private int currentDashCount;
 
@@ -73,6 +74,7 @@ public class PlayerController : MonoBehaviour
         isDoubleJumping = false;
         isAttacking = false;
         isDashing = false;
+        isRolling = false;
         currentDashCount = 0;
         rb.gravityScale = gravityScale;
     }
@@ -112,7 +114,9 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetTrigger("Dashing");
             if (dashCoroutine != null)
+            {
                 StopCoroutine(dashCoroutine);
+            }
             dashCoroutine = StartCoroutine(Dash());
         }
         if (Input.GetKeyDown(KeyCode.C))
@@ -267,6 +271,16 @@ public class PlayerController : MonoBehaviour
             prefab.GetComponent<ParticleSystem>().Play();
 
         }
+    }
+    public void StartRoll()
+    {
+        isRolling = true;
+        MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Dash");
+    }
+    public void EndRoll()
+    {
+        isRolling = false;
+        animator.ResetTrigger("Rolling");
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

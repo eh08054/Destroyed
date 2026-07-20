@@ -16,7 +16,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float ChaseThresholdY = 0.1f;
     [SerializeField] private float rayDistance = 1f;
     [SerializeField] private Vector2 headOffset;
-    [SerializeField]private LayerMask wallLayer;
+    [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private ParticleSystem deathPaticle;
     
     private float lastAttackTime = -999f;
     private float moveDirection;
@@ -194,6 +195,8 @@ public class EnemyController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         if(Enemy.CurrentState == EnemyData.State.Dead) { return; }
+        MyEffectManager.Instance.CreateFloatingText(damage, (Vector2)transform.position + headOffset);
+        Instantiate(deathPaticle, transform.position + Vector3.up * 2f, Quaternion.identity);
         Enemy.CurrentHP -= damage;
         if(Enemy.CurrentHP > 0)
         {
@@ -208,7 +211,6 @@ public class EnemyController : MonoBehaviour
                 StartCoroutine(ChangeColor());
             }
             StartCoroutine(KnockBack(playerTransform.position.x - transform.position.x));
-            MyEffectManager.Instance.CreateFloatingText(damage, (Vector2)transform.position + headOffset);
         }
         else
         {

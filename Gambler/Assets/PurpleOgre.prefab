@@ -272,7 +272,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 100
+  m_SortingOrder: 2
   m_Sprite: {fileID: 4723107735738678597, guid: bc8421d33323470badde616a99843edb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -473,6 +473,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  deathPaticle: {fileID: 5184171278836851203, guid: 18bd73f2850389f41ab241cf2897430e, type: 3}
   platformDistance: 1.5
   platformLayer:
     serializedVersion: 2

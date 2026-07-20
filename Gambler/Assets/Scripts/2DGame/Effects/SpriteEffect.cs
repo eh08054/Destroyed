@@ -1,4 +1,10 @@
 using UnityEngine;
+
+public enum Effects
+{
+    Splatter,
+
+}
 public class MySpriteEffect : MonoBehaviour
 {
     public void Play(string clipName, int direction = 1)

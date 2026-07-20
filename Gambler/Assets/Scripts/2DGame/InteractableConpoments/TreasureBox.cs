@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 public class TreasureBox : MonoBehaviour, IInteractable
@@ -43,14 +44,13 @@ public class TreasureBox : MonoBehaviour, IInteractable
     }
     private void GetRewards()
     {
-        switch (treasureData.treasureType)
+        foreach(var item in treasureData.items)
         {
-            case TreasureData.TreasureType.Wooden:
-                break;
-            case TreasureData.TreasureType.Silver:
-                break;
-            case TreasureData.TreasureType.Golden:
-                break;
+            GameObject x = Instantiate(item._itemPrefab, transform.position + Vector3.right, Quaternion.identity);
+            if(item.itemType == ItemData.ItemType.Gold)
+            {
+                x.GetComponent<GoldDrop>().amount = treasureData.gold;
+            }
         }
     }
     private void SetState(bool idle = false, bool destroy = false, bool open = false)

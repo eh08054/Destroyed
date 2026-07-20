@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageNum: 1
   stageName: Stage 1
-  totalEnemyCount: 20
+  totalEnemyCount: 15
   backgroundPrefab: {fileID: 4246222773208558604, guid: 255986c7ed1d70d4cb3bba86e110df9a, type: 3}
   backgroundWidthSize: 5000
   backgroundHeightSize: 1080
@@ -23,7 +23,7 @@ MonoBehaviour:
   enemies:
   - enemyData: {fileID: 11400000, guid: 68614a95055b2df4aa2ea23c7b269b02, type: 2}
     enemyType: 0
-    count: 10
+    count: 5
   - enemyData: {fileID: 11400000, guid: b754b5bb59bbd6a47bdfbf2cbae8e0c4, type: 2}
     enemyType: 0
     count: 5

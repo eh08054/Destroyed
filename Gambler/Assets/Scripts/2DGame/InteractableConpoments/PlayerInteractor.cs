@@ -37,7 +37,7 @@ public class PlayerInteractor : MonoBehaviour
                         if (Input.GetKeyDown(x))
                         {
                             CurrentInteractable.OnInteract(x);
-                            OnInteracted.Invoke(CurrentInteractable, c.gameObject);
+                            OnInteracted?.Invoke(CurrentInteractable, c.gameObject);
                         }
                     }
                 }

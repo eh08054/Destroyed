@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0bfb1246bb75da4080c8fc326597ae5, type: 3}
+  m_Name: BlueDragon
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Dragon
+  maxHP: 1000
+  chaseRange: 10
+  attackRange: 5
+  attackDamage: 30
+  attackCoolTime: 2
+  moveSpeed: 3
+  enemyPrefab: {fileID: 866829735663616562, guid: e37d5d2449cdf2a4ab26cbe5abde6bae, type: 3}
+  enemyIcon: {fileID: 21300000, guid: 1fb9fb5c62efc58479078a9420c18165, type: 2}
+  dropTable: {fileID: 11400000, guid: b9c9ba19fa5275c4899877916ad17b3d, type: 2}

@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerType playerType;
 
     [Header("Movement")] 
-    [SerializeField] private float playerSpeed = 1f;
     [SerializeField] private float dashSpeed = 50f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float gravityScale;
@@ -65,6 +64,7 @@ public class PlayerController : MonoBehaviour
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Sword"));
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Gun"));
         player.ChangeWeapon(player.ownedWeapons[0]);
+        player.MoveSpeed = 10f;
     }
     private void Start()
     {
@@ -168,14 +168,14 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x = MoveDirection > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
         transform.localScale = scale;
-        rb.linearVelocity = new Vector2(MoveDirection * playerSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(MoveDirection * player.MoveSpeed, rb.linearVelocity.y);
     }
 
     private IEnumerator Dash()
     {
         isDashing = true;
         currentDashCount++;
-        rb.linearVelocity = new Vector2(MoveDirection * dashSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(MoveDirection * (player.MoveSpeed + dashSpeed), rb.linearVelocity.y);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Dash");
         ghost.makeGhost = true;
         yield return new WaitForSeconds(0.4f);
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
             EnemyController enemy = bullet.collider.gameObject.GetComponent<EnemyController>();
             if (enemy != null && enemy.Enemy.CurrentState != EnemyData.State.Dead)
             {
-                var attackDamage = player.AttackDamage + player.currentWeapon.weaponDamage;
+                var attackDamage = player.ATK + player.currentWeapon.weaponDamage;
                 enemy.TakeDamage(attackDamage);
             }
         }
@@ -324,7 +324,7 @@ public class PlayerController : MonoBehaviour
             EnemyController enemyController = collision.GetComponentInParent<EnemyController>();
             if(enemyController != null)
             { 
-                player.TakeDamage(enemyController.AttackDamage);
+                player.TakeDamage(enemyController.AttackDamage - player.DEF);
                 OnHPChanged?.Invoke(player.CurrentHP, player.MaxHP);
                 if(player.CurrentHP <= 0)
                 {
@@ -349,6 +349,10 @@ public class PlayerController : MonoBehaviour
     {
         player.HealPlayer(amount);
         InvokeHPChanged();
+    }
+    public void AttakUpPlayer(int amount)
+    {
+        player.ATK += amount;
     }
     public void InvokeHPChanged()
     {

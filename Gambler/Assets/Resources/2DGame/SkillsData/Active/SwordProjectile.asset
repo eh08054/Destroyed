@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ca1b022ea3fda42bccc92b0669de43, type: 3}
   m_Name: SwordProjectile
   m_EditorClassIdentifier: Assembly-CSharp::ActiveSkillData
-  id: 3
+  id: 4
   skillName: "\uAC80\uACA9"
   skillIcon: {fileID: 21300000, guid: 5e206622009ac77478a66d4e9e26a569, type: 3}
   skillLevel: 0
@@ -31,3 +31,5 @@ MonoBehaviour:
   targetSkill: {fileID: 0}
   requiredSkill: {fileID: 0}
   enhanceType: 0
+  duration: 0
+  buffType: 0

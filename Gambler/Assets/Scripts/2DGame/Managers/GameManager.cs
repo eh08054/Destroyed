@@ -41,11 +41,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject inventoryPrefab;
     [SerializeField] private GameObject skillContainerPrefab;
-    [SerializeField] private GameObject pauseCanvasPrefab;
-    [SerializeField] private GameObject settingsCanvasPrefab;
-    [SerializeField] private GameObject GameEndCanvasPrefab;
+    [SerializeField] private GameObject pausePrefab;
+    [SerializeField] private GameObject settingsPrefab;
+    [SerializeField] private GameObject GameEndPrefab;
     [SerializeField] private GameObject BuffPanelPrefab;
     [SerializeField] private GameObject[] treasureBoxPrefab;
+    [SerializeField] private GameObject dynamicCanvasPrefab;
     private Platform[] platforms;
 
     public event Action OnClear;
@@ -85,9 +86,11 @@ public class GameManager : MonoBehaviour
             settings.BGMSlider.value = saveData.BGMVolume;
             settings.SFXSlider.value = saveData.SFXVolume;
             settings.AllSlider.value = saveData.AllVolume;
+            settings.HUDSlider.value = saveData.HUDAlpha;
             GameData.BGMVolume = saveData.BGMVolume;
             GameData.SFXVolume = saveData.SFXVolume;
             GameData.AllVolume = saveData.AllVolume;
+            GameData.HUDAlpha = saveData.HUDAlpha;
         }
     }
     private void Start()
@@ -111,26 +114,19 @@ public class GameManager : MonoBehaviour
     }
     private void CreatePanels()
     {
-        GameObject dynamicCanvas = new GameObject("DynamicCanvas");
+        GameObject dynamicCanvas = Instantiate(dynamicCanvasPrefab);
         DontDestroyOnLoad(dynamicCanvas);
-
-        GameObject hudGroup = new GameObject("HUDGroup");
-        hudGroup.transform.SetParent(dynamicCanvas.transform);
-        hudGroup.AddComponent<CanvasGroup>();
-
-        GameObject popupGroup = new GameObject("PopUpGroup");
-        popupGroup.transform.SetParent(dynamicCanvas.transform);
-        popupGroup.AddComponent<CanvasGroup>();
-
+        Transform hudGroup = dynamicCanvas.transform.GetChild(0);
+        Transform popupGroup = dynamicCanvas.transform.GetChild(1);
         // HUD
-        BuffPanel = Instantiate(BuffPanelPrefab, hudGroup.transform);
+        BuffPanel = Instantiate(BuffPanelPrefab, hudGroup);
 
         // Popup
-        InventoryPanel = Instantiate(inventoryPrefab, popupGroup.transform);
-        SkillPanel = Instantiate(skillContainerPrefab, popupGroup.transform);
-        PausePanel = Instantiate(pauseCanvasPrefab, popupGroup.transform);
-        SettingsPanel = Instantiate(settingsCanvasPrefab, popupGroup.transform);
-        GameEndPanel = Instantiate(GameEndCanvasPrefab, popupGroup.transform);
+        InventoryPanel = Instantiate(inventoryPrefab, popupGroup);
+        SkillPanel = Instantiate(skillContainerPrefab, popupGroup);
+        PausePanel = Instantiate(pausePrefab, popupGroup);
+        SettingsPanel = Instantiate(settingsPrefab, popupGroup);
+        GameEndPanel = Instantiate(GameEndPrefab, popupGroup);
     }
 
     public void RegisterInventory(Inventory inventory)
@@ -228,18 +224,14 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < platform.spawnPoints.Length; i++)
             {
                 var enemy = stageData.enemies[enemyIndex];
-                Vector3 enemyOffset = new Vector3(0, -0.3f, 0);
+                Vector3 enemyOffset = enemy.enemyData.offset;
                 GameObject newEnemy = Instantiate(enemy.enemyData.enemyPrefab,
                    platform.spawnPoints[i].position + enemyOffset,
                    Quaternion.identity);
                 EnemyController enemyController = newEnemy.GetComponent<EnemyController>();
                 enemyController.OnDeath += EnemyDeath;
                 enemyController.OnDeath += UIManager.Instance.RefreshMinimapPanel;
-                if (enemy.enemyType == EnemyData.Type.Boss)
-                {
-                    enemyController.OnDeath += UIManager.Instance.ShowGameClearPanel;
-                }
-                enemyController.InitEnemy(enemy.enemyData);
+                enemyController.InitEnemy(enemy.enemyData, enemy.enemyType);
                 spawnCount++;
                 if (spawnCount >= enemy.count)
                 {
@@ -271,12 +263,12 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
     }
-    public void EnemyDeath(string enemyName)
+    public void EnemyDeath(string enemyName, EnemyData.Type enemyType)
     {
         GameData.RemainedEnemyInStage--;
         if(GameData.RemainedEnemyInStage == 0)
         {
-            OnClear.Invoke();
+            OnClear?.Invoke();
             MakeTreasureBox();
         }
     }
@@ -329,6 +321,7 @@ public class GameManager : MonoBehaviour
         saveData.BGMVolume = GameData.BGMVolume;
         saveData.SFXVolume = GameData.SFXVolume;
         saveData.AllVolume = GameData.AllVolume;
+        saveData.HUDAlpha = GameData.HUDAlpha;
         SaveSystem.Save(saveData);
     }
 
@@ -340,10 +333,12 @@ public class GameManager : MonoBehaviour
             Player.SetActive(true);
             PlayerBase.CurrentHP = PlayerBase.MaxHP;
             AudioManager.instance.PlayBGM(BGM.MAP);
+            UIManager.Instance.SetHUDAlpha(GameData.HUDAlpha);
         }
         else if (scene.name == "GameScene")
         {
             AudioManager.instance.PlayBGM(BGM.BATTLE);
+            UIManager.Instance.SetHUDAlpha(GameData.HUDAlpha);
         }
         else if (scene.name == "MenuScene")
         {

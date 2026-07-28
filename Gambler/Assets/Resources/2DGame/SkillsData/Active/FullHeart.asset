@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ca1b022ea3fda42bccc92b0669de43, type: 3}
   m_Name: FullHeart
   m_EditorClassIdentifier: Assembly-CSharp::ActiveSkillData
-  id: 5
+  id: 6
   skillName: "\uC804\uC2EC\uC804\uB825"
   skillIcon: {fileID: 21300000, guid: ac2abc62bfce025419327754842f69f0, type: 3}
   skillLevel: 0

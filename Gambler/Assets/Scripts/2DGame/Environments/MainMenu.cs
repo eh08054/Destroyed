@@ -33,6 +33,7 @@ public class MainMenu : MonoBehaviour
         settings.AllSlider.value = saveData.AllVolume;
         settings.BGMSlider.value = saveData.BGMVolume;
         settings.SFXSlider.value = saveData.SFXVolume;
+        settings.HUDSlider.value = saveData.HUDAlpha;
 
         AudioManager.instance.SetAllVolume(saveData.AllVolume);
         AudioManager.instance.SetBGMVolume(saveData.BGMVolume);
@@ -89,6 +90,7 @@ public class MainMenu : MonoBehaviour
         saveData.AllVolume = settings.AllSlider.value;
         saveData.BGMVolume = settings.BGMSlider.value;
         saveData.SFXVolume = settings.SFXSlider.value;
+        saveData.HUDAlpha = settings.HUDSlider.value;
 
         SaveSystem.Save(saveData);
     }

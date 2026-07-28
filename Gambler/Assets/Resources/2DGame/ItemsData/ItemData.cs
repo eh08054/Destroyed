@@ -9,12 +9,12 @@ public class ItemData : ScriptableObject
     public GameObject _itemPrefab;
     public Sprite ItemIcon;
     public int maxStorageStack;
-    public enum ItemType
-    {
-        Potion,
-        Sword,
-        Shield,
-        Gold,
-    }
     public ItemType itemType;
+}
+public enum ItemType
+{
+    Potion,
+    Sword,
+    Shield,
+    Gold,
 }

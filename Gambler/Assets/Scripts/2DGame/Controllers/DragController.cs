@@ -13,22 +13,10 @@ public class DragController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
         canvas = GetComponentInParent<Canvas>();
         dragCopy = Instantiate(gameObject, canvas.transform); 
         dragCopyRect = dragCopy.GetComponent<RectTransform>();
-        RectTransform originalRect = GetComponent<RectTransform>();
+        dragCopyRect.position = GetComponent<RectTransform>().position;
 
-        dragCopyRect.sizeDelta = new Vector2(
-            originalRect.rect.width * originalRect.lossyScale.x / canvas.transform.lossyScale.x,
-            originalRect.rect.height * originalRect.lossyScale.y / canvas.transform.lossyScale.y);
-
-        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, originalRect.position);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvas.GetComponent<RectTransform>(),
-            screenPos,
-            null,
-            out Vector2 localPos);
-        dragCopyRect.anchoredPosition = localPos;
         dragCopy.GetComponent<Image>().raycastTarget = false;
         Destroy(dragCopy.GetComponent<DragController>());
-
         Skill = GetComponentInParent<SkillContainerSlot>().skill;
     }
     void IDragHandler.OnDrag(PointerEventData eventData)

@@ -20,6 +20,7 @@ public class ActiveSkillData : SkillData
     public enum BuffType
     {
         AttackUp,
+        SpeedUp,
     }
 
     [Header("Skill Type")]

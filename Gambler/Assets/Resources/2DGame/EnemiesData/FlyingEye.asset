@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0bfb1246bb75da4080c8fc326597ae5, type: 3}
+  m_Name: FlyingEye
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: FlyingEye
+  maxHP: 50
+  chaseRange: 5
+  attackRange: 2
+  attackDamage: 10
+  attackCoolTime: 1
+  moveSpeed: 4
+  offset: {x: 0, y: 0.5, z: 0}
+  enemyPrefab: {fileID: 4184724544410129914, guid: 14bd7a72b353c814e9e89cd1e5723d75, type: 3}
+  enemyIcon: {fileID: 21300000, guid: 481eed73ec364334b8352f3980a28aa2, type: 2}
+  dropTable: {fileID: 11400000, guid: 835a575cf49bdd246a75e6c8686ad832, type: 2}

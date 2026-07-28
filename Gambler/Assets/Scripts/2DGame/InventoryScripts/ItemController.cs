@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class ItemController : MonoBehaviour
 {
-    [SerializeField] private ItemData _item;
-    private void OnTriggerEnter2D(Collider2D collision)
+    public ItemData _item;
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (_item.itemType == ItemData.ItemType.Gold)
+            if (_item.itemType == ItemType.Gold)
             {
                 GameManager.Instance.AddGold(GetComponent<GoldDrop>().amount);
                 Destroy(gameObject);

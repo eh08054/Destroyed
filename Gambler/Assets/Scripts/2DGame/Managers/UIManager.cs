@@ -42,11 +42,13 @@ public class UIManager : MonoBehaviour
     private PlayerController playerController;
     private Image fadeImage;
     private TMP_Text stageText;
+    private CanvasGroup canvasGroup;
     public List<GameObject> openedPanels = new List<GameObject>();
     public GraphicBlink GraphicBlink { get; private set; }
     private void Awake()
     {
         Instance = this;
+        canvasGroup = canvas.GetComponent<CanvasGroup>();
     }
     private void Start()
     {
@@ -66,9 +68,8 @@ public class UIManager : MonoBehaviour
     public void OpenPanel(GameObject panel)
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if (panel == dialogPanel || panel == GameManager.Instance.PausePanel)
+        if (panel == dialogPanel)
         {
-            skillPanel.SetActive(false);
             weaponPanel.SetActive(false);
         }
         panel.SetActive(true);
@@ -117,7 +118,7 @@ public class UIManager : MonoBehaviour
     {
         goldText.text = goldValue.ToString();
     }
-    public void ShowGameClearPanel(string enemyName)
+    public void ShowGameClearPanel(string enemyName = "", EnemyData.Type enemyType = 0)
     {
         StartCoroutine(ShowGamePanelDelay());
     }
@@ -161,7 +162,7 @@ public class UIManager : MonoBehaviour
     {
         MinimapPanel.GetComponent<MinimapHUD>().InitHUD(enemySpawnInfos);
     }
-    public void RefreshMinimapPanel(string enemyName)
+    public void RefreshMinimapPanel(string enemyName, EnemyData.Type enemyType)
     {
         MinimapPanel.GetComponent<MinimapHUD>().RefreshHUD(enemyName);
     }
@@ -186,7 +187,7 @@ public class UIManager : MonoBehaviour
     }
     public void ResisterBuff(ActiveSkill activeSkill, Action OnEnd)
     {
-        GameObject gameObject = Instantiate(buffSlotPrefab, GameManager.Instance.BuffPanel.transform.GetChild(0));
+        GameObject gameObject = Instantiate(buffSlotPrefab, GameManager.Instance.BuffPanel.transform);
         BuffSlot buffSlot = gameObject.GetComponent<BuffSlot>();
 
         buffSlot.icon.sprite = activeSkill.ActiveData.skillIcon;
@@ -230,8 +231,8 @@ public class UIManager : MonoBehaviour
         RectTransform rect = StageText.GetComponent<RectTransform>();
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
 
-        Vector2 StartPos = new Vector2(0, 100f);
-        Vector2 endPos = new Vector2(0, 100f);
+        Vector2 StartPos = new Vector2(0, -400f);
+        Vector2 endPos = new Vector2(0, -400f);
 
         Vector3 StartScale = Vector3.zero;
         Vector3 EndScale = Vector3.one;
@@ -239,8 +240,8 @@ public class UIManager : MonoBehaviour
         float durationTime = 2f;
         yield return StartCoroutine(GraphicBlink.MSGraphic(rect, StartPos, endPos, StartScale, EndScale, durationTime));
 
-        StartPos = new Vector2(0, 100f);
-        endPos = new Vector2(0, canvasRect.rect.height / 2 - rect.rect.height / 2);
+        StartPos = new Vector2(0, -400f);
+        endPos = new Vector2(0, -rect.rect.height / 2);
 
         StartScale = Vector3.one;
         EndScale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -263,6 +264,10 @@ public class UIManager : MonoBehaviour
             fadePanel.SetActive(false);
         }
         GameManager.Instance.gameState = GameState.Playing;
+    }
+    public void SetHUDAlpha(float value)
+    {
+        canvasGroup.alpha = value;
     }
     private void OnDisable()
     {

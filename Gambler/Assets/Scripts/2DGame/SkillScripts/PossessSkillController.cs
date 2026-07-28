@@ -40,9 +40,13 @@ public class PossessSkillController : MonoBehaviour
         foreach (var (skillData, skill) in GameManager.Instance.PlayerBase.ownedSkills)
         {
             GameObject mySkill;
-            if(skill is ActiveSkill)
+            if(skill is ActiveSkill activeSkill)
             {
                 mySkill = Instantiate(SkillPrefab, ActiveSlotParent);
+                if(activeSkill.ActiveData.activeSkillType == ActiveSkillData.ActiveSkillType.Original)
+                {
+                    mySkill.GetComponentInChildren<Button>().gameObject.AddComponent<DragController>();
+                }
             }
             else if(skill is PassiveSkill)
             {

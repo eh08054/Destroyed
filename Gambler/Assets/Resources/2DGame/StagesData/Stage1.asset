@@ -21,13 +21,13 @@ MonoBehaviour:
   backgroundPPU: 32
   PlayerSpawnPosition: {x: -15, y: 1.318604, z: 0}
   enemies:
-  - enemyData: {fileID: 11400000, guid: 68614a95055b2df4aa2ea23c7b269b02, type: 2}
+  - enemyData: {fileID: 11400000, guid: 6ee55971c779cab428b3e26123a978d5, type: 2}
     enemyType: 0
     count: 5
   - enemyData: {fileID: 11400000, guid: b754b5bb59bbd6a47bdfbf2cbae8e0c4, type: 2}
     enemyType: 0
     count: 5
   - enemyData: {fileID: 11400000, guid: a75527ec2f2a18e4c97dd221b8c8f589, type: 2}
-    enemyType: 1
+    enemyType: 0
     count: 5
   stageDifficulty: 1

@@ -4,7 +4,7 @@ using TMPro;
 public class Slot : MonoBehaviour
 {
     [SerializeField] private Image itemImage;
-    [SerializeField] private TMP_Text itemText;
+    //[SerializeField] private TMP_Text itemText;
     [SerializeField] private TMP_Text itemCountText;
     private ItemSlot _itemSlot;
     private Button button;
@@ -32,13 +32,13 @@ public class Slot : MonoBehaviour
             {
                 itemImage.sprite = _itemSlot.item.ItemIcon;
                 itemImage.color = new Color(1, 1, 1, 1);
-                itemText.text = _itemSlot.item.itemName;
+                //itemText.text = _itemSlot.item.itemName;
                 itemCountText.text = _itemSlot.count.ToString();
             }
             else
             {
                 itemImage.color = new Color(1, 1, 1, 0);
-                itemText.text = "";
+                //itemText.text = "";
                 itemCountText.text = "";
             }
         }

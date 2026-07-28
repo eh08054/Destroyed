@@ -323,12 +323,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 69871b43121614f4c82d905e7e019d7a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: feccbc8dfa06bf54f8f859bb4dd8f686, type: 3}
   m_Color: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 5, y: 5}
+  m_Size: {x: 5, y: 7.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -368,17 +368,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.13678646, y: 2.6641433}
+  m_Offset: {x: 0.16675067, y: 3.7652938}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 5, y: 5}
-    newSize: {x: 5, y: 5}
+    oldSize: {x: 5, y: 7.5}
+    newSize: {x: 5, y: 7.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.850996, y: 4.6717134}
+  m_Size: {x: 4.360369, y: 6.304712}
   m_EdgeRadius: 0
 --- !u!114 &8836977447383169370
 MonoBehaviour:
@@ -392,8 +392,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b85e1fbea7e9bd41867070fba9b4ace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
-  openSprite: {fileID: 21300000, guid: bc7099d87ccc9494b9384e4461b8dc5b, type: 3}
-  closedSprite: {fileID: 21300000, guid: 69871b43121614f4c82d905e7e019d7a, type: 3}
+  openSprite: {fileID: 21300000, guid: b1d72825fbb65894b910d7f4629d770c, type: 3}
+  closedSprite: {fileID: 21300000, guid: feccbc8dfa06bf54f8f859bb4dd8f686, type: 3}
   nextStage: 0
   promptContent: 
 --- !u!114 &6159695457654785404

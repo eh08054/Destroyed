@@ -19,5 +19,5 @@ MonoBehaviour:
   dropItems:
   - _item: {fileID: 0}
     weight: 50
-  - _item: {fileID: 11400000, guid: ba79d7f2aef401d40993ba28bf37e5b0, type: 2}
+  - _item: {fileID: 11400000, guid: 36520dab6caf06549a5e88256e577757, type: 2}
     weight: 50

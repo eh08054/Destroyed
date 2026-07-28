@@ -42,20 +42,22 @@ public class SkillController : MonoBehaviour
                     AudioManager.instance.PlaySFX(SFX.Skill_Slash);
                     animator.SetTrigger("Projectile");
                 }
+                StartCoroutine(SkillCoolTime(activeSkill, index));
                 break;
             case ActiveSkillData.ActiveType.Roll:
                 animator.SetTrigger("Rolling");
+                StartCoroutine(SkillCoolTime(activeSkill, index));
                 break;
             case ActiveSkillData.ActiveType.Buff:
-                PlayBuffParticle();
+                GameObject BP = PlayBuffParticle();
                 activeSkill.ApplyBuff(playerBase);
-                UIManager.Instance.ResisterBuff(activeSkill, () => activeSkill.ReleaseBuff(playerBase));
+                UIManager.Instance.ResisterBuff(activeSkill, () => ReleaseBuff(activeSkill, playerBase, BP));
                 AudioManager.instance.PlaySFX(SFX.Buff);
+                StartCoroutine(SkillCoolTime(activeSkill, index));
                 break;
             default:
                 break;
         }
-        StartCoroutine(SkillCoolTime(activeSkill, index));
     }
     public void EquipSkill(ActiveSkill activeSkill)
     {
@@ -96,9 +98,10 @@ public class SkillController : MonoBehaviour
             }
         }
     }
-    public void PlayBuffParticle()
+    public GameObject PlayBuffParticle()
     {
-        Instantiate(currentSkillEffect, transform);
+        GameObject prefab = Instantiate(currentSkillEffect, transform);
+        return prefab;
     }
     private IEnumerator SkillCoolTime(ActiveSkill skill, int index)
     {
@@ -117,5 +120,10 @@ public class SkillController : MonoBehaviour
         }
 
         UIManager.Instance.CoolDownImage(index, 0f);
+    }
+    private void ReleaseBuff(ActiveSkill activeSkill, PlayerBase playerBase, GameObject BP)
+    {
+        activeSkill.ReleaseBuff(playerBase);
+        Destroy(BP);
     }
 }

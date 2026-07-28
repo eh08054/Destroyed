@@ -52,7 +52,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2308671512265554434
 Transform:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1999999, y: 1.1999999, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9180949918733626575}
@@ -102,7 +102,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 1.6182892, y: 1.3925382}
+  m_Offset: {x: 1.6182892, y: 2}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -112,7 +112,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.2050753, y: 2.9941986}
+  m_Size: {x: 1.2050753, y: 2}
   m_EdgeRadius: 0
 --- !u!1 &1462254139553282780
 GameObject:
@@ -426,8 +426,8 @@ Transform:
   m_GameObject: {fileID: 2842030435789226543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.17, y: 1.06, z: 0}
-  m_LocalScale: {x: 1.3, y: 2, z: 1}
+  m_LocalPosition: {x: -0.0269, y: 1.677, z: 0}
+  m_LocalScale: {x: 1.8365886, y: 3.234, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9180949918733626575}
@@ -840,6 +840,7 @@ GameObject:
   - component: {fileID: 4144934248986173698}
   - component: {fileID: -3394367941339123939}
   - component: {fileID: 7191077695628684833}
+  - component: {fileID: -1099501961605418348}
   m_Layer: 9
   m_Name: Skeleton
   m_TagString: Enemy
@@ -1049,6 +1050,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 2.8125, y: 3.2108588}
   m_EdgeRadius: 0
+--- !u!114 &-1099501961605418348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387827569987270625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada8aa52ebc08054a95de70d8c69f885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDrop
 --- !u!1 &6830218970288216445
 GameObject:
   m_ObjectHideFlags: 0

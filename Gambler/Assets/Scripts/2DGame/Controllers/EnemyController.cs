@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     public EnemyBase Enemy { get; private set; }
     public Animator Animator { get; private set; }
 
-    public event Action<string> OnDeath;
+    public event Action<string, EnemyData.Type> OnDeath;
     public int AttackDamage { get; private set;}
 
     [SerializeField] private float platformDistance = 1.5f;
@@ -48,9 +48,9 @@ public class EnemyController : MonoBehaviour
         else { moveDirection = -1f; }
     }
 
-    public void InitEnemy(EnemyData enemyData)
+    public void InitEnemy(EnemyData enemyData, EnemyData.Type enemyType)
     {
-        Enemy.Init(enemyData);
+        Enemy.Init(enemyData, enemyType);
         HPSlider.maxValue = Enemy.Data.maxHP;
         HPSlider.value = HPSlider.maxValue;
         HPText.text = HPSlider.value + "/" + HPSlider.maxValue;
@@ -257,9 +257,10 @@ public class EnemyController : MonoBehaviour
     }
     public void EnemyDeath()
     {
-        Enemy.Data.dropTable.ItemDrop(transform.position + Vector3.up * 0.2f);
+        EnemyDrop enemyDrop = GetComponent<EnemyDrop>();
+        enemyDrop.DropItem(Enemy.Data.dropTable, transform.position);
         Destroy(gameObject);
-        OnDeath?.Invoke(Enemy.Data.enemyName);
+        OnDeath?.Invoke(Enemy.Data.enemyName, Enemy.EnemyType);
     }
     private void OnDrawGizmos()
     {

@@ -23,6 +23,9 @@ public class SettingsController : MonoBehaviour
     public TMP_Dropdown ScreenDropDown;
     public TMP_Dropdown ResDropDown;
 
+    [Header("게임 플레이")]
+    public Slider HUDSlider;
+
     [Header("공통")]
     public TMP_Text SettingType;
 
@@ -39,6 +42,8 @@ public class SettingsController : MonoBehaviour
         ScreenManager.instance.Init(ScreenDropDown, ResDropDown);
         ScreenDropDown.onValueChanged.AddListener(ScreenManager.instance.SetScreenMode);
         ResDropDown.onValueChanged.AddListener(ScreenManager.instance.SetResolution);
+
+        HUDSlider.onValueChanged.AddListener(OnHUDAlphaChanged);
     }
     private void OnDestroy()
     {
@@ -49,6 +54,14 @@ public class SettingsController : MonoBehaviour
         BGMSlider.onValueChanged.RemoveListener(AudioManager.instance.SetBGMVolume);
         SFXSlider.onValueChanged.RemoveListener(AudioManager.instance.SetSFXVolume);
         AllSlider.onValueChanged.RemoveListener(AudioManager.instance.SetAllVolume);
+    }
+
+    public void OnHUDAlphaChanged(float value)
+    {
+        if(UIManager.Instance == null) { return; }
+        UIManager.Instance.SetHUDAlpha(value);
+        if(GameManager.Instance == null) { return; }
+        GameManager.Instance.GameData.HUDAlpha = value;
     }
 
     private void ShowGraphicPanel()

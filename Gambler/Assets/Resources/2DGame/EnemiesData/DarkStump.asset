@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0bfb1246bb75da4080c8fc326597ae5, type: 3}
+  m_Name: DarkStump
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: DarkStump
+  maxHP: 50
+  chaseRange: 5
+  attackRange: 2
+  attackDamage: 10
+  attackCoolTime: 1
+  moveSpeed: 4
+  enemyPrefab: {fileID: 5001401592973163419, guid: a9d490cb561d7e44dbffd51bc1af89a7, type: 3}
+  enemyIcon: {fileID: 21300000, guid: c070cc31c12711141979c2f1b0f161d7, type: 2}
+  dropTable: {fileID: 11400000, guid: c54edb57b1018894c8bad49119d822e1, type: 2}

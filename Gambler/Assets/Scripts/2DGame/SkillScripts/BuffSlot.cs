@@ -29,7 +29,7 @@ public class BuffSlot : MonoBehaviour
 
             yield return null;
         }
-        OnEnd.Invoke();
+        OnEnd?.Invoke();
         Destroy(gameObject);
     } 
 }

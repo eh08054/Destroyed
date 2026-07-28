@@ -8,12 +8,14 @@ public class SaveData
     public float BGMVolume;
     public float SFXVolume;
     public float AllVolume;
+    public float HUDAlpha;
     public SaveData()
     {
         item_names = new List<string>();
         gold = 0;
-        BGMVolume = 0f;
-        SFXVolume = 0f;
-        AllVolume = 0f;
+        BGMVolume = 0;
+        SFXVolume = 0;
+        AllVolume = 0;
+        HUDAlpha = 0;
     }
 }

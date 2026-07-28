@@ -24,6 +24,9 @@ public class ActiveSkill : Skill
             case ActiveSkillData.BuffType.AttackUp:
                 player.AttackBuffOn(ActiveData.sumValues);
                 break;
+            case ActiveSkillData.BuffType.SpeedUp:
+                player.SpeedBuffOn(ActiveData.sumValues);
+                break;
             default:
                 break;
         }
@@ -35,6 +38,9 @@ public class ActiveSkill : Skill
         {
             case ActiveSkillData.BuffType.AttackUp:
                 player.AttackBuffOff(ActiveData.sumValues);
+                break;
+            case ActiveSkillData.BuffType.SpeedUp:
+                player.SpeedBuffOff(ActiveData.sumValues);
                 break;
             default:
                 break;

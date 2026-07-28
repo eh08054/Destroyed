@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ca1b022ea3fda42bccc92b0669de43, type: 3}
+  m_Name: Runner
+  m_EditorClassIdentifier: Assembly-CSharp::ActiveSkillData
+  id: 7
+  skillName: "\uB7EC\uB108"
+  skillIcon: {fileID: 21300000, guid: 786fc78ac21a57447a1437ec554fab13, type: 3}
+  skillLevel: 0
+  skillMaxLevel: 1
+  sumValues: 5
+  valuePerLevel:
+  - 0
+  goldPerLevel: 0a000000
+  descriptionFormat: "[\uB7EC\uB108] \uC2A4\uD0AC\uC744 \uD68D\uB4DD\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  skillDescriptionFormat: "\uC774\uB3D9\uC18D\uB3C4\uAC00 \n<color=green>10\uCD08</color>\uAC04 
+    <color=red>5%</color> \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  activeSkillType: 0
+  skillEffectPrefab: {fileID: 4582098005761202493, guid: a4e38447da7c0304cb45bd7bfa5b9967, type: 3}
+  cooldown: 5
+  activeType: 2
+  targetSkill: {fileID: 0}
+  requiredSkill: {fileID: 0}
+  enhanceType: 0
+  duration: 10
+  buffType: 1

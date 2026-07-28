@@ -46,6 +46,7 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
             if (skillData is PassiveSkillData)
             {
                 valueSumText.text = "+0%";
+                skillLevelText.text = "LV.0";
             }
             else if(skillData is ActiveSkillData activeSkillData &&
                 activeSkillData.requiredSkill != null)
@@ -58,8 +59,12 @@ public class SkillUpgradeSlot : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 {
                     skillImage.color = new Color(0.5f, 0.5f, 0.5f);
                 }
+                skillLevelText.text = "LV.0";
             }
-            skillLevelText.text = "LV.0";
+            else
+            {
+                skillLevelText.text = "¹ÌÇØ±Ý";
+            }
         }
     }
 }

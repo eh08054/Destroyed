@@ -7,4 +7,5 @@ public class GameData
     public float BGMVolume { get; set; }
     public float SFXVolume { get; set; }
     public float AllVolume { get; set; }
+    public float HUDAlpha { get; set; }
 }

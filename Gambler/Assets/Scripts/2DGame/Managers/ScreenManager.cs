@@ -54,20 +54,7 @@ public class ScreenManager : MonoBehaviour
         ResolutionDropdown.value = currentResolutionIndex;
         ResolutionDropdown.RefreshShownValue();
 
-        switch (screenDropdown.value)
-        {
-            case 0:
-                Screen.SetResolution(resolutions[currentResolutionIndex].width, 
-                    resolutions[currentResolutionIndex].height, 
-                    FullScreenMode.FullScreenWindow);
-                break;
-            case 1:
-                Screen.SetResolution(resolutions[currentResolutionIndex].width,
-                    resolutions[currentResolutionIndex].height, 
-                    FullScreenMode.Windowed);
-                break;
-        }
-
+        SetScreenMode(screenDropdown.value);
     }
     public void SetScreenMode(int index)
     {

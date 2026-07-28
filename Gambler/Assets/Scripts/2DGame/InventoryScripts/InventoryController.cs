@@ -54,12 +54,27 @@ public class InventoryController : MonoBehaviour
         PlayerController player = GameManager.Instance.Player.GetComponent<PlayerController>();
         switch (_item.itemType)
         {
-            case ItemData.ItemType.Potion:
-                player.HealPlayer(_item.value);
+            case ItemType.Potion:
+                UsePotion((PotionData)_item, player);
                 break;
-            case ItemData.ItemType.Sword:
+            case ItemType.Sword:
                 break;
-            case ItemData.ItemType.Shield:
+            case ItemType.Shield:
+                break;
+        }
+    }
+
+    public void UsePotion(PotionData potion, PlayerController player)
+    {
+        switch (potion.potionType)
+        {
+            case PotionType.Heal:
+                player.HealPlayer(potion.value);
+                break;
+            case PotionType.Attack:
+                player.AttakUpPlayer(potion.value);
+                break;
+            default:
                 break;
         }
     }

@@ -47,7 +47,7 @@ public class TreasureBox : MonoBehaviour, IInteractable
         foreach(var item in treasureData.items)
         {
             GameObject x = Instantiate(item._itemPrefab, transform.position + Vector3.right, Quaternion.identity);
-            if(item.itemType == ItemData.ItemType.Gold)
+            if(item.itemType == ItemType.Gold)
             {
                 x.GetComponent<GoldDrop>().amount = treasureData.gold;
             }

@@ -35,10 +35,12 @@ MonoBehaviour:
     {2}% \uAC10\uC18C\uD569\uB2C8\uB2E4."
   skillDescriptionFormat: "[\uAC80\uACA9] \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
     <color=red>{0}%</color> \uAC10\uC18C\uD569\uB2C8\uB2E4.\t"
-  attackSkillType: 1
+  activeSkillType: 1
   skillEffectPrefab: {fileID: 0}
   cooldown: 0
-  attackType: 0
+  activeType: 0
   targetSkill: {fileID: 11400000, guid: ec939a487534f4b4ea8c25aeef1e5585, type: 2}
   requiredSkill: {fileID: 11400000, guid: ec939a487534f4b4ea8c25aeef1e5585, type: 2}
   enhanceType: 0
+  duration: 0
+  buffType: 0

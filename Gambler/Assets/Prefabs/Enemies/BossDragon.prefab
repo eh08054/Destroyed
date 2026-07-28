@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 7190685541925665369}
   - component: {fileID: 3541918548960724800}
   - component: {fileID: 3135972820513200977}
+  - component: {fileID: 1679018589082362741}
   m_Layer: 9
   m_Name: BossDragon
   m_TagString: Enemy
@@ -262,6 +263,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 297ded0c9e3183642979eb3f63ed09aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
+  body: {fileID: 0}
+  rb: {fileID: 0}
   HPCanvas: {fileID: 5118997437037867711}
   HPSlider: {fileID: 2820662585969945718}
   HPText: {fileID: 4221697980211175493}
@@ -273,6 +276,7 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 256
+  deathPaticle: {fileID: 0}
   platformDistance: 1
   platformLayer:
     serializedVersion: 2
@@ -408,6 +412,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1679018589082362741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886921123244102641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada8aa52ebc08054a95de70d8c69f885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDrop
 --- !u!1 &2741360163895981410
 GameObject:
   m_ObjectHideFlags: 0

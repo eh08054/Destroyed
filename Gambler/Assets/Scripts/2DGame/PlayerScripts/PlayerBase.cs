@@ -7,8 +7,10 @@ public abstract class PlayerBase
     public abstract int MaxHP { get; set; }
     public int CurrentHP { get; set; }
     public abstract float AttackRange { get;}
-    public abstract int AttackDamage { get; set; }
+    public abstract int ATK { get; set; }
+    public abstract int DEF { get; set; }
     public abstract float AttackCoolTime { get; }
+    public float MoveSpeed { get; set; }
     public enum AttackType { Jab, Slash };
     public enum State { Idle, Attack, Dead}
     public State CurrentState { get; set; } = State.Idle;
@@ -97,12 +99,15 @@ public abstract class PlayerBase
         switch (skill.skillType)
         {
             case PassiveSkillData.SkillType.AttackUp:
-                AttackDamage += (int)skill.skillData.valuePerLevel[skill.level];
+                ATK += (int)skill.skillData.valuePerLevel[skill.level];
                 break;
             case PassiveSkillData.SkillType.HPUp:
                 MaxHP += (int)skill.skillData.valuePerLevel[skill.level];
                 CurrentHP += (int)skill.skillData.valuePerLevel[skill.level];
                 GameManager.Instance.ChangeHP();
+                break;
+            case PassiveSkillData.SkillType.DefenseUp:
+                DEF += (int)skill.skillData.valuePerLevel[skill.level];
                 break;
         }
     }
@@ -120,10 +125,18 @@ public abstract class PlayerBase
 
     public void AttackBuffOn(float attackPlus)
     {
-        AttackDamage += (int)attackPlus;
+        ATK += (int)attackPlus;
     }
     public void AttackBuffOff(float attackMinus)
     {
-        AttackDamage -= (int)attackMinus;
+        ATK -= (int)attackMinus;
+    }
+    public void SpeedBuffOn(float speedPlus)
+    {
+        MoveSpeed += speedPlus;
+    }
+    public void SpeedBuffOff(float speedMinus)
+    {
+        MoveSpeed -= speedMinus;
     }
 }

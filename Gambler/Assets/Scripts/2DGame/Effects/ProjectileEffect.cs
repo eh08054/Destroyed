@@ -37,7 +37,7 @@ public class ProjectileEffect : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             if (!collision.gameObject.TryGetComponent(out EnemyController enemyController)) { return; }
-            enemyController.TakeDamage(GameManager.Instance.PlayerBase.AttackDamage);
+            enemyController.TakeDamage(GameManager.Instance.PlayerBase.ATK);
         }
     }
 }

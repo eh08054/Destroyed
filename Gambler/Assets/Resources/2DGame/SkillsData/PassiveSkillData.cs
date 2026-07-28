@@ -7,7 +7,7 @@ public class PassiveSkillData : SkillData
     {
         AttackUp,
         SpeedUp,
-        DefendUp,
+        DefenseUp,
         HPUp,
     }
     public SkillType skillType;

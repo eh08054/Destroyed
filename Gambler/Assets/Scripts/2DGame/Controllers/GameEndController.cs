@@ -10,6 +10,7 @@ public class GameEndController : MonoBehaviour
     {
         YesButton.onClick.AddListener(GameEnd);
         NoButton.onClick.AddListener(Close);
+        gameObject.SetActive(false);
     }
 
     private void GameEnd()

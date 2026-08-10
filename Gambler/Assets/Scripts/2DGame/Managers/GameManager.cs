@@ -1,13 +1,10 @@
-using Assets.PixelFantasy.PixelTileEngine.Scripts;
-using CityBackgroundsCollection;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public enum GameState
 {
@@ -23,36 +20,23 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public GameObject Player { get; private set; }
     public PlayerBase PlayerBase { get; private set; }
-    public GameObject InventoryPanel { get; private set; }
-    public GameObject SkillPanel{ get; private set; }
-    public GameObject PausePanel { get; private set; }
-    public GameObject SettingsPanel { get; private set; }
-    public GameObject GameEndPanel { get; private set; }
-    public GameObject BuffPanel { get; private set; }
     public GameObject Background { get; private set; }
     public Transform BackgroundOnly { get; private set; }
     public Inventory PlayerInventory { get; private set; }
     public GameData GameData { get; private set; }
     public SceneChanger SceneChanger { get; private set; }
     public StageData.StageDifficulty CurrentDifficulty { get; private set; }
+    public DialogSystem DialogSystem;
+    public InventoryController inventoryController;
     public GameState gameState = GameState.Playing;
 
     [SerializeField] private List<StageData> stages;
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject inventoryPrefab;
-    [SerializeField] private GameObject skillContainerPrefab;
-    [SerializeField] private GameObject pausePrefab;
-    [SerializeField] private GameObject settingsPrefab;
-    [SerializeField] private GameObject GameEndPrefab;
-    [SerializeField] private GameObject BuffPanelPrefab;
     [SerializeField] private GameObject[] treasureBoxPrefab;
-    [SerializeField] private GameObject dynamicCanvasPrefab;
     private Platform[] platforms;
 
     public event Action OnClear;
     public event Action OnStageLoaded;
-    public event Action OpenDialog;
-    public event Action CloseDialog;
     public event Action<int> GoldChanged;
     private void Awake()
     {
@@ -61,9 +45,10 @@ public class GameManager : MonoBehaviour
             Instance = this;
             GameData = new GameData();
             SceneManager.sceneLoaded += OnSceneLoaded;
+            Instantiate(DialogSystem);
+            inventoryController = gameObject.AddComponent<InventoryController>();
             DontDestroyOnLoad(gameObject);
             SpawnPlayer();
-            CreatePanels();
             LoadSaveData();
         }
         else
@@ -71,32 +56,42 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    private void Start()
+    {
+        inventoryController.InitializeInventory(PlayerInventory);
+        UIManager.Instance.InventoryPanel.InitializeUI();
+        SettingsController settings = UIManager.Instance.SettingsPanel.GetComponent<SettingsController>();
+        settings.BGMSlider.value = GameData.BGMVolume;
+        settings.SFXSlider.value = GameData.SFXVolume;
+        settings.AllSlider.value = GameData.AllVolume;
+        settings.HUDSlider.value = GameData.HUDAlpha;
+        GameData.BGMVolume = GameData.BGMVolume;
+        GameData.SFXVolume = GameData.SFXVolume;
+        GameData.AllVolume = GameData.AllVolume;
+        GameData.HUDAlpha = GameData.HUDAlpha;
+    }
     public void LoadSaveData()
     {
         SaveData saveData = SaveSystem.Load();
         if (saveData != null)
         {
-            foreach (var itemName in saveData.item_names)
+            PlayerInventory = new Inventory
             {
-                ItemData item = Resources.Load<ItemData>("2DGame/ItemsData/" + itemName);
-                InventoryPanel.GetComponentInChildren<InventoryController>().AddItem(item);
+                itemSlots = new List<ItemSlot>(),
+                maxSlotCount = 30
+            };
+            foreach (var saveName in saveData.item_names)
+            {
+                ItemData item = Resources.Load<ItemData>("2DGame/ItemsData/" + saveName);
+                PlayerInventory.AddItem(item);
             }
+
             GameData.Gold = saveData.gold;
-            SettingsController settings = SettingsPanel.GetComponent<SettingsController>();
-            settings.BGMSlider.value = saveData.BGMVolume;
-            settings.SFXSlider.value = saveData.SFXVolume;
-            settings.AllSlider.value = saveData.AllVolume;
-            settings.HUDSlider.value = saveData.HUDAlpha;
             GameData.BGMVolume = saveData.BGMVolume;
             GameData.SFXVolume = saveData.SFXVolume;
             GameData.AllVolume = saveData.AllVolume;
             GameData.HUDAlpha = saveData.HUDAlpha;
         }
-    }
-    private void Start()
-    {
-        InputM.keyAction -= RegisterKeyActions;
-        InputM.keyAction += RegisterKeyActions;
     }
     private void Update()
     {
@@ -112,62 +107,9 @@ public class GameManager : MonoBehaviour
             PlayerBase.Init();
         }
     }
-    private void CreatePanels()
-    {
-        GameObject dynamicCanvas = Instantiate(dynamicCanvasPrefab);
-        DontDestroyOnLoad(dynamicCanvas);
-        Transform hudGroup = dynamicCanvas.transform.GetChild(0);
-        Transform popupGroup = dynamicCanvas.transform.GetChild(1);
-        // HUD
-        BuffPanel = Instantiate(BuffPanelPrefab, hudGroup);
-
-        // Popup
-        InventoryPanel = Instantiate(inventoryPrefab, popupGroup);
-        SkillPanel = Instantiate(skillContainerPrefab, popupGroup);
-        PausePanel = Instantiate(pausePrefab, popupGroup);
-        SettingsPanel = Instantiate(settingsPrefab, popupGroup);
-        GameEndPanel = Instantiate(GameEndPrefab, popupGroup);
-    }
-
     public void RegisterInventory(Inventory inventory)
     {
         PlayerInventory = inventory;
-    }
-    public void RegisterKeyActions()
-    {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            if (InventoryPanel.activeSelf)
-            {
-                UIManager.Instance.ClosePanel(InventoryPanel);
-            }
-            else
-            {
-                UIManager.Instance.OpenPanel(InventoryPanel);
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (SkillPanel.activeSelf)
-            {
-                UIManager.Instance.ClosePanel(SkillPanel);
-            }
-            else
-            {
-                UIManager.Instance.OpenPanel(SkillPanel);
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (UIManager.Instance.openedPanels.Count != 0)
-            {
-                UIManager.Instance.CloseLastPanel();
-            }
-            else if (!PausePanel.activeSelf)
-            {
-                UIManager.Instance.OpenPanel(PausePanel);
-            }
-        }
     }
     public void AddGold(int value)
     {
@@ -245,20 +187,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public void StartDialogue()
-    {
-        OpenDialog?.Invoke();
-        DialogSystem dialog = GameObject.FindGameObjectWithTag("DialogSystem").GetComponent<DialogSystem>();
-        StartCoroutine(StartDialogueCoroutine(dialog));
-    }
-    public void StopDialogue()
-    {
-        CloseDialog?.Invoke();
-    }
-    private IEnumerator StartDialogueCoroutine(DialogSystem dialog)
-    {
-        yield return new WaitUntil(() => dialog.UpdateDialog());
-    }
     public void StopTime()
     {
         Time.timeScale = 0f;
@@ -293,14 +221,6 @@ public class GameManager : MonoBehaviour
     {
         PlayerBase.CurrentHP = PlayerBase.MaxHP;
     }
-    public void ResetPanel()
-    {
-        InventoryPanel.SetActive(false);
-        SkillPanel.SetActive(false);
-        PausePanel.SetActive(false);
-        SettingsPanel.SetActive(false);
-        GameEndPanel.SetActive(false);
-    }
     private void OnApplicationQuit()
     {
         if (Instance != this) { return; }
@@ -313,7 +233,7 @@ public class GameManager : MonoBehaviour
             {
                 for (int i = 0; i < itemSlot.count; i++)
                 {
-                    saveData.item_names.Add(itemSlot.item.itemName);
+                    saveData.item_names.Add(itemSlot.item.saveName);
                 }
             }
         }
@@ -352,14 +272,12 @@ public class GameManager : MonoBehaviour
             LoadStage(stages[GameData.SelectedStage]);
             OnStageLoaded?.Invoke();
             UIManager.Instance.HPSliderInit(PlayerBase.CurrentHP, PlayerBase.MaxHP);
-            UIManager.Instance.ChangeWeaponImage(PlayerBase.ownedWeapons[PlayerBase.currentWeaponIndex % 2]);
             UIManager.Instance.SetGold(GameData.Gold);
             if (Player.GetComponent<SkillController>().EquipedSkills != null)
             {
                 UIManager.Instance.SetSkillImages(Player.GetComponent<SkillController>().EquipedSkills);
             }
         }
-        ResetPanel();
         SceneChanger = GameObject.Find("SceneChanger").GetComponent<SceneChanger>();
     }
 }

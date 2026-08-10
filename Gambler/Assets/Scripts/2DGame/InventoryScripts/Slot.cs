@@ -1,26 +1,41 @@
-using UnityEngine;
-using UnityEngine.UI;
+using System;
 using TMPro;
-public class Slot : MonoBehaviour
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image itemImage;
-    //[SerializeField] private TMP_Text itemText;
     [SerializeField] private TMP_Text itemCountText;
+    [SerializeField] private Button button;
     private ItemSlot _itemSlot;
-    private Button button;
     public int slotIndex;
 
-    private void Awake()
+    public event Action<ItemData> OnHoverEnter;
+    public event Action OnHoverExit;
+    private bool isHovered = false;
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        button = GetComponent<Button>();
+        isHovered = true;
+        OnHoverEnter?.Invoke(_itemSlot.item);
     }
-    public void Start()
+    public void OnPointerExit(PointerEventData eventData)
     {
-        button.onClick.AddListener(ClickedItem);
+        isHovered = false;
+        OnHoverExit?.Invoke();
     }
-    public void OnDestroy()
+
+    private void OnDisable()
     {
-        button.onClick.RemoveListener(ClickedItem);
+        if (isHovered)
+        {
+            isHovered = false;
+            OnHoverExit?.Invoke();
+        }
+    }
+    private void OnDestroy()
+    {
+        button.onClick.RemoveListener(() => GameManager.Instance.inventoryController.ClickedItem(_itemSlot.item, slotIndex));
     }
     public ItemSlot ItemSlot
     {
@@ -34,6 +49,7 @@ public class Slot : MonoBehaviour
                 itemImage.color = new Color(1, 1, 1, 1);
                 //itemText.text = _itemSlot.item.itemName;
                 itemCountText.text = _itemSlot.count.ToString();
+                button.onClick.AddListener(() => GameManager.Instance.inventoryController.ClickedItem(_itemSlot.item, slotIndex));
             }
             else
             {
@@ -43,20 +59,4 @@ public class Slot : MonoBehaviour
             }
         }
     }
-    
-    private void ClickedItem()
-    {
-        UseItem();
-        RemoveItem();
-    }
-
-    private void UseItem()
-    {
-        GameManager.Instance.InventoryPanel.GetComponentInChildren<InventoryController>().UseItem(_itemSlot.item);
-    }
-    private void RemoveItem()
-    {
-        GameManager.Instance.InventoryPanel.GetComponentInChildren<InventoryController>().RemoveItem(slotIndex);
-    }
-
 }

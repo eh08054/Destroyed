@@ -24,8 +24,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject firePosition;
     [SerializeField] private LayerMask enemyLayer;
 
-    [Header("Slash Effect")]
-    [SerializeField]private GameObject SlashEffect;
+    [Header("Effects")]
+    [SerializeField] private GameObject SlashEffect;
+    [SerializeField] private GameObject PotionEffect;
 
     public PlayerBase player { get; private set; }
     public GameObject CurrentOneWayPlatform { get; private set; }
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
     private bool isDashing;
     private bool isRolling;
     private bool canCombo = false;
+    private GameObject PotionE;
     private int currentDashCount;
 
     public event Action<int, int> OnHPChanged;
@@ -63,8 +65,6 @@ public class PlayerController : MonoBehaviour
         };
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Sword"));
         player.AddWeapon(Resources.Load<WeaponData>("2DGame/WeaponsData/Gun"));
-        player.ChangeWeapon(player.ownedWeapons[0]);
-        player.MoveSpeed = 10f;
     }
     private void Start()
     {
@@ -77,6 +77,9 @@ public class PlayerController : MonoBehaviour
         isRolling = false;
         currentDashCount = 0;
         rb.gravityScale = gravityScale;
+
+        player.ChangeWeapon(player.ownedWeapons[0]);
+        player.MoveSpeed = 7f;
     }
     private void Update()
     {
@@ -282,6 +285,15 @@ public class PlayerController : MonoBehaviour
         isRolling = false;
         animator.ResetTrigger("Rolling");
     }
+
+    public void AttachPotionEffect()
+    {
+        PotionE = Instantiate(PotionEffect, gameObject.transform);
+    }
+    public void DetachPotionEffect()
+    {
+        Destroy(PotionE);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Platform"))
@@ -350,9 +362,13 @@ public class PlayerController : MonoBehaviour
         player.HealPlayer(amount);
         InvokeHPChanged();
     }
-    public void AttakUpPlayer(int amount)
+    public void AttackPotionOn(int amount, float durationTime)
     {
         player.ATK += amount;
+    }
+    public void AttackPotionOff(int amount)
+    {
+        player.ATK -= amount;
     }
     public void InvokeHPChanged()
     {

@@ -15,6 +15,7 @@ public class PauseController : MonoBehaviour
         newGameButton.onClick.AddListener(NewGame);
         SettingsButton.onClick.AddListener(OpenSettings);
         GameEndButton.onClick.AddListener(EndGame);
+        gameObject.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -31,13 +32,14 @@ public class PauseController : MonoBehaviour
     private void NewGame()
     {
         GameManager.Instance.SceneChanger.SceneChange("MapScene");
+        UIManager.Instance.ClosePanel(gameObject);
     }
     private void OpenSettings()
     {
-        UIManager.Instance.OpenPanel(GameManager.Instance.SettingsPanel);
+        UIManager.Instance.OpenPanel(UIManager.Instance.SettingsPanel);
     }
     private void EndGame()
     {
-        UIManager.Instance.OpenPanel(GameManager.Instance.GameEndPanel);
+        UIManager.Instance.OpenPanel(UIManager.Instance.GameEndPanel);
     }
 }

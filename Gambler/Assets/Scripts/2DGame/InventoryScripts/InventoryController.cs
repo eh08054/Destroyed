@@ -1,61 +1,84 @@
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using System;
 
 public class InventoryController : MonoBehaviour
 {
-   public Inventory Inventory { get; private set; }
-    [SerializeField] private Transform SlotParent;
+    public Inventory Inventory { get; private set; }
+    public HashSet<ItemData> ActiveItems { get; private set; }
+
+    private ItemToolTip itemToolTip;
+    private List<Slot> slots;
+    private DupCheckPanel dupCheckPanel;
     private void Awake()
     {
-        Inventory = new Inventory
-        {
-            Slots = SlotParent.GetComponentsInChildren<Slot>(),
-            itemSlots = new List<ItemSlot>()
-        };
-        GameManager.Instance.RegisterInventory(Inventory);
+        ActiveItems = new HashSet<ItemData>();
     }
-    private void Start()
+    public void InitializeInventory(Inventory inventory)
     {
-        FreshSlot();
+        Inventory = inventory;
+        Inventory.OnInventoryChanged += HandleInventoryChanged;
     }
-    public void FreshSlot()
+    public void OnDestroy()
+    {
+        if(Inventory != null)
+        {
+            Inventory.OnInventoryChanged -= HandleInventoryChanged;
+        }
+    }
+    private void HandleInventoryChanged()
+    {
+        FreshSlot(slots);
+    }
+    public void SetSlots(List<Slot> slots)
+    {
+        this.slots = slots;
+        FreshSlot(slots);
+    }
+    public void SetDupcheckPanel(DupCheckPanel panel)
+    {
+        dupCheckPanel = panel;
+    }
+
+    public void FreshSlot(List<Slot> slots)
     {
         int i = 0;
-        for (; i < Inventory.itemSlots.Count && i < Inventory.Slots.Length; i++)
+        for (; i < Inventory.itemSlots.Count && i < Inventory.maxSlotCount; i++)
         {
-            Inventory.Slots[i].ItemSlot = Inventory.itemSlots[i];
+            slots[i].ItemSlot = Inventory.itemSlots[i];
+            slots[i].OnHoverEnter -= ActivateToolTip;
+            slots[i].OnHoverExit -= DeActivateToopTip;
+
+            slots[i].OnHoverEnter += ActivateToolTip;
+            slots[i].OnHoverExit += DeActivateToopTip;
         }
-        for (; i < Inventory.Slots.Length; i++)
+        for (; i < Inventory.maxSlotCount; i++)
         {
-            Inventory.Slots[i].ItemSlot = null;
+            slots[i].ItemSlot = null;
+            slots[i].OnHoverEnter -= ActivateToolTip;
+            slots[i].OnHoverExit -= DeActivateToopTip;
         }
-        for(int j = 0; j < Inventory.Slots.Length; j++)
+        for (int j = 0; j < Inventory.maxSlotCount; j++)
         {
-            Inventory.Slots[j].slotIndex = j;
+            slots[j].slotIndex = j;
         }
     }
-    public bool AddItem(ItemData _item)
+    public void ClickedItem(ItemData _item, int slotIndex)
     {
-        bool check = Inventory.AddItem(_item);
-        if (check == true)
-        {
-            FreshSlot();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if(_item == null) { return; }
+        UseItem(_item, () => RemoveItem(slotIndex));
     }
-    public void UseItem(ItemData _item)
+    public void AddItem(ItemData _item, GameObject gameObject = null)
+    {
+        if (Inventory.AddItem(_item)) { Destroy(gameObject); }
+    }
+    public void UseItem(ItemData _item, Action onUsed)
     {
         PlayerController player = GameManager.Instance.Player.GetComponent<PlayerController>();
         switch (_item.itemType)
         {
             case ItemType.Potion:
-                UsePotion((PotionData)_item, player);
+                UsePotion((PotionData)_item, player, onUsed);
                 break;
             case ItemType.Sword:
                 break;
@@ -64,23 +87,66 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    public void UsePotion(PotionData potion, PlayerController player)
+    public void UsePotion(PotionData potion, PlayerController player, Action onUsed)
     {
-        switch (potion.potionType)
+        if (potion.potionType != PotionType.Heal && ActiveItems.Contains(potion))
         {
-            case PotionType.Heal:
-                player.HealPlayer(potion.value);
-                break;
-            case PotionType.Attack:
-                player.AttakUpPlayer(potion.value);
-                break;
-            default:
-                break;
+            dupCheckPanel.Show(
+                onYes: () =>
+                {
+                    ReleaseItemBuff(player, potion);
+                    ApplyPotionEffect(potion, player);
+                    onUsed?.Invoke();
+                },
+                onNo: () => { }
+                );
+            return;
+        }
+
+        ApplyPotionEffect(potion, player);
+        onUsed.Invoke();
+    }
+    public void ApplyPotionEffect(PotionData potion, PlayerController player)
+    {
+        potion.ApplyEffect(player, potion.potionType);
+        if (potion.potionType != PotionType.Heal)
+        {
+            player.AttachPotionEffect();
+            ActiveItems.Add(potion);
+            UIManager.Instance.ResisterItem(potion, () => ReleaseItemBuff(player, potion));
         }
     }
     public void RemoveItem(int slotIndex)
     {
         Inventory.RemoveItem(slotIndex);
-        FreshSlot();
+    }
+
+    public void ReleaseItemBuff(PlayerController player, ItemData item)
+    {
+        if (item is PotionData potion)
+        {
+            potion.ReleaseEffect(player, potion.potionType);
+            player.DetachPotionEffect();
+        }
+        ActiveItems.Remove(item);
+        UIManager.Instance.RemoveItem(item);
+    }
+
+    public void SetItemToolTip(ItemToolTip itemToolTip)
+    {
+        this.itemToolTip = itemToolTip;
+    }
+    public void ActivateToolTip(ItemData itemData)
+    {
+        itemToolTip.SetPanel(itemData.itemName, itemData.ItemIcon, itemData.description);
+        UIManager.Instance.ToolTipPanel.SetActive(true);
+    }
+    public void SortInventory()
+    {
+        Inventory.Sort();
+    }
+    public void DeActivateToopTip()
+    {
+        UIManager.Instance.ToolTipPanel.SetActive(false);
     }
 }

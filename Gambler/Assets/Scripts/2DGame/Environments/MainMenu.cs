@@ -14,8 +14,8 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private float fadeTime;
     [SerializeField] private float SceneFadeTime;
-    [SerializeField] private GameObject GameEndCanvas;
-    [SerializeField] private GameObject SettingsCanvas;
+    [SerializeField] private GameObject GameEndPanel;
+    [SerializeField] private GameObject SettingsPanel;
     [SerializeField] private GameObject FadePanel;
 
     private SaveData saveData;
@@ -29,7 +29,7 @@ public class MainMenu : MonoBehaviour
     {
         saveData = SaveSystem.Load();
 
-        settings = SettingsCanvas.GetComponent<SettingsController>();
+        settings = SettingsPanel.GetComponent<SettingsController>();
         settings.AllSlider.value = saveData.AllVolume;
         settings.BGMSlider.value = saveData.BGMVolume;
         settings.SFXSlider.value = saveData.SFXVolume;
@@ -55,17 +55,17 @@ public class MainMenu : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (SettingsCanvas.activeSelf)
+                if (SettingsPanel.activeSelf)
                 {
-                    SettingsCanvas.SetActive(false);
+                    SettingsPanel.SetActive(false);
                 }
-                else if (GameEndCanvas.activeSelf)
+                else if (GameEndPanel.activeSelf)
                 {
-                    GameEndCanvas.SetActive(false);
+                    GameEndPanel.SetActive(false);
                 }
                 else
                 {
-                    GameEndCanvas.SetActive(true);
+                    GameEndPanel.SetActive(true);
                 }
                 
             }
@@ -110,10 +110,10 @@ public class MainMenu : MonoBehaviour
     
     private void OpenSettingPanel()
     {
-        SettingsCanvas.SetActive(true);
+        SettingsPanel.SetActive(true);
     }
     private void OpenGameEndPanel()
     {
-        GameEndCanvas.SetActive(true);
+        GameEndPanel.SetActive(true);
     }
 }

@@ -5,44 +5,52 @@ using TMPro;
 public class EnhanceController : MonoBehaviour
 {
     [SerializeField] private List<GameObject> skillSlots;
-    [SerializeField] private GameObject EnhanceConfirmPanel;
-    [SerializeField] private GameObject skillDescriptionPanel;
-    [SerializeField] private TMP_Text text;
+    [SerializeField] private EnhanceConfirmPanel EnhanceConfirmPrefab;
+
+    public EnhanceConfirmPanel EnhanceConfirmPanel { get; private set; }
+    public GameObject SkillDescriptionPanel;
+    public GameObject ActiveSkillPanel;
+    public GameObject PassiveSkillPanel;
 
     private SkillUpgradeSlot currentSlot;
     private PlayerBase playerBase;
-    private void Awake()
+    private void Start()
     {
         foreach(var x in skillSlots)
         {
             SkillUpgradeSlot SUS = x.GetComponentInChildren<SkillUpgradeSlot>();
-            x.GetComponentInChildren<Button>().onClick.AddListener(() => ShowInhanceComment(SUS));
+            x.GetComponentInChildren<Button>().onClick.AddListener(() => ShowEnhanceComment(SUS));
             SUS.OnHoverEnter += ActivateSDPanel;
             SUS.OnHoverExit += DeActivateSDPanel;
             SUS.Refresh();
         }
+
         currentSlot = skillSlots[0].GetComponent<SkillUpgradeSlot>();
         playerBase = GameManager.Instance.PlayerBase;
+        EnhanceConfirmPanel = Instantiate(EnhanceConfirmPrefab, UIManager.Instance.DynamicCanvas.PopUpGroup.transform);
+        EnhanceConfirmPanel.gameObject.SetActive(false);
+        SkillDescriptionPanel.SetActive(false);
+        gameObject.SetActive(false);
     }
     private void OnDisable()
     {
-        skillDescriptionPanel.SetActive(false);
+        DeActivateSDPanel();
     }
     private void OnDestroy()
     {
         foreach (var x in skillSlots)
         {
             SkillUpgradeSlot SUS = x.GetComponentInChildren<SkillUpgradeSlot>();
-            x.GetComponentInChildren<Button>().onClick.RemoveListener(() => ShowInhanceComment(SUS));
+            x.GetComponentInChildren<Button>().onClick.RemoveListener(() => ShowEnhanceComment(SUS));
         }
     }
-    private void ShowInhanceComment(SkillUpgradeSlot skillSlot)
+    private void ShowEnhanceComment(SkillUpgradeSlot skillSlot)
     {
         currentSlot = skillSlot;
         if (playerBase.ownedSkills.TryGetValue(skillSlot.skillData, out Skill skill))
         {
             if(skill.level == skill.skillData.skillMaxLevel) { return; }
-            text.text = string.Format(currentSlot.skillData.descriptionFormat,
+            EnhanceConfirmPanel.text.text = string.Format(currentSlot.skillData.descriptionFormat,
             skillSlot.skillData.skillName,
             skillSlot.skillData.goldPerLevel[skill.level],
             skillSlot.skillData.valuePerLevel[skill.level]);
@@ -55,7 +63,9 @@ public class EnhanceController : MonoBehaviour
                     && !GameManager.Instance.PlayerBase.ownedSkills.TryGetValue(activeSkillData.requiredSkill, out _)){ return; }
                 if (activeSkillData.activeSkillType == ActiveSkillData.ActiveSkillType.Original)
                 {
-                    text.text = currentSlot.skillData.descriptionFormat;
+                    EnhanceConfirmPanel.text.text = string.Format(currentSlot.skillData.descriptionFormat,
+                        skillSlot.skillData.skillName,
+                        skillSlot.skillData.goldPerLevel[0]);
                 }
                 else
                 {
@@ -67,7 +77,7 @@ public class EnhanceController : MonoBehaviour
                 SetDescriptionText(skillSlot);
             }
         }
-        UIManager.Instance.OpenPanel(EnhanceConfirmPanel);
+        UIManager.Instance.OpenPanel(EnhanceConfirmPanel.gameObject);
     }
     public void OnConfirm()
     {
@@ -78,22 +88,22 @@ public class EnhanceController : MonoBehaviour
            skillSlot.GetComponent<SkillUpgradeSlot>().Refresh();
         }
         ActivateSDPanel(currentSlot);
-        HideInhanceComment();
+        HideEnhanceComment();
     }
     public void SetDescriptionText(SkillUpgradeSlot skillSlot)
     {
-        text.text = string.Format(currentSlot.skillData.descriptionFormat,
+        EnhanceConfirmPanel.text.text = string.Format(currentSlot.skillData.descriptionFormat,
                skillSlot.skillData.skillName,
                skillSlot.skillData.goldPerLevel[0],
                skillSlot.skillData.valuePerLevel[0]);
     }
     private void ActivateSDPanel(SkillUpgradeSlot skillSlot)
     {
-        if (!skillDescriptionPanel.activeSelf)
+        if (!SkillDescriptionPanel.activeSelf)
         {
-            skillDescriptionPanel.SetActive(true);
+            SkillDescriptionPanel.SetActive(true);
         }
-        SkillDescriptionPanel SDPanel = skillDescriptionPanel.GetComponent<SkillDescriptionPanel>();
+        SkillDescriptionPanel SDPanel = SkillDescriptionPanel.GetComponent<SkillDescriptionPanel>();
 
         string levelText;
         float sumValue;
@@ -130,13 +140,23 @@ public class EnhanceController : MonoBehaviour
     }
     private void DeActivateSDPanel()
     {
-        if (skillDescriptionPanel.activeSelf)
+        if (SkillDescriptionPanel.activeSelf)
         {
-            skillDescriptionPanel.SetActive(false);
+            SkillDescriptionPanel.SetActive(false);
         }
     }
-    public void HideInhanceComment()
+    public void OpenPassivePanel()
     {
-        UIManager.Instance.ClosePanel(EnhanceConfirmPanel);
+        ActiveSkillPanel.SetActive(false);
+        PassiveSkillPanel.SetActive(true);
+    }
+    public void OpenActivePanel()
+    {
+        ActiveSkillPanel.SetActive(true);
+        PassiveSkillPanel.SetActive(false);
+    }
+    public void HideEnhanceComment()
+    {
+        UIManager.Instance.ClosePanel(EnhanceConfirmPanel.gameObject);
     }
 }

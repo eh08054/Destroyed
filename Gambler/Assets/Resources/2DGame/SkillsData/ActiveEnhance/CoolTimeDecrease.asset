@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CoolTimeDecrease
   m_EditorClassIdentifier: Assembly-CSharp::ActiveSkillData
   id: 11
-  skillName: "\uAC80\uAE30\uD6C8\uB828"
+  skillName: "\uAC80\uACA9 : \uAC80\uAE30\uD6C8\uB828"
   skillIcon: {fileID: 21300000, guid: 883e8b241fbf6fc4db138bbd7690388a, type: 3}
   skillLevel: 0
   skillMaxLevel: 10
@@ -30,11 +30,11 @@ MonoBehaviour:
   - 5
   - 5
   goldPerLevel: 0a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a0000000a000000
-  descriptionFormat: "{0} \uC2A4\uD0AC\uC744 \uAC15\uD654\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
-    {1}\n\uAC15\uD654\uD6A8\uACFC: \uAC80\uACA9 \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
-    {2}% \uAC10\uC18C\uD569\uB2C8\uB2E4."
-  skillDescriptionFormat: "[\uAC80\uACA9] \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
-    <color=red>{0}%</color> \uAC10\uC18C\uD569\uB2C8\uB2E4.\t"
+  descriptionFormat: "<color=red>[{0}]</color> \uC2A4\uD0AC\uC744 \uAC15\uD654\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
+    <color=red>{1}</color> \uACE8\uB4DC\n\uAC15\uD654\uD6A8\uACFC: \uAC80\uACA9 \uC2A4\uD0AC\uC758
+    \uCFE8\uD0C0\uC784\uC774 <color=green>{2}%</color> \uAC10\uC18C\uD569\uB2C8\uB2E4."
+  skillDescriptionFormat: "<color=red>[\uAC80\uACA9]</color> \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774
+    <color=green>{0}%</color> \uAC10\uC18C\uD569\uB2C8\uB2E4.\t"
   activeSkillType: 1
   skillEffectPrefab: {fileID: 0}
   cooldown: 0

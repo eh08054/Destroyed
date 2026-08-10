@@ -9,6 +9,7 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private string promptContent;
     public string PromptContent => promptContent;
     private bool isOpened = false;
+    private bool isClicked = false;
     public void OnEnable()
     {
         GameManager.Instance.OnClear += ClearDoor;
@@ -39,10 +40,11 @@ public class Door : MonoBehaviour, IInteractable
         }
         else if(keyCode == KeyCode.F)
         {
-            if (isOpened)
+            if (isOpened && !isClicked)
             {
                 GameData.SelectedStage = nextStage;
                 StartCoroutine(UIManager.Instance.FadeScene(0, 1, "GameScene"));
+                isClicked = true;
             }
         }
     }

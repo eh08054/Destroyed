@@ -4,6 +4,13 @@ using UnityEngine;
 public class NPC : MonoBehaviour, IInteractable
 {
     public string PromptContent { get; } = "[F] 대화하기";
+
+    private bool isTalking = false;
+
+    private void Start()
+    {
+        UIManager.Instance.CloseDialog += EndTalking;
+    }
     public void OnInteractionEntered()
     {
 
@@ -14,7 +21,16 @@ public class NPC : MonoBehaviour, IInteractable
     }
     public void OnInteract(KeyCode keyCode)
     {
-        GameManager.Instance.StartDialogue();
+        if (!isTalking)
+        {
+            isTalking = true;
+            UIManager.Instance.StartDialogue();
+        }
+    }
+
+    private void EndTalking()
+    {
+        isTalking = false;
     }
     public bool CanInteract { get; } = true;
     public KeyCode[] KeyCodes { get; } = { KeyCode.F };

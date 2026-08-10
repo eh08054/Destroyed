@@ -1,6 +1,7 @@
-using UnityEngine;
-using TMPro;
+using System;
 using System.Collections;
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogSystem : MonoBehaviour
@@ -16,10 +17,18 @@ public class DialogSystem : MonoBehaviour
     private bool isTypingEffect = false;
     private Coroutine typingTextCoroutine;
 
+    private void Start()
+    {
+        UIManager.Instance.CloseDialog += InitDialogue;
+    }
     private void SetUp()
     {
-        for(int i = 0; i < speakers.Length; i++)
-        {
+        speakers[0].spriteRenderer = UIManager.Instance.DialogPanel.SpriteRenderer;
+        speakers[0].textName = UIManager.Instance.DialogPanel.DialogName;
+        speakers[0].textDialogue = UIManager.Instance.DialogPanel.Dialog;
+        speakers[0].objectArrow = UIManager.Instance.DialogPanel.ImageArrow.gameObject;
+        for (int i = 0; i < speakers.Length; i++)
+        { 
             SetActiveObjects(speakers[i], false);
             speakers[i].spriteRenderer.gameObject.SetActive(true);
         }
@@ -52,16 +61,9 @@ public class DialogSystem : MonoBehaviour
             }
             else
             {
-                GameManager.Instance.StopDialogue();
-                InitDialogue();
+                UIManager.Instance.HideDialogPanel();
                 return true;
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Escape) && isTalking == true)
-        {
-            GameManager.Instance.StopDialogue();
-            InitDialogue();
-            return true;
         }
         return false;
     }

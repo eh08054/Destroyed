@@ -30,9 +30,9 @@ MonoBehaviour:
   - 10
   - 10
   goldPerLevel: 0a000000140000001e00000028000000320000003c00000046000000500000005a00000064000000
-  descriptionFormat: "{0} \uC2A4\uD0AC\uC744 \uAC15\uD654\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
-    {1}\n\uAC15\uD654\uD6A8\uACFC: \uACF5\uACA9\uB825\uC774 \uC601\uAD6C\uC801\uC73C\uB85C
-    {2}% \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  descriptionFormat: "<color=red>[{0}]</color> \uC2A4\uD0AC\uC744 \uAC15\uD654\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
+    <color=red>{1}</color> \uACE8\uB4DC\n\uAC15\uD654\uD6A8\uACFC: \uACF5\uACA9\uB825\uC774
+    \uC601\uAD6C\uC801\uC73C\uB85C <color=green>{2}%</color> \uC99D\uAC00\uD569\uB2C8\uB2E4."
   skillDescriptionFormat: "\uACF5\uACA9\uB825\uC774 \uC601\uAD6C\uC801\uC73C\uB85C
     <color=red>{0}%</color> \uC99D\uAC00\uD569\uB2C8\uB2E4."
   skillType: 0

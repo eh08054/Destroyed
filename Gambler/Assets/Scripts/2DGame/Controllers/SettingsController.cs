@@ -44,6 +44,7 @@ public class SettingsController : MonoBehaviour
         ResDropDown.onValueChanged.AddListener(ScreenManager.instance.SetResolution);
 
         HUDSlider.onValueChanged.AddListener(OnHUDAlphaChanged);
+        gameObject.SetActive(false);
     }
     private void OnDestroy()
     {

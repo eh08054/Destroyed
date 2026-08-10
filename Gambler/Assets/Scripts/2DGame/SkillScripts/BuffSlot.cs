@@ -13,12 +13,16 @@ public class BuffSlot : MonoBehaviour
 
     public void StartBuff(ActiveSkill skill, Action OnEnd)
     {
-        StartCoroutine(StartDuration(skill, OnEnd));
+        StartCoroutine(StartDuration(skill.Duration, OnEnd));
     }
-    public IEnumerator StartDuration(ActiveSkill skill, Action OnEnd)
+    public void StartBuff(ItemData item, Action OnEnd)
+    {
+        StartCoroutine(StartDuration(item.durationTime, OnEnd));
+    }
+    public IEnumerator StartDuration(float buffTime, Action OnEnd)
     {
         remainedTime.gameObject.SetActive(true);
-        time = skill.Duration;
+        time = buffTime;
 
         while (time > 0f)
         {

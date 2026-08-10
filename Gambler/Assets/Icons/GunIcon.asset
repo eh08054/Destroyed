@@ -9,10 +9,10 @@ Sprite:
   m_Name: GunIcon
   m_Rect:
     serializedVersion: 2
-    x: 0
-    y: 896
-    width: 32
-    height: 32
+    x: 2
+    y: 902
+    width: 24
+    height: 24
   m_Offset: {x: 0, y: 0}
   m_Border: {x: 0, y: 0, z: 0, w: 0}
   m_PixelsToUnits: 16
@@ -102,18 +102,18 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000080bf0000803f000000000000803f0000803f00000000000080bf000080bf000000000000803f000080bf00000000000000000000803f398e633d0000803f00000000232c773f398e633d232c773f
+      _typelessdata: 000040bf0000403f000000000000403f0000403f00000000000040bf000040bf000000000000403f000040bf000000000000000000000000000000000000000000000000000000000000000000000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 0
-      y: 896
-      width: 32
-      height: 32
+      x: 2
+      y: 902
+      width: 24
+      height: 24
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 16, y: 16, z: 16, w: 912}
+    uvTransform: {x: 16, y: 14, z: 16, w: 914}
     downscaleMultiplier: 1
   m_AtlasRD:
     serializedVersion: 3
@@ -193,28 +193,28 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000080bf0000803f000000000000803f0000803f00000000000080bf000080bf000000000000803f000080bf00000000000000000000803f398e633d0000803f00000000232c773f398e633d232c773f
+      _typelessdata: 000040bf0000403f000000000000403f0000403f00000000000040bf000040bf000000000000403f000040bf000000000000000000000000000000000000000000000000000000000000000000000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
-      x: 0
-      y: 896
-      width: 32
-      height: 32
+      x: 2
+      y: 902
+      width: 24
+      height: 24
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 16, y: 16, z: 16, w: 912}
+    uvTransform: {x: 16, y: 14, z: 16, w: 914}
     downscaleMultiplier: 1
   m_PhysicsShape:
-  - - {x: -0.6875, y: 0.375}
-    - {x: -0.75, y: 0.125}
-    - {x: -0.75, y: -0.125}
-    - {x: -0.6875, y: -0.1875}
-    - {x: 0.125, y: -0.1875}
-    - {x: 0.375, y: -0.125}
-    - {x: 0.5, y: 0}
-    - {x: 0.5, y: 0.375}
+  - - {x: -0.5625, y: 0.25}
+    - {x: -0.625, y: 0}
+    - {x: -0.625, y: -0.25}
+    - {x: -0.5625, y: -0.3125}
+    - {x: 0.25, y: -0.3125}
+    - {x: 0.5, y: -0.25}
+    - {x: 0.625, y: -0.125}
+    - {x: 0.625, y: 0.25}
   m_Bones: []
   m_ScriptableObjects: []
   m_SpriteID: f93a4339e4026d04ea000fac5507884a

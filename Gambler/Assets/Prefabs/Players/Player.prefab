@@ -89,7 +89,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyPlayerController
   playerType: 0
-  playerSpeed: 5
   dashSpeed: 20
   jumpForce: 20
   gravityScale: 1
@@ -103,6 +102,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   SlashEffect: {fileID: 3032771829464754105, guid: 795ae896d1ece1b468463b44ab419e0c, type: 3}
+  PotionEffect: {fileID: 6083052314287505248, guid: 9e94003a1a59d594e980db6b08b25819, type: 3}
 --- !u!95 &9132813703826714243
 Animator:
   serializedVersion: 7

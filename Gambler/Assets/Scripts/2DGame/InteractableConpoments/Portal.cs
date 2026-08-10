@@ -13,7 +13,6 @@ public class Portal : MonoBehaviour, IInteractable
     public void OnEnable()
     {
         GameManager.Instance.OnClear += ClearPortal;
-        Debug.Log("hsdf");
     }
     public void OnInteractionEntered()
     {

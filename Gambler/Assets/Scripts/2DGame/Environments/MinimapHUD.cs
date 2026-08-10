@@ -31,6 +31,7 @@ public class MinimapHUD : MonoBehaviour
         while(index < enemyCountEntries.Count)
         {
             enemyCountEntries[index].icon.color = new Color(1, 1, 1, 0);
+            enemyCountEntries[index].countText.text = "";
             index++;
         }
     }

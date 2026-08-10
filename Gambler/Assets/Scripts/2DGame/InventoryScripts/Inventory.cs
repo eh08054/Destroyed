@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class ItemSlot
 {
@@ -12,8 +13,9 @@ public class ItemSlot
 
 public class Inventory
 {
+    public event Action OnInventoryChanged;
     public List<ItemSlot> itemSlots;
-    public Slot[] Slots { get; set; }
+    public int maxSlotCount;
     public bool AddItem(ItemData _item)
     {
         foreach (var itemSlot in itemSlots)
@@ -21,12 +23,14 @@ public class Inventory
             if (itemSlot.item == _item && itemSlot.CanStack)
             {
                 itemSlot.count++;
+                OnInventoryChanged?.Invoke();
                 return true;
             }
         }
-        if (itemSlots.Count < Slots.Length)
+        if (itemSlots.Count < maxSlotCount)
         {
             itemSlots.Add(new ItemSlot { item = _item, count = 1, maxStack = _item.maxStorageStack });
+            OnInventoryChanged?.Invoke();
             return true;
         }
 
@@ -41,6 +45,13 @@ public class Inventory
         if (itemSlots[slotIndex].count <= 0)
         {
             itemSlots.RemoveAt(slotIndex);
-        }      
+        }
+        OnInventoryChanged?.Invoke();
+    }
+
+    public void Sort()
+    {
+        itemSlots.Sort((a, b) => a.item.id.CompareTo(b.item.id));
+        OnInventoryChanged?.Invoke();
     }
 }

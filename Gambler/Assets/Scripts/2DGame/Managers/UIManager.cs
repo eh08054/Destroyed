@@ -1,8 +1,9 @@
+using CityBackgroundsCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using TMPro;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -12,43 +13,85 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [Header("Menu Bar")]
-    [SerializeField] private Slider PlayerHPSlider;
-    [SerializeField] private TMP_Text HPText;
-    [SerializeField] private TMP_Text goldText;
-
-    [Header("Common")]
-    [SerializeField] private GameObject weaponPanel;
-    [SerializeField] private GameObject skillPanel;
-    [SerializeField] private GameObject fadePanel;
-    [SerializeField] private GameObject buffSlotPrefab;
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private Image WeaponImage;
-    [SerializeField] private Image[] SkillImages;
+    [Header("Persistent")]
+    [SerializeField] private DynamicCanvas dynamicCanvasPrefab;
+    [SerializeField] private HUDPanel HUDPrefab;
+    [SerializeField] private WeaponPanel weaponPrefab;
+    [SerializeField] private SkillPanel skillPrefab;
+    [SerializeField] private GameObject fadePrefab;
+    [SerializeField] private GameObject buffPanelPrefab;
+    [SerializeField] private ActiveItemPanel activeItemPrefab;
+    [SerializeField] private BuffSlot buffSlotPrefab;
+    [SerializeField] private BuffSlot ItemBuffSlotPrefab;
     [SerializeField] private float sceneFadeTime;
 
-    [Header("Map Scene")]
-    [SerializeField] private GameObject dialogPanel;
-    [SerializeField] private GameObject skillEnhancePanel;
-    [SerializeField] private GameObject activeSkillPanel;
-    [SerializeField] private GameObject passiveSkillPanel;
+    [Header("Shelter")]
+    [SerializeField] private DialogPanel dialogPrefab;
+    [SerializeField] private GameObject skillEnhancePrefab;
 
-    [Header("Game Scene")]
-    [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject gameClearPanel;
-    [SerializeField] private GameObject MinimapPanel;
-    [SerializeField] private GameObject StageText;
+    [Header("Game Play")]
+    [SerializeField] private GameObject gameOverPrefab;
+    [SerializeField] private GameObject gameClearPrefab;
+    [SerializeField] private GameObject minimapPrefab;
+
+    [Header("Pop Up")]
+    [SerializeField] private InventoryPanel inventoryPrefab;
+    [SerializeField] private GameObject pausePrefab;
+    [SerializeField] private GameObject settingsPrefab;
+    [SerializeField] private GameObject possessSkillPrefab;
+    [SerializeField] private GameObject gameEndPrefab;
+    [SerializeField] private GameObject itemToolTipPrefab;
+
+    public InventoryPanel InventoryPanel { get; private set; }
+    public SkillPanel SkillPanel { get; private set; }
+    public GameObject PausePanel { get; private set; }
+    public GameObject SettingsPanel { get; private set; }
+    public GameObject GameEndPanel { get; private set; }
+    public GameObject BuffPanel { get; private set; }
+    public ActiveItemPanel ActiveItemPanel { get; private set; }
+    public GameObject PossessSkillPanel { get; private set; }
+    public GameObject ToolTipPanel { get; private set; }
+    public WeaponPanel WeaponPanel { get; private set; }
+    public GameObject FadePanel { get; private set; }
+    public HUDPanel HUDPanel { get; private set; }
+
+    public DialogPanel DialogPanel { get; private set; }
+    public GameObject SkillEnhancePanel { get; private set; }
+    public GameObject ActiveSkillPanel { get; private set; }
+    public GameObject PassiveSkillPanel { get; private set; }
+
+    public GameObject GameOverPanel { get; private set; }
+    public GameObject GameClearPanel { get; private set; }
+    public GameObject MinimapPanel { get; private set; }
+
+    public DynamicCanvas DynamicCanvas;
+    public event Action CloseDialog;
 
     private PlayerController playerController;
     private Image fadeImage;
     private TMP_Text stageText;
-    private CanvasGroup canvasGroup;
+    public Canvas Canvas { get; private set; }
     public List<GameObject> openedPanels = new List<GameObject>();
     public GraphicBlink GraphicBlink { get; private set; }
+
+    private Coroutine DialogCoroutine;
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return; 
+        }
         Instance = this;
-        canvasGroup = canvas.GetComponent<CanvasGroup>();
+        DontDestroyOnLoad(gameObject);
+
+        DynamicCanvas = Instantiate(dynamicCanvasPrefab);
+        DontDestroyOnLoad(DynamicCanvas);
+
+        Persistent_Panels(0);
+        PopUp_Panels(0);
+        Shelter_Panels(0);
+        GamePlay_Panels(0);
     }
     private void Start()
     {
@@ -56,22 +99,58 @@ public class UIManager : MonoBehaviour
         playerController.OnHPChanged += SetPlayerHP;
         playerController.OnDeath += ShowGameOverPanel;
         playerController.OnWeaponChanged += ChangeWeaponImage;
-        GameManager.Instance.OpenDialog += ShowDialogPanel;
-        GameManager.Instance.CloseDialog += HideDialogPanel;
         GameManager.Instance.GoldChanged += SetGold;
+        GameManager.InputM.keyAction -= RegisterKeyActions;
+        GameManager.InputM.keyAction += RegisterKeyActions;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         GraphicBlink = new GraphicBlink();
-        fadeImage = fadePanel.GetComponent<Image>();
+        fadeImage = FadePanel.GetComponent<Image>();
         StartCoroutine(FadeScene(1, 0));
-        SetStageText();
+        DynamicCanvas.GamePlayGroup.SetActive(false);
+
+        GameManager.Instance.inventoryController.SetItemToolTip(ToolTipPanel.GetComponent<ItemToolTip>());
+    }
+    public void RegisterKeyActions()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if (InventoryPanel.gameObject.activeSelf)
+            {
+                ClosePanel(InventoryPanel.gameObject);
+            }
+            else
+            {
+                OpenPanel(InventoryPanel.gameObject);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            if (PossessSkillPanel.activeSelf)
+            {
+                ClosePanel(PossessSkillPanel);
+            }
+            else
+            {
+                PossessSkillPanel.GetComponent<PossessSkillController>().Refresh();
+                OpenPanel(PossessSkillPanel);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (openedPanels.Count != 0)
+            {
+                CloseLastPanel();
+            }
+            else if (!PausePanel.activeSelf)
+            {
+                OpenPanel(PausePanel);
+            }
+        }
     }
     public void OpenPanel(GameObject panel)
     {
         EventSystem.current.SetSelectedGameObject(null);
-        if (panel == dialogPanel)
-        {
-            weaponPanel.SetActive(false);
-        }
         panel.SetActive(true);
         openedPanels.Add(panel);
     }
@@ -90,10 +169,17 @@ public class UIManager : MonoBehaviour
             openedPanels.Remove(entry);
         }
 
-        if (entry == dialogPanel || entry == GameManager.Instance.PausePanel)
+        if (entry == DialogPanel.gameObject || entry == PausePanel.gameObject)
         {
-            skillPanel.SetActive(true);
-            weaponPanel.SetActive(true);
+            SkillPanel.gameObject.SetActive(true);
+            WeaponPanel.gameObject.SetActive(true);
+        }
+        if(entry == DialogPanel.gameObject)
+        {
+            if(DialogCoroutine != null) { StopCoroutine(DialogCoroutine); }
+            panel.SetActive(false);
+            CloseDialog?.Invoke();
+            return;
         }
         panel.SetActive(false);
     }
@@ -104,19 +190,19 @@ public class UIManager : MonoBehaviour
     }
     public void HPSliderInit(int current, int max)
     {
-        PlayerHPSlider.maxValue = max;
-        PlayerHPSlider.value = current;
-        HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
+        HUDPanel.PlayerHPSlider.maxValue = max;
+        HUDPanel.PlayerHPSlider.value = current;
+        HUDPanel.HPText.text = HUDPanel.PlayerHPSlider.value + "/" + HUDPanel.PlayerHPSlider.maxValue;
     }
     public void SetPlayerHP(int current, int max)
     {
-        PlayerHPSlider.maxValue = max;
-        PlayerHPSlider.value = current;
-        HPText.text = PlayerHPSlider.value + "/" + PlayerHPSlider.maxValue;
+        HUDPanel.PlayerHPSlider.maxValue = max;
+        HUDPanel.PlayerHPSlider.value = current;
+        HUDPanel.HPText.text = HUDPanel.PlayerHPSlider.value + "/" + HUDPanel.PlayerHPSlider.maxValue;
     }
     public void SetGold(int goldValue)
     {
-        goldText.text = goldValue.ToString();
+        HUDPanel.GoldText.text = goldValue.ToString();
     }
     public void ShowGameClearPanel(string enemyName = "", EnemyData.Type enemyType = 0)
     {
@@ -125,77 +211,101 @@ public class UIManager : MonoBehaviour
     private IEnumerator ShowGamePanelDelay()
     {
         yield return new WaitForSeconds(0.5f);
-        gameClearPanel.SetActive(true);
+        GameClearPanel.SetActive(true);
     }
     public void ShowGameOverPanel()
     {
-        gameOverPanel.SetActive(true);
+        GameOverPanel.SetActive(true);
+    }
+    public void StartDialogue()
+    {
+        ShowDialogPanel();
+        DialogSystem dialog = GameObject.FindGameObjectWithTag("DialogSystem").GetComponent<DialogSystem>();
+        DialogCoroutine = StartCoroutine(DialogueCoroutine(dialog));
+    }
+    private IEnumerator DialogueCoroutine(DialogSystem dialog)
+    {
+        yield return new WaitUntil(() => dialog.UpdateDialog());
     }
     public void ShowDialogPanel()
     {
-        OpenPanel(dialogPanel);
+        OpenPanel(DialogPanel.gameObject);
     }
     public void HideDialogPanel()
     {
-        ClosePanel(dialogPanel);
+        ClosePanel(DialogPanel.gameObject);
     }
 
     public void ShowSkillEnhancePanel()
     {
-        OpenPanel(skillEnhancePanel);
+        OpenPanel(SkillEnhancePanel);
     }
     public void HideSkillEnhancePanel()
     {
-        skillEnhancePanel.SetActive(false);
+        SkillEnhancePanel.SetActive(false);
     }
     public void ShowActiveSkillPanel()
     {
-        passiveSkillPanel.SetActive(false);
-        activeSkillPanel.SetActive(true);
+        PassiveSkillPanel.SetActive(false);
+        ActiveSkillPanel.SetActive(true);
     }
     public void ShowPassiveSkillPanel()
     {
-        activeSkillPanel.SetActive(false);
-        passiveSkillPanel.SetActive(true);
+        ActiveSkillPanel.SetActive(false);
+        PassiveSkillPanel.SetActive(true);
     }
     public void SetMinimapPanel(List<EnemySpawnInfo> enemySpawnInfos)
     {
-        MinimapPanel.GetComponent<MinimapHUD>().InitHUD(enemySpawnInfos);
+        MinimapPanel.GetComponentInChildren<MinimapHUD>().InitHUD(enemySpawnInfos);
     }
     public void RefreshMinimapPanel(string enemyName, EnemyData.Type enemyType)
     {
-        MinimapPanel.GetComponent<MinimapHUD>().RefreshHUD(enemyName);
+        MinimapPanel.GetComponentInChildren<MinimapHUD>().RefreshHUD(enemyName);
     }
     public void ChangeWeaponImage(WeaponData weaponData)
     {
-        WeaponImage.sprite = weaponData.weaponIcon;
+        WeaponPanel.WeaponImage.sprite = weaponData.weaponIcon;
     }
 
     public void RegisterSkill(int slotIndex, ActiveSkill activeSkill)
     {
         if (activeSkill == null)
         {
-            SkillImages[slotIndex].sprite = null;
-            SkillImages[slotIndex].color = new Color(0.4f, 0.4f, 0.4f);
+            SkillPanel.SkillImages[slotIndex].sprite = null;
+            SkillPanel.SkillImages[slotIndex].color = new Color(0.4f, 0.4f, 0.4f);
         }
         else
         {
-            SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
-            SkillImages[slotIndex].color = new Color(1, 1, 1);
-            SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillImages[slotIndex]);
+            SkillPanel.SkillImages[slotIndex].sprite = activeSkill.skillData.skillIcon;
+            SkillPanel.SkillImages[slotIndex].color = new Color(1, 1, 1);
+            SkillPanel.SkillImages[slotIndex].transform.parent.GetComponent<SkillSlotUI>().RegisterCoolDownImage(SkillPanel.SkillImages[slotIndex]);
         }
     }
     public void ResisterBuff(ActiveSkill activeSkill, Action OnEnd)
     {
-        GameObject gameObject = Instantiate(buffSlotPrefab, GameManager.Instance.BuffPanel.transform);
-        BuffSlot buffSlot = gameObject.GetComponent<BuffSlot>();
+        BuffSlot buffSlot = Instantiate(buffSlotPrefab, BuffPanel.transform);
 
         buffSlot.icon.sprite = activeSkill.ActiveData.skillIcon;
         buffSlot.StartBuff(activeSkill, OnEnd);
     }
+    public void ResisterItem(ItemData item, Action OnEnd)
+    {
+        BuffSlot itemBuffSlot = Instantiate(ItemBuffSlotPrefab, ActiveItemPanel.transform);
+        itemBuffSlot.icon.sprite = item.ItemIcon;
+        itemBuffSlot.StartBuff(item, OnEnd);
+        ActiveItemPanel.ActiveBuffSlots[item] = itemBuffSlot;
+    }
+    public void RemoveItem(ItemData item)
+    {
+        if(ActiveItemPanel.ActiveBuffSlots.TryGetValue(item, out var slot))
+        {
+            ActiveItemPanel.ActiveBuffSlots.Remove(item);
+            Destroy(slot.gameObject);
+        }
+    }
     public void SetSkillImages(ActiveSkill[] activeSkills)
     {
-        for(int i = 0; i < SkillImages.Length; i++)
+        for(int i = 0; i < SkillPanel.SkillImages.Length; i++)
         {
             if (activeSkills[i] != null)
             {
@@ -206,11 +316,11 @@ public class UIManager : MonoBehaviour
 
     public void ActiveCoolDownImage(int index)
     {
-        SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().ActiveCoolDownImage();
+        SkillPanel.SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().ActiveCoolDownImage();
     }
     public void CoolDownImage(int index, float ratio)
     {
-        SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().UpdateSkillSlotUI(ratio);
+        SkillPanel.SkillImages[index].transform.parent.GetComponent<SkillSlotUI>().UpdateSkillSlotUI(ratio);
     }
     public void SetStageText()
     {
@@ -220,7 +330,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            stageText = StageText.GetComponent<TMP_Text>();
+            stageText = GameObject.Find("StageText").GetComponent<TMP_Text>();
             stageText.text = $"STAGE {GameData.SelectedStage}";
             StartCoroutine(StageBlink());
         }
@@ -228,8 +338,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator StageBlink()
     {
-        RectTransform rect = StageText.GetComponent<RectTransform>();
-        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+        RectTransform rect = stageText.gameObject.GetComponent<RectTransform>();
+        RectTransform canvasRect = Canvas.GetComponent<RectTransform>();
 
         Vector2 StartPos = new Vector2(0, -400f);
         Vector2 endPos = new Vector2(0, -400f);
@@ -252,28 +362,123 @@ public class UIManager : MonoBehaviour
     public IEnumerator FadeScene(float start, float end, string sceneName = null)
     {
         GameManager.Instance.gameState = GameState.Loading;
-        fadePanel.SetActive(true);
         yield return StartCoroutine(GraphicBlink.FadeGraphic(fadeImage, start, end, sceneFadeTime));
 
-        if(sceneName != null)
+        if (sceneName != null)
         {
             GameManager.Instance.SceneChanger.SceneChange(sceneName);
-        }
-        else
-        {
-            fadePanel.SetActive(false);
         }
         GameManager.Instance.gameState = GameState.Playing;
     }
     public void SetHUDAlpha(float value)
     {
-        canvasGroup.alpha = value;
+        
     }
-    private void OnDisable()
+    public void ResetPanel()
     {
-        playerController.OnHPChanged -= SetPlayerHP;
-        playerController.OnDeath -= ShowGameOverPanel;
-        playerController.OnWeaponChanged -= ChangeWeaponImage;
-        GameManager.Instance.OpenDialog -= ShowDialogPanel;
+        PopUp_Panels(1);
+    }
+    private void OnDestroy()
+    {
+        //playerController.OnHPChanged -= SetPlayerHP;
+        //playerController.OnDeath -= ShowGameOverPanel;
+        //playerController.OnWeaponChanged -= ChangeWeaponImage;
+        //GameManager.Instance.OpenDialog -= ShowDialogPanel;
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ResetPanel();
+        Canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        if (scene.name == "MapScene")
+        {
+            DynamicCanvas.ShelterGroup.SetActive(true);
+            DynamicCanvas.GamePlayGroup.SetActive(false);
+        }
+        else if (scene.name == "GameScene")
+        {
+            DynamicCanvas.ShelterGroup.SetActive(false);
+            DynamicCanvas.GamePlayGroup.SetActive(true);
+            StartCoroutine(FadeScene(1, 0));
+            SetStageText();
+        }
+        else if (scene.name == "MenuScene")
+        {
+            DynamicCanvas.ShelterGroup.SetActive(false);
+            DynamicCanvas.GamePlayGroup.SetActive(false);
+        }
+        else { return; }
+    }
+    public void Shelter_Panels(int order)
+    {
+        switch (order)
+        {
+            case 0:
+                DialogPanel = Instantiate(dialogPrefab, DynamicCanvas.ShelterGroup.transform);
+                SkillEnhancePanel = Instantiate(skillEnhancePrefab, DynamicCanvas.ShelterGroup.transform);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+    }
+    public void GamePlay_Panels(int order)
+    {
+        switch (order)
+        {
+            case 0:
+                GameOverPanel = Instantiate(gameOverPrefab, DynamicCanvas.GamePlayGroup.transform);
+                GameClearPanel = Instantiate(gameClearPrefab, DynamicCanvas.GamePlayGroup.transform);
+                MinimapPanel = Instantiate(minimapPrefab, DynamicCanvas.GamePlayGroup.transform);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+    }
+    public void Persistent_Panels(int order)
+    {
+        switch (order)
+        {
+            case 0:
+                BuffPanel = Instantiate(buffPanelPrefab, DynamicCanvas.PersistentGroup.transform);
+                ActiveItemPanel = Instantiate(activeItemPrefab, DynamicCanvas.PersistentGroup.transform);
+                SkillPanel = Instantiate(skillPrefab, DynamicCanvas.PersistentGroup.transform);
+                HUDPanel = Instantiate(HUDPrefab, DynamicCanvas.PersistentGroup.transform);
+                WeaponPanel = Instantiate(weaponPrefab, DynamicCanvas.PersistentGroup.transform);
+                FadePanel = Instantiate(fadePrefab, DynamicCanvas.PersistentGroup.transform);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+    }
+    public void PopUp_Panels(int order)
+    {
+        switch (order)
+        {
+            case 0:
+                PausePanel = Instantiate(pausePrefab, DynamicCanvas.PopUpGroup.transform);
+                SettingsPanel = Instantiate(settingsPrefab, DynamicCanvas.PopUpGroup.transform);
+                GameEndPanel = Instantiate(gameEndPrefab, DynamicCanvas.PopUpGroup.transform);
+                PossessSkillPanel = Instantiate(possessSkillPrefab, DynamicCanvas.PopUpGroup.transform);
+                InventoryPanel = Instantiate(inventoryPrefab, DynamicCanvas.PopUpGroup.transform);
+                ToolTipPanel = Instantiate(itemToolTipPrefab, DynamicCanvas.PopUpGroup.transform);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -21,7 +21,8 @@ MonoBehaviour:
   valuePerLevel:
   - 0
   goldPerLevel: 0a000000
-  descriptionFormat: "[\uAC80\uACA9] \uC2A4\uD0AC\uC744 \uD68D\uB4DD\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+  descriptionFormat: "<color=red>[{0}]</color> \uC2A4\uD0AC\uC744 \uD68D\uB4DD\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?\n\uC18C\uBAA8:
+    <color=red>{1}</color> \uACE8\uB4DC"
   skillDescriptionFormat: "\uACF5\uACA9 \uBC29\uD5A5\uC73C\uB85C \uAC80\uAE30\uB97C
     \uBC29\uCD9C\uD569\uB2C8\uB2E4."
   activeSkillType: 0

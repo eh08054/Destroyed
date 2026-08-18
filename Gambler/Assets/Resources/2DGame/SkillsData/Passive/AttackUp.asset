@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PassiveSkillData
   id: 1
   skillName: "\uACF5\uACA9\uD6C8\uB828"
-  skillIcon: {fileID: 21300000, guid: 4f0b1b34806904f47afb23de85826910, type: 3}
+  skillIcon: {fileID: 21300000, guid: 922fd24dc86fc134eafb23a86411cc5c, type: 3}
   skillLevel: 0
   skillMaxLevel: 10
   sumValues: 0

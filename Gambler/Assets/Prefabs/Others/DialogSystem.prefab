@@ -52,7 +52,8 @@ MonoBehaviour:
   dialogs:
   - speakerIndex: 0
     name: "\uB3D9\uB8CC"
-    dialogue: "\uC5EC\uAE30\uC11C \uAC15\uD654\uB97C \uD560 \uC218 \uC788\uC5B4."
+    dialogue: "\uC5EC\uAE30\uC11C\uB294 \uAC15\uD654\uB97C \uD558\uAC70\uB098 \uC0C1\uC810\uC744
+      \uC774\uC6A9\uD560 \uC218 \uC788\uC5B4."
   - speakerIndex: 0
     name: "\uB3D9\uB8CC"
     dialogue: "\uD589\uC6B4\uC744 \uBE4C\uC5B4."

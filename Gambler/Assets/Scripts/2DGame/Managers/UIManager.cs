@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
     [Header("Shelter")]
     [SerializeField] private DialogPanel dialogPrefab;
     [SerializeField] private GameObject skillEnhancePrefab;
+    [SerializeField] private GameObject shopPrefab;
 
     [Header("Game Play")]
     [SerializeField] private GameObject gameOverPrefab;
@@ -59,6 +60,7 @@ public class UIManager : MonoBehaviour
     public GameObject SkillEnhancePanel { get; private set; }
     public GameObject ActiveSkillPanel { get; private set; }
     public GameObject PassiveSkillPanel { get; private set; }
+    public GameObject ShopPanel { get; private set; }
 
     public GameObject GameOverPanel { get; private set; }
     public GameObject GameClearPanel { get; private set; }
@@ -152,6 +154,14 @@ public class UIManager : MonoBehaviour
     {
         EventSystem.current.SetSelectedGameObject(null);
         panel.SetActive(true);
+
+        if(panel == ShopPanel)
+        {
+            WeaponPanel.gameObject.SetActive(false);
+            SkillPanel.gameObject.SetActive(false);
+            HUDPanel.gameObject.SetActive(false);
+            DialogPanel.gameObject.SetActive(false);
+        }
         openedPanels.Add(panel);
     }
     public void ClosePanel(GameObject panel, bool last = false)
@@ -169,7 +179,15 @@ public class UIManager : MonoBehaviour
             openedPanels.Remove(entry);
         }
 
-        if (entry == DialogPanel.gameObject || entry == PausePanel.gameObject)
+        if (entry == ShopPanel)
+        {
+            WeaponPanel.gameObject.SetActive(true);
+            SkillPanel.gameObject.SetActive(true);
+            HUDPanel.gameObject.SetActive(true);
+            DialogPanel.gameObject.SetActive(true);
+        }
+
+        if (entry == DialogPanel.gameObject || entry == PausePanel)
         {
             SkillPanel.gameObject.SetActive(true);
             WeaponPanel.gameObject.SetActive(true);
@@ -415,6 +433,7 @@ public class UIManager : MonoBehaviour
             case 0:
                 DialogPanel = Instantiate(dialogPrefab, DynamicCanvas.ShelterGroup.transform);
                 SkillEnhancePanel = Instantiate(skillEnhancePrefab, DynamicCanvas.ShelterGroup.transform);
+                ShopPanel = Instantiate(shopPrefab, DynamicCanvas.ShelterGroup.transform);
                 break;
             case 1:
                 break;

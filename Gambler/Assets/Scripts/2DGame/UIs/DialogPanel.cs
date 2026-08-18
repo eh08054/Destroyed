@@ -14,6 +14,7 @@ public class DialogPanel : MonoBehaviour
     private void Start()
     {
         Upgradebutton.onClick.AddListener(() => UIManager.Instance.OpenPanel(UIManager.Instance.SkillEnhancePanel));
+        ShopButton.onClick.AddListener(() => UIManager.Instance.OpenPanel(UIManager.Instance.ShopPanel));
         gameObject.SetActive(false);
     }
 }

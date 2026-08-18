@@ -18,7 +18,9 @@ MonoBehaviour:
   attackRange: 3
   attackDamage: 10
   attackCoolTime: 2
+  defense: 10
   moveSpeed: 2
+  offset: {x: 0, y: 0, z: 0}
   enemyPrefab: {fileID: 2069578600902310124, guid: 6e26775e6c8becf47bf6526cb369cba6, type: 3}
   enemyIcon: {fileID: 21300000, guid: a6692f481d4d85e45952e370e7beec54, type: 2}
   dropTable: {fileID: 11400000, guid: f6b3fb51f0dce9949b818b09d02827bf, type: 2}

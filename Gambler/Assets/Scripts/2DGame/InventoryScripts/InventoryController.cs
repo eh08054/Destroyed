@@ -8,7 +8,7 @@ public class InventoryController : MonoBehaviour
     public HashSet<ItemData> ActiveItems { get; private set; }
 
     private ItemToolTip itemToolTip;
-    private List<Slot> slots;
+    private List<InventorySlot> slots;
     private DupCheckPanel dupCheckPanel;
     private void Awake()
     {
@@ -30,7 +30,7 @@ public class InventoryController : MonoBehaviour
     {
         FreshSlot(slots);
     }
-    public void SetSlots(List<Slot> slots)
+    public void SetSlots(List<InventorySlot> slots)
     {
         this.slots = slots;
         FreshSlot(slots);
@@ -40,8 +40,9 @@ public class InventoryController : MonoBehaviour
         dupCheckPanel = panel;
     }
 
-    public void FreshSlot(List<Slot> slots)
+    public void FreshSlot(List<InventorySlot> slots)
     {
+        itemToolTip.gameObject.SetActive(false);
         int i = 0;
         for (; i < Inventory.itemSlots.Count && i < Inventory.maxSlotCount; i++)
         {
@@ -62,6 +63,21 @@ public class InventoryController : MonoBehaviour
         {
             slots[j].slotIndex = j;
         }
+    }
+    public bool CheckFull(ItemData itemData)
+    {
+        for(int i = 0; i < Inventory.maxSlotCount; i++)
+        {
+            if (slots[i].ItemSlot == null)
+            {
+                return false;
+            }
+            else if (slots[i].ItemSlot.item == itemData && slots[i].ItemSlot.CanStack)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     public void ClickedItem(ItemData _item, int slotIndex)
     {

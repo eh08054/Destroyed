@@ -14,7 +14,8 @@ public class AttackHitbox : MonoBehaviour
                 if (enemyController.Enemy.CurrentState != EnemyData.State.Dead)
                 {
                     var attackDamage = attackData.AttackDamage + GameManager.Instance.PlayerBase.ATK
-                        + GameManager.Instance.PlayerBase.currentWeapon.weaponDamage;
+                        + GameManager.Instance.PlayerBase.currentWeapon.weaponDamage
+                        - enemyController.Enemy.Data.defense;
                     enemyController.TakeDamage(attackDamage);
                     AudioManager.instance.PlaySFX(attackData.Attack_Hit);
                     StartCoroutine(HitStop(enemyController.Animator));

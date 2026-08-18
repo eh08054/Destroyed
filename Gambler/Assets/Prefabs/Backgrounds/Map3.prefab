@@ -511,7 +511,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder
@@ -757,7 +757,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder
@@ -925,7 +925,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder
@@ -995,7 +995,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder
@@ -1326,7 +1326,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3346438242456775045, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Name
@@ -1486,7 +1486,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder
@@ -1556,7 +1556,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 697070245506485337, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2372254401540510976, guid: 65de4443e45b46a408947cb60655e7dd, type: 3}
       propertyPath: m_SortingOrder

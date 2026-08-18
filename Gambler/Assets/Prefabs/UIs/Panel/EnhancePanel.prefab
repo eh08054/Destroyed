@@ -642,7 +642,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: af94da46bea6bc640aab52c4b6f856b6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a08e859b8831fbe4fb7922a4d5d9acbf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAE08\uAC15\uBD88\uAD34"
+  m_text: "\uB700\uBC15\uC9C8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 24dab520541244145a031da3a243fecd, type: 2}
   m_sharedMaterial: {fileID: 9080636558567996034, guid: 24dab520541244145a031da3a243fecd, type: 2}
@@ -1192,10 +1192,10 @@ RectTransform:
   - {fileID: 2841087032507311740}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.3, y: 0.15}
-  m_AnchorMax: {x: 0.7, y: 0.85}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 768, y: 756}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &935991493179825616
 CanvasRenderer:
@@ -1251,6 +1251,8 @@ MonoBehaviour:
   - {fileID: 7765797210259581868}
   - {fileID: 7978269529720228807}
   - {fileID: 5318050417726798450}
+  - {fileID: 9199477541808778571}
+  - {fileID: 2195887531341634843}
   - {fileID: 7187057951466275439}
   - {fileID: 9044024470206909707}
   - {fileID: 4792558808785257945}
@@ -1824,7 +1826,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4f0b1b34806904f47afb23de85826910, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 27d6d0fba72b8d944a816cee30e94d72, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2015,7 +2017,7 @@ GameObject:
   - component: {fileID: 2107326013861942611}
   - component: {fileID: 2590030769075863042}
   m_Layer: 5
-  m_Name: DefenceUp (2)
+  m_Name: JumpUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2095,7 +2097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d5f1280adcfb549aab835e5c289c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillUpgradeSlot
-  skillData: {fileID: 11400000, guid: 7939f2b907103844aa52f4321ac42791, type: 2}
+  skillData: {fileID: 11400000, guid: 4d0ed0cb2e5ee8d449a12d7fd48c998e, type: 2}
   valueSumText: {fileID: 5586544471875249115}
   skillLevelText: {fileID: 430083489884226686}
   skillImage: {fileID: 0}
@@ -3365,9 +3367,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: HideSkillEnhancePanel
+      - m_Target: {fileID: 592213444354707958}
+        m_TargetAssemblyTypeName: EnhanceController, Assembly-CSharp
+        m_MethodName: CloseSelf
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3847,7 +3849,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3723988395757673523}
   m_HandleRect: {fileID: 7637978435845830849}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0.9999997
   m_Size: 0.6322705
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4860,7 +4862,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: af94da46bea6bc640aab52c4b6f856b6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 027871a41967ada459b0a33628d50722, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8703,7 +8705,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAE08\uAC15\uBD88\uAD34"
+  m_text: "\uC810\uD37C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 24dab520541244145a031da3a243fecd, type: 2}
   m_sharedMaterial: {fileID: 9080636558567996034, guid: 24dab520541244145a031da3a243fecd, type: 2}
@@ -9683,7 +9685,7 @@ GameObject:
   - component: {fileID: 4313095482769450940}
   - component: {fileID: 850731132146277975}
   m_Layer: 5
-  m_Name: DefenceUp (1)
+  m_Name: SpeedUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9763,7 +9765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1d5f1280adcfb549aab835e5c289c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillUpgradeSlot
-  skillData: {fileID: 11400000, guid: 7939f2b907103844aa52f4321ac42791, type: 2}
+  skillData: {fileID: 11400000, guid: 732b3870198b76a46a5d3c83eb48722a, type: 2}
   valueSumText: {fileID: 2032486060055572571}
   skillLevelText: {fileID: 9008748455001489504}
   skillImage: {fileID: 0}

@@ -8,9 +8,8 @@ public class PlayerController : MonoBehaviour
     enum PlayerType { SwordsMan, Sorcerer, AxeMan }
     [SerializeField] private PlayerType playerType;
 
-    [Header("Movement")] 
+    [Header("Movement")]
     [SerializeField] private float dashSpeed = 50f;
-    [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float gravityScale;
     [SerializeField] private float fallingGravityScale;
     [SerializeField] private int maxDashCount = 2;
@@ -79,7 +78,6 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = gravityScale;
 
         player.ChangeWeapon(player.ownedWeapons[0]);
-        player.MoveSpeed = 7f;
     }
     private void Update()
     {
@@ -199,7 +197,7 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = true;
         }
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, player.JumpForce);
         MyEffectManager.Instance.CreateSpriteEffect(gameObject, "Jump");
         AudioManager.instance.PlaySFX(SFX.Jump);
     }
@@ -369,6 +367,14 @@ public class PlayerController : MonoBehaviour
     public void AttackPotionOff(int amount)
     {
         player.ATK -= amount;
+    }
+    public void SpeedPotionOn(int amount, float durationTime)
+    {
+        player.MoveSpeed += amount;
+    }
+    public void SpeedPotionOff(int amount)
+    {
+        player.MoveSpeed -= amount;
     }
     public void InvokeHPChanged()
     {

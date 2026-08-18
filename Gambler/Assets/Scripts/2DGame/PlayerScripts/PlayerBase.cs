@@ -1,4 +1,5 @@
 using Assets.PixelFantasy.PixelTileEngine.Scripts;
+using CityBackgroundsCollection;
 using System.Collections.Generic;
 using UnityEngine;
 public abstract class PlayerBase
@@ -11,6 +12,7 @@ public abstract class PlayerBase
     public abstract int DEF { get; set; }
     public abstract float AttackCoolTime { get; }
     public float MoveSpeed { get; set; }
+    public float JumpForce { get; set; }
     public enum AttackType { Jab, Slash };
     public enum State { Idle, Attack, Dead}
     public State CurrentState { get; set; } = State.Idle;
@@ -23,6 +25,8 @@ public abstract class PlayerBase
         CurrentHP = MaxHP;
         CurrentState = State.Idle;
         currentWeaponIndex = 0;
+        MoveSpeed = 7f;
+        JumpForce = 20f;
     }
     public virtual void TakeDamage(int damage)
     {
@@ -108,6 +112,12 @@ public abstract class PlayerBase
                 break;
             case PassiveSkillData.SkillType.DefenseUp:
                 DEF += (int)skill.skillData.valuePerLevel[skill.level];
+                break;
+            case PassiveSkillData.SkillType.SpeedUp:
+                MoveSpeed += (int)skill.skillData.valuePerLevel[skill.level];
+                break;
+            case PassiveSkillData.SkillType.JumpUp:
+                JumpForce += (int)skill.skillData.valuePerLevel[skill.level];
                 break;
         }
     }

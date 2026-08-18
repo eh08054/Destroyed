@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 40902378550034396}
   m_Layer: 0
-  m_Name: backGroundOpen4
+  m_Name: Shelter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47c3dbdd347d9d54b946a724e3a0b8f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC
+  text: {fileID: 7450905922440821069}
 --- !u!61 &212987390616315868
 BoxCollider2D:
   m_ObjectHideFlags: 0

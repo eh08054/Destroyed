@@ -8,7 +8,7 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField] private Button sortButton;
     [SerializeField] private DupCheckPanel dupCheckPanel;
 
-    public List<Slot> slots;
+    public List<InventorySlot> slots;
 
     public void Start()
     {
@@ -21,7 +21,7 @@ public class InventoryPanel : MonoBehaviour
         for (int i = 0; i < inventory.maxSlotCount; i++)
         {
             GameObject slotObject = Instantiate(slotPrefab, slotParent);
-            Slot slot = slotObject.GetComponent<Slot>();
+            InventorySlot slot = slotObject.GetComponent<InventorySlot>();
             slots.Add(slot);
 
         }

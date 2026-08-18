@@ -9,6 +9,7 @@ public class EnemyData : ScriptableObject
     public float attackRange;
     public int attackDamage;
     public float attackCoolTime;
+    public int defense;
     public float moveSpeed;
     public Vector3 offset;
     public enum Type { Normal, Elite, Boss}

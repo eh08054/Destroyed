@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image itemImage;
     [SerializeField] private TMP_Text itemCountText;
@@ -49,6 +49,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 itemImage.color = new Color(1, 1, 1, 1);
                 //itemText.text = _itemSlot.item.itemName;
                 itemCountText.text = _itemSlot.count.ToString();
+                button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => GameManager.Instance.inventoryController.ClickedItem(_itemSlot.item, slotIndex));
             }
             else

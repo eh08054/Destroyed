@@ -160,6 +160,7 @@ MonoBehaviour:
   sceneFadeTime: 1.5
   dialogPrefab: {fileID: 5120754645227182804, guid: 9822f1c0df51b8845844618c037ca472, type: 3}
   skillEnhancePrefab: {fileID: 1210668117932161258, guid: f974ecc9ae71f2a4fab82a18f6a8fa71, type: 3}
+  shopPrefab: {fileID: 3783977133609174764, guid: 71e7029905b779f49936301a77803494, type: 3}
   gameOverPrefab: {fileID: 5521447686687554269, guid: 2e3431d7c2f1f974d8f0c38b0de82f2a, type: 3}
   gameClearPrefab: {fileID: 8351210578571847936, guid: 2766d47dbb73bfa419a2e5bce4dcb09d, type: 3}
   minimapPrefab: {fileID: 2927680016545236447, guid: 3de15fbe1db0831488bf6b2a0c891ca7, type: 3}

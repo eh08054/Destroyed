@@ -15,6 +15,11 @@ public class PotionData : ItemData
             case PotionType.Attack:
                 player.AttackPotionOn(value, durationTime);
                 break;
+            case PotionType.Speed:
+                player.SpeedPotionOn(value, durationTime);
+                break;
+            default:
+                break;
         }
     }
     public void ReleaseEffect(PlayerController player, PotionType type)
@@ -23,6 +28,11 @@ public class PotionData : ItemData
         {
             case PotionType.Attack:
                 player.AttackPotionOff(value);
+                break;
+            case PotionType.Speed:
+                player.SpeedPotionOff(value);
+                break;
+            default:
                 break;
         }
     }

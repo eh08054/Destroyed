@@ -159,4 +159,8 @@ public class EnhanceController : MonoBehaviour
     {
         UIManager.Instance.ClosePanel(EnhanceConfirmPanel.gameObject);
     }
+    public void CloseSelf()
+    {
+        UIManager.Instance.ClosePanel(gameObject);
+    }
 }

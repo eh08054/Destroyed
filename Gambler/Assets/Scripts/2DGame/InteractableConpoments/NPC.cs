@@ -1,9 +1,11 @@
 using System;
 using UnityEngine;
+using TMPro;
 
 public class NPC : MonoBehaviour, IInteractable
 {
-    public string PromptContent { get; } = "[F] 대화하기";
+    public string PromptContent { get; private set; } = "[F] 대화하기";
+    [SerializeField] private TMP_Text text;
 
     private bool isTalking = false;
 
@@ -21,6 +23,7 @@ public class NPC : MonoBehaviour, IInteractable
     }
     public void OnInteract(KeyCode keyCode)
     {
+        text.gameObject.SetActive(false);
         if (!isTalking)
         {
             isTalking = true;
@@ -30,6 +33,7 @@ public class NPC : MonoBehaviour, IInteractable
 
     private void EndTalking()
     {
+        text.gameObject.SetActive(true);
         isTalking = false;
     }
     public bool CanInteract { get; } = true;

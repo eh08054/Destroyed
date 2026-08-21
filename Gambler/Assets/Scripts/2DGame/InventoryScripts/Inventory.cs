@@ -34,7 +34,6 @@ public class Inventory
             return true;
         }
 
-        Debug.Log("슬롯이 가득 차 있습니다.");
         return false;
     }
     public void RemoveItem(int slotIndex)

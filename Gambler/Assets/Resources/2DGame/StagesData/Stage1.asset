@@ -24,7 +24,7 @@ MonoBehaviour:
   - enemyData: {fileID: 11400000, guid: 6ee55971c779cab428b3e26123a978d5, type: 2}
     enemyType: 0
     count: 5
-  - enemyData: {fileID: 11400000, guid: b754b5bb59bbd6a47bdfbf2cbae8e0c4, type: 2}
+  - enemyData: {fileID: 11400000, guid: 8db1ad049e883274590cba036fff1ecf, type: 2}
     enemyType: 0
     count: 5
   - enemyData: {fileID: 11400000, guid: a75527ec2f2a18e4c97dd221b8c8f589, type: 2}

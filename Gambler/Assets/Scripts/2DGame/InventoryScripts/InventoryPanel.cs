@@ -15,9 +15,8 @@ public class InventoryPanel : MonoBehaviour
         sortButton.onClick.AddListener(() => GameManager.Instance.inventoryController.SortInventory());
         gameObject.SetActive(false);
     }
-    public void InitializeUI()
+    public void InitializeUI(Inventory inventory)
     {
-        var inventory = GameManager.Instance.inventoryController.Inventory;
         for (int i = 0; i < inventory.maxSlotCount; i++)
         {
             GameObject slotObject = Instantiate(slotPrefab, slotParent);

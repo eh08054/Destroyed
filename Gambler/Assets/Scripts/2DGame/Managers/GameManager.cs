@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         inventoryController.InitializeInventory(PlayerInventory);
-        UIManager.Instance.InventoryPanel.InitializeUI();
+        UIManager.Instance.InventoryPanel.InitializeUI(inventoryController.Inventory);
         SettingsController settings = UIManager.Instance.SettingsPanel.GetComponent<SettingsController>();
         settings.BGMSlider.value = GameData.BGMVolume;
         settings.SFXSlider.value = GameData.SFXVolume;

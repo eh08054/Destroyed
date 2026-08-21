@@ -17,5 +17,7 @@ MonoBehaviour:
   goldData: {fileID: 11400000, guid: 188210b2de6b5eb4e95a0de63a97d14f, type: 2}
   expAmount: 0
   dropItems:
-  - _item: {fileID: 11400000, guid: 9a0918f18b14b504faa9d742b9de03c4, type: 2}
-    weight: 100
+  - _item: {fileID: 0}
+    weight: 50
+  - _item: {fileID: 11400000, guid: 36520dab6caf06549a5e88256e577757, type: 2}
+    weight: 50

@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class DropController : MonoBehaviour, IDropHandler
 {
-    SkillController skillController;
-    [SerializeField] int index;
+    private SkillController skillController;
+    [SerializeField] private int index;
     void Start()
     {
         skillController = GameObject.FindGameObjectWithTag("Player").GetComponent<SkillController>();

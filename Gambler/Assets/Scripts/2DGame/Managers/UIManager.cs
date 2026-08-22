@@ -104,6 +104,7 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.GoldChanged += SetGold;
         GameManager.InputM.keyAction -= RegisterKeyActions;
         GameManager.InputM.keyAction += RegisterKeyActions;
+        GameManager.Instance.OnGameClear += ShowGameClearPanel;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         GraphicBlink = new GraphicBlink();
@@ -222,7 +223,7 @@ public class UIManager : MonoBehaviour
     {
         HUDPanel.GoldText.text = goldValue.ToString();
     }
-    public void ShowGameClearPanel(string enemyName = "", EnemyData.Type enemyType = 0)
+    public void ShowGameClearPanel()
     {
         StartCoroutine(ShowGamePanelDelay());
     }

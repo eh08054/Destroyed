@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     private Platform[] platforms;
 
     public event Action OnClear;
+    public event Action OnGameClear;
     public event Action OnStageLoaded;
     public event Action<int> GoldChanged;
     private void Awake()
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
             GameData = new GameData();
             SceneManager.sceneLoaded += OnSceneLoaded;
-            Instantiate(DialogSystem);
+            Instantiate(DialogSystem, gameObject.transform);
             inventoryController = gameObject.AddComponent<InventoryController>();
             DontDestroyOnLoad(gameObject);
             SpawnPlayer();
@@ -198,6 +199,10 @@ public class GameManager : MonoBehaviour
         {
             OnClear?.Invoke();
             MakeTreasureBox();
+        }
+        if(enemyType == EnemyData.Type.Boss)
+        {
+            OnGameClear?.Invoke();
         }
     }
     public void MakeTreasureBox()

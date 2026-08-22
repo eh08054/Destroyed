@@ -25,6 +25,20 @@ public class PauseController : MonoBehaviour
         GameEndButton.onClick.RemoveListener(EndGame);
     }
 
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+        {
+            Time.timeScale = 0f;
+            GameManager.Instance.gameState = GameState.Pausing;
+        }
+    }
+    private void OnDisable()
+    {
+        Time.timeScale = 1f;
+        GameManager.Instance.gameState = GameState.Playing;
+    }
+
     private void BackGame()
     {
         UIManager.Instance.ClosePanel(gameObject);

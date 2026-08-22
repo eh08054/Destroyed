@@ -10,6 +10,7 @@ public class DropController : MonoBehaviour, IDropHandler
     }
     void IDropHandler.OnDrop(PointerEventData eventData)
     {
+        Debug.Log("hsdfs");
         DragController draggedSkill = eventData.pointerDrag.GetComponent<DragController>();
         if(draggedSkill != null)
         {

@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if(GameManager.Instance.gameState != GameState.Playing) { return; }
         isWalking = false;
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if (!stateInfo.IsName("Jab"))

@@ -21,6 +21,7 @@ public class DragController : MonoBehaviour, IBeginDragHandler, IEndDragHandler,
     }
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
+        Debug.Log("SDfsf");
         if(dragCopy == null) { return; }
         dragCopyRect.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }

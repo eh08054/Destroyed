@@ -21,6 +21,7 @@ public class SkillController : MonoBehaviour
     }
     private void Update()
     {
+        if(GameManager.Instance.gameState != GameState.Playing) { return; }
         for(int i = 0; i < skillKeys.Length; i++)
         {
             if (Input.GetKeyDown(skillKeys[i]))

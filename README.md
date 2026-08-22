@@ -58,6 +58,9 @@
 + 사운드(특히 SFX) 발생 시 매번 Instantiate, Destroy를 함으로써 자원이 낭비되는 문제<br>
   &rarr; 사운드를 Object Pool 형태로 관리함. 즉, 적절한 크기의 AudioSource 배열을 미리 생성해둔 뒤 필요할 때 대여, 사용 후 반납 형태로 구현.
 
++ Drag & Drop, Dropdown, Button, 기타 이벤트 기반 UI 조작 시 겹치는 투명 이미지의 Raycast target이 켜져있어 기능이 제대로 작동하지 않는 문제<br>
+  &rarr; 이벤트가 필요하지 않은 UI의 경우 Raycast target을 비활성화.
+
 ---
 
 ## 조작 방법
@@ -82,5 +85,6 @@
 + 인벤토리/상점 패널 이외에도 UI의 아키텍쳐를 MVP 패턴 따르도록 기능을 분리하여 개발 효율성을 증대
 + 스테이지 추가
 + 보스 패턴 추가
++ UI 배치 최적화
 + 기타 버그 수정 등
   
